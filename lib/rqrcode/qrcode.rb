@@ -56,9 +56,9 @@ module RQRCode
 
     def initialize( options = {} )
       options                   = options.stringify_keys
-      @type_number	        = options["type_number"] || 4
-      ecl		        = options["error_correct_level"] || "h" 
-      @error_correct_level      = QRERRORCORRECTLEVEL[ecl.downcase.to_sym] 
+      @type_number	        = options["size"] || 4
+      level		        = options["level"] || "h" 
+      @error_correct_level      = QRERRORCORRECTLEVEL[ level.downcase.to_sym ] 
       @modules			= nil
       @module_count		= 0
       @data_cache		= nil
