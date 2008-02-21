@@ -1,10 +1,10 @@
 module RQRCode
 
   QRMODE = {
-    :mode_number	=> 1 << 0,
+    :mode_number		=> 1 << 0,
     :mode_alpha_num	=> 1 << 1,
     :mode_8bit_byte	=> 1 << 2,
-    :mode_kanji		=> 1 << 3
+    :mode_kanji			=> 1 << 3
   }
 
   QRERRORCORRECTLEVEL = {
@@ -49,20 +49,20 @@ module RQRCode
 
 
   class QRCode
-    attr_reader :modules
+    attr_reader :modules, :module_count
 
     PAD0 = 0xEC
     PAD1 = 0x11	
 
     def initialize( options = {} )
-      options                   = options.stringify_keys
+      options						    = options.stringify_keys
       @type_number	        = options["size"] || 4
-      level		        = options["level"] || "h" 
-      @error_correct_level      = QRERRORCORRECTLEVEL[ level.downcase.to_sym ] 
-      @modules			= nil
-      @module_count		= 0
-      @data_cache		= nil
-      @data_list		= [] 
+      level									= options["level"] || "h" 
+      @error_correct_level  = QRERRORCORRECTLEVEL[ level.downcase.to_sym ] 
+      @modules							= nil
+      @module_count					= 0
+      @data_cache						= nil
+      @data_list						= [] 
     end
 
 
@@ -79,11 +79,6 @@ module RQRCode
       end
 
       @modules[row][col]
-    end
-
-
-    def get_module_count
-      @module_count
     end
 
 
@@ -378,9 +373,9 @@ module RQRCode
     end 
 
     def to_console
-      (0...get_module_count).each do |col|
+      (0...@module_count).each do |col|
         tmp = []
-        (0...get_module_count).each do |row|
+        (0...@module_count).each do |row|
           if is_dark(col,row)
             tmp << "x"
           else
@@ -787,7 +782,7 @@ module RQRCode
 
 
     def QRUtil.get_lost_point( qr_code )
-      module_count = qr_code.get_module_count
+      module_count = qr_code.module_count
       lost_point = 0
 
       # level1
