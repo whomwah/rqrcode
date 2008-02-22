@@ -8,10 +8,10 @@ module RQRCode
   }
 
   QRERRORCORRECTLEVEL = {
-    :l => 1,
     :m => 0,
-    :q => 3,
-    :h => 2
+    :l => 1,
+    :h => 2,
+    :q => 3
   }
 
   QRMASKPATTERN = {
