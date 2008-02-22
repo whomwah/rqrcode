@@ -32,23 +32,21 @@ module RQRCode
     PAD0 = 0xEC
     PAD1 = 0x11	
 
-    def initialize( data, options = {} )
-      options						    = options.stringify_keys
-      level									= options["level"] || "h" 
-      @error_correct_level  = QRERRORCORRECTLEVEL[ level.downcase.to_sym ] 
-      @type_number	        = options["size"] || 4
+    def initialize( *args )
+			raise ArgumentError unless args.first.kind_of?( String )
+
+			@data									= args.shift
+			options								= args.extract_options!
+      level									= options[:level] || :h 
+      @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
+      @type_number	        = options[:size] || 4
+			@module_count					= @type_number * 4 + 17
       @modules							= nil
-      @module_count					= 0
       @data_cache						= nil
-			@data_list						= QR8bitByte.new( data )
+			@data_list						= QR8bitByte.new( @data )
 
 			self.make # let's go !
     end
-
-
-		def make
-      make_impl( false, get_best_mask_pattern )
-		end
 
 
     def is_dark( row, col )
@@ -59,9 +57,16 @@ module RQRCode
       @modules[row][col]
     end
 
+		protected
+
+		def make
+      make_impl( false, get_best_mask_pattern )
+		end
+
+		private
+
 
     def make_impl( test, mask_pattern )
-      @module_count = @type_number * 4 + 17
       @modules = Array.new( @module_count )
 
       ( 0...@module_count ).each do |row|
@@ -263,7 +268,7 @@ module RQRCode
       end
 
       if buffer.get_length_in_bits > total_data_count * 8
-        raise "code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
+        raise RQRCodeError "code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
       end
 
       if buffer.get_length_in_bits + 4 <= total_data_count * 8
