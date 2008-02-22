@@ -25,28 +25,6 @@ module RQRCode
     :pattern111 => 7
   }
 
-  class QR8bitByte
-    attr_reader :mode
-
-    def initialize( data )
-      @mode = QRMODE[:mode_8bit_byte]
-      @data = data;
-    end
-
-
-    def get_length
-      @data.size
-    end
-
-
-    def write( buffer )
-      ( 0...@data.size ).each do |i|
-        buffer.put( @data[i], 8 )
-      end
-    end
-
-  end
-
 
   class QRCode
     attr_reader :modules, :module_count
@@ -56,22 +34,19 @@ module RQRCode
 
     def initialize( data, options = {} )
       options						    = options.stringify_keys
-      @type_number	        = options["size"] || 4
       level									= options["level"] || "h" 
       @error_correct_level  = QRERRORCORRECTLEVEL[ level.downcase.to_sym ] 
+      @type_number	        = options["size"] || 4
       @modules							= nil
       @module_count					= 0
       @data_cache						= nil
-      @data_list						= [] 
-			@data									= data
+			@data_list						= QR8bitByte.new( data )
 
-			self.create # let's go !
+			self.make # let's go !
     end
 
 
-		def create
-			raise ArgumentError if @data.nil? || @data.size == 0
-			@data_list << QR8bitByte.new( @data )
+		def make
       make_impl( false, get_best_mask_pattern )
 		end
 
@@ -275,14 +250,12 @@ module RQRCode
       rs_blocks = QRRSBlock.get_rs_blocks( type_number, error_correct_level )
       buffer = QRBitBuffer.new
 
-      ( 0...data_list.size ).each do |i|
-        data = data_list[i]
-        buffer.put( data.mode, 4 )
-        buffer.put( 
-          data.get_length, QRUtil.get_length_in_bits( data.mode, type_number ) 
-          )
-        data.write( buffer )	
-      end
+      data = data_list
+      buffer.put( data.mode, 4 )
+      buffer.put( 
+        data.get_length, QRUtil.get_length_in_bits( data.mode, type_number ) 
+      )
+      data.write( buffer )	
 
       total_data_count = 0
       ( 0...rs_blocks.size ).each do |i|
@@ -381,6 +354,29 @@ module RQRCode
           end
         end 
         puts tmp.join
+      end
+    end
+
+  end
+
+
+  class QR8bitByte
+    attr_reader :mode
+
+    def initialize( data )
+      @mode = QRMODE[:mode_8bit_byte]
+      @data = data;
+    end
+
+
+    def get_length
+      @data.size
+    end
+
+
+    def write( buffer )
+      ( 0...@data.size ).each do |i|
+        buffer.put( @data[i], 8 )
       end
     end
 

@@ -3,12 +3,6 @@ require File.join(File.dirname(__FILE__), "..", "test_helper")
 class QRCodeTest < Test::Unit::TestCase
 	require File.dirname(__FILE__) + "/test_data"
   
-	def test_argument_error
-		assert_raise(ArgumentError) {
-			qr = RQRCode::QRCode.new( :size => 1 )
-		}
-	end
-
   def test_1_H_
 		qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
 
