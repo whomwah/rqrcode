@@ -1,1 +1,12 @@
-to be added .. I promise
+rQRCode
+=======
+
+A library for encoding QR Codes in Ruby. Adapted from the Javascript library:
+
+// QRCode for ActionScript - version 1.0.1 - Kazuhiko Arase
+
+
+Usage
+=====
+
+qr = RQRCode::QRCode.new( :size => 
