@@ -54,7 +54,7 @@ module RQRCode
     PAD0 = 0xEC
     PAD1 = 0x11	
 
-    def initialize( options = {} )
+    def initialize( data, options = {} )
       options						    = options.stringify_keys
       @type_number	        = options["size"] || 4
       level									= options["level"] || "h" 
@@ -63,14 +63,17 @@ module RQRCode
       @module_count					= 0
       @data_cache						= nil
       @data_list						= [] 
+			@data									= data
+
+			self.create # let's go !
     end
 
 
-    def add_data( data )
-      new_data = QR8bitByte.new( data )
-      @data_list << new_data
-      @data_cache = nil
-    end
+		def create
+			raise ArgumentError if @data.nil? || @data.size == 0
+			@data_list << QR8bitByte.new( @data )
+      make_impl( false, get_best_mask_pattern )
+		end
 
 
     def is_dark( row, col )
@@ -79,11 +82,6 @@ module RQRCode
       end
 
       @modules[row][col]
-    end
-
-
-    def make
-      make_impl( false, get_best_mask_pattern )
     end
 
 

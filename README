@@ -1,12 +1,39 @@
-rQRCode
-=======
+= rQRCode, Encode QRCodes
 
-A library for encoding QR Codes in Ruby. Adapted from the Javascript library:
+rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface with all the standard qrcode options. It was adapted from the Javascript library by Kazuhiko Arase.
 
-// QRCode for ActionScript - version 1.0.1 - Kazuhiko Arase
+= An Overview
+
+Let's clear up what rQRCode is.
+
+# rQRCode is a *standalone library*. It requires no other libraries. Just Ruby!
+# It is an encoding library. You can't decode QR codes with it.
+# The interface is simple and assumes you just want to parse a string into a QR code
+# QR code is trademarked by Denso Wave inc
+
+= Rescources
+
+# wikipedia [http://en.wikipedia.org/wiki/QR_Code]
+# Denso-Wave website [http://www.denso-wave.com/qrcode/index-e.html]
+# kaywa [http://qrcode.kaywa.com/]
 
 
-Usage
-=====
+== Installing
 
-qr = RQRCode::QRCode.new( :size => 
+You may get the latest stable version from Rubyforge. Source gems are also available.
+
+  $ gem install rqrcode
+
+=== Loading rQRCode Itself
+
+You have installed the gem already, yeah?
+
+ require 'rubygems'
+ require 'qrqcode'
+
+=== Simple QRCode generation to screen
+
+ qr = RQRCode::QRCode.create('my string to generate')
+ qr.to_console
+
+
