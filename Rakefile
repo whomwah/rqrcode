@@ -7,7 +7,7 @@ require 'rake/testtask'
 
 NAME = "rqrcode"
 VERS = "0.2.0"
-CLEAN.include ['pkg']
+CLEAN.include ['pkg', 'rdoc']
 
 Gem::manage_gems
 

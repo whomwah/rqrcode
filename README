@@ -2,6 +2,8 @@
 
 rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface with all the standard qrcode options. It was adapted from the Javascript library by Kazuhiko Arase.
 
+RubyForge Project Page  http://rubyforge.org/projects/rqrcode/
+
 = An Overview
 
 Let's clear up some rQRCode stuff.
@@ -13,9 +15,9 @@ Let's clear up some rQRCode stuff.
 
 = Rescources
 
- # wikipedia [http://en.wikipedia.org/wiki/QR_Code]
- # Denso-Wave website [http://www.denso-wave.com/qrcode/index-e.html]
- # kaywa [http://qrcode.kaywa.com/]
+wikipedia:: http://en.wikipedia.org/wiki/QR_Code
+Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
+kaywa:: http://qrcode.kaywa.com
 
 
 == Installing
