@@ -4,14 +4,18 @@ class QRCodeTest < Test::Unit::TestCase
 	require File.dirname(__FILE__) + "/test_data"
  
 	def test_no_data_given
-		assert_raise(ArgumentError) {
+		assert_raise(RQRCode::QRCodeArgumentError) {
 			RQRCode::QRCode.new( :size => 1, :level => :h )
 			RQRCode::QRCode.new( :size => 1 )
 			RQRCode::QRCode.new
 		}
+		assert_raise(RQRCode::QRCodeRunTimeError) {
+			qr = RQRCode::QRCode.new('duncan')
+			qr.is_dark(0,999999)
+		}
 	end
 
-  def test_1_H_
+  def test_H_
 		qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
 
     assert_equal qr.modules.length, 21
@@ -20,6 +24,12 @@ class QRCodeTest < Test::Unit::TestCase
 
 		qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
 		assert_equal qr.modules, MATRIX_1_H
+		qr = RQRCode::QRCode.new( 'duncan', :size => 1, :level => :l )
+		assert_equal qr.modules, MATRIX_1_L
+		qr = RQRCode::QRCode.new( 'duncan', :size => 1, :level => :m )
+		assert_equal qr.modules, MATRIX_1_M
+		qr = RQRCode::QRCode.new( 'duncan', :size => 1, :level => :q )
+		assert_equal qr.modules, MATRIX_1_Q
   end
 
   def test_3_H_
@@ -47,8 +57,17 @@ class QRCodeTest < Test::Unit::TestCase
   end
 
   def test_4_H_
-		qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw')
+		qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
+			:level => :l )
+		assert_equal qr.modules, MATRIX_4_L
+		qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
+			:level => :m )
+		assert_equal qr.modules, MATRIX_4_M
+		qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
+			:level => :q )
+		assert_equal qr.modules, MATRIX_4_Q
 
+		qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw')
     assert_equal qr.modules.length, 33
     assert_equal qr.module_count, 33
 		assert_equal qr.modules, MATRIX_4_H

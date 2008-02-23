@@ -8,10 +8,10 @@ module RQRCode
   }
 
   QRERRORCORRECTLEVEL = {
-    :m => 0,
     :l => 1,
-    :h => 2,
-    :q => 3
+    :m => 0,
+    :q => 3,
+    :h => 2
   }
 
   QRMASKPATTERN = {
@@ -25,6 +25,8 @@ module RQRCode
     :pattern111 => 7
   }
 
+	class QRCodeArgumentError < ArgumentError; end
+	class QRCodeRunTimeError < RuntimeError; end
 
   class QRCode
     attr_reader :modules, :module_count
@@ -33,7 +35,7 @@ module RQRCode
     PAD1 = 0x11	
 
     def initialize( *args )
-			raise ArgumentError unless args.first.kind_of?( String )
+			raise QRCodeArgumentError unless args.first.kind_of?( String )
 
 			@data									= args.shift
 			options								= args.extract_options!
@@ -51,10 +53,23 @@ module RQRCode
 
     def is_dark( row, col )
       if row < 0 || @module_count <= row || col < 0 || @module_count <= col
-        raise "#{row},#{col}"
+        raise QRCodeRunTimeError, "#{row},#{col}"
       end
-
       @modules[row][col]
+    end
+
+    def to_console
+      (0...@module_count).each do |col|
+        tmp = []
+        (0...@module_count).each do |row|
+          if is_dark(col,row)
+            tmp << "x"
+          else
+            tmp << " "
+          end
+        end 
+        puts tmp.join
+      end
     end
 
 		protected
@@ -268,7 +283,8 @@ module RQRCode
       end
 
       if buffer.get_length_in_bits > total_data_count * 8
-        raise RQRCodeError "code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
+        raise QRCodeRunTimeError, 
+					"code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
       end
 
       if buffer.get_length_in_bits + 4 <= total_data_count * 8
@@ -348,20 +364,6 @@ module RQRCode
       data
     end 
 
-    def to_console
-      (0...@module_count).each do |col|
-        tmp = []
-        (0...@module_count).each do |row|
-          if is_dark(col,row)
-            tmp << "x"
-          else
-            tmp << " "
-          end
-        end 
-        puts tmp.join
-      end
-    end
-
   end
 
 
@@ -391,7 +393,7 @@ module RQRCode
   class QRPolynomial
 
     def initialize( num, shift )
-      raise "#{num.size}/#{shift}" if num.empty?
+      raise QRCodeRunTimeError, "#{num.size}/#{shift}" if num.empty?
       offset = 0
 
       while offset < num.size && num[offset] == 0
@@ -531,11 +533,12 @@ module RQRCode
     ]
 
 
-    def QRRSBlock.get_rs_blocks( type_number, error_correct_level )
-      rs_block = QRRSBlock.get_rs_block_table( type_number, error_correct_level )
+    def QRRSBlock.get_rs_blocks( type_no, error_correct_level )
+      rs_block = QRRSBlock.get_rs_block_table( type_no, error_correct_level )
 
       if rs_block.nil?
-        raise "bad rs block @ typenumber: #{type_number}/error_correct_level:#{error_correct_level}"
+        raise QRCodeRunTimeError,
+					"bad rsblock @ typeno: #{type_no}/error_correct_level:#{error_correct_level}"
       end
 
       length = rs_block.size / 3
@@ -721,7 +724,7 @@ module RQRCode
       when QRMASKPATTERN[:pattern111]
         ( (i * j) % 3 + (i + j) % 2) % 2 == 0
       else
-        raise "bad mask_pattern: #{mask_pattern}"	
+        raise QRCodeRunTimeError, "bad mask_pattern: #{mask_pattern}"	
       end
     end
 
@@ -747,7 +750,7 @@ module RQRCode
         when QRMODE[:mode_8bit_byte] : 8
         when QRMODE[:mode_kanji] : 8
         else
-          raise "mode: #{mode}"
+          raise QRCodeRunTimeError, "mode: #{mode}"
         end
 
       elsif type < 27
@@ -759,7 +762,7 @@ module RQRCode
         when QRMODE[:mode_8bit_byte] : 16
         when QRMODE[:mode_kanji] : 10
         else
-          raise "mode: #{mode}"
+          raise QRCodeRunTimeError, "mode: #{mode}"
         end
 
       elsif type < 41
@@ -771,11 +774,11 @@ module RQRCode
         when QRMODE[:mode_8bit_byte] : 16
         when QRMODE[:mode_kanji] : 12
         else
-          raise "mode: #{mode}"
+          raise QRCodeRunTimeError, "mode: #{mode}"
         end
 
       else
-        raise "type: #{type}"
+        raise QRCodeRunTimeError, "type: #{type}"
       end
     end
 
@@ -885,7 +888,7 @@ module RQRCode
     class << self
 
       def glog(n)
-        raise "glog(#{n})" if ( n < 1 )
+        raise QRCodeRunTimeError, "glog(#{n})" if ( n < 1 )
         LOG_TABLE[n]
       end
 
