@@ -6,7 +6,7 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 NAME = "rqrcode"
-VERS = "0.1.0"
+VERS = "0.2.0"
 CLEAN.include ['pkg']
 
 Gem::manage_gems
@@ -35,7 +35,7 @@ end
 task :build_package => [:repackage]
 Rake::GemPackageTask.new(spec) do |pkg|
   #pkg.need_zip = true
-  pkg.need_tar = true
+  #pkg.need_tar = true
   pkg.gem_spec = spec
 end
 
