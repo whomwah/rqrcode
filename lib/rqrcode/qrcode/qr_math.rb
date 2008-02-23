@@ -9,7 +9,7 @@
 # above copyright notice is included.
 #++
 
-module RQRCode
+module RQRCode #:nodoc:
 
   class QRMath
 

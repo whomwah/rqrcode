@@ -9,7 +9,7 @@
 # above copyright notice is included.
 #++
 
-module RQRCode #:nodoc:
+module RQRCode
 
   class QR8bitByte
     attr_reader :mode
