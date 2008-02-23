@@ -56,6 +56,6 @@ Rake::RDocTask.new do |rd|
 end
 
 desc "rdoc to rubyforge"
-task :rubyforge do
+task :rubyforge => [:rdoc] do
 	sh %{/usr/bin/scp -r -p rdoc/* whomwah@rubyforge.org:/var/www/gforge-projects/rqrcode}
 end
