@@ -25,7 +25,7 @@ rQRCode is a library for encoding QRCodes. The simple
 interace allows you to simply create QRCodes ready to
 be displayed in the way you choose. 
 EOF
-  s.files = FileList["{lib}/**/*"].exclude("rdoc").to_a
+  s.files = FileList["lib/**/*", "test/*"].exclude("rdoc").to_a
   s.require_path		= "lib"
 	s.has_rdoc				= true
   s.extra_rdoc_files = ["README", "CHANGELOG", "COPYING"]  
@@ -35,7 +35,7 @@ end
 task :build_package => [:repackage]
 Rake::GemPackageTask.new(spec) do |pkg|
   #pkg.need_zip = true
-  #pkg.need_tar = true
+  pkg.need_tar = true
   pkg.gem_spec = spec
 end
 
