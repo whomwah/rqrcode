@@ -57,5 +57,5 @@ end
 
 desc "rdoc to rubyforge"
 task :rubyforge => [:rdoc] do
-	sh %{/usr/bin/scp -r -p rdoc/* whomwah@rubyforge.org:/var/www/gforge-projects/rqrcode}
+	sh %{/usr/bin/scp -r -p rdoc/* rubyforge:/var/www/gforge-projects/rqrcode}
 end
