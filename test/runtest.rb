@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), "..", "test_helper")
+require "test/unit"
+require "lib/rqrcode"
 
 class QRCodeTest < Test::Unit::TestCase
 	require File.dirname(__FILE__) + "/test_data"

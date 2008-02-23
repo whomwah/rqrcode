@@ -1,5 +1,5 @@
-module CoreExtensions
-  module Integer
+module CoreExtensions #:nodoc:
+  module Integer #:nodoc:
     module Bitwise
       def rszf(count)
         # zero fill right shift
