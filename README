@@ -1,4 +1,4 @@
-= rQRCode, Encode QRCodes
+= Project: rQRCode, Encode QRCodes
 
 rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface with all the standard qrcode options. It was adapted from the Javascript library by Kazuhiko Arase.
 
@@ -33,11 +33,14 @@ You have installed the gem already, yeah?
 
 === Simple QRCode generation to screen
 
- # QRCode.new( string [, :size, :level] ) 
- # defaults :size => 4, :level => :h
- #
  qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
  qr.to_console
+ #
+ # Prints:
+ # xxxxxxx x  x x   x x  xx  xxxxxxx
+ # x     x  xxx  xxxxxx xxx  x     x
+ # x xxx x  xxxxx x       xx x xxx x
+ # ... etc
 
 === Simple QRCode generation to view (RubyOnRails)
 
@@ -79,3 +82,10 @@ td.white { background-color: #fff; }
   </tr>
 <% end %>
 </table>
+
+== Contact
+
+Author::     Duncan Robertson 
+Email::      duncan@whomwah.com 
+Home Page::  http://whomwah.com
+License::    MIT Licence (http://www.opensource.org/licenses/mit-license.html)
