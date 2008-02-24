@@ -36,7 +36,7 @@ You have installed the gem already, yeah?
 === Simple QRCode generation to screen
 
  qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
- qr.to_console
+ puts qr.to_console
  #
  # Prints:
  # xxxxxxx x  x x   x x  xx  xxxxxxx
@@ -72,9 +72,9 @@ You have installed the gem already, yeah?
  </style>
 
  <table>
- <% (0...@qr.module_count).each do |x| %>
+ <% @qr.modules.each_index do |x| %>
    <tr>  
-   <% (0...@qr.module_count).each do |y| %>
+   <% x.each_index do |y| %>
      <% if @qr.is_dark(x,y) %>
  		<td class="black"/>
      <% else %>

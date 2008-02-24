@@ -73,4 +73,9 @@ class QRCodeTest < Test::Unit::TestCase
     assert_equal qr.module_count, 33
 		assert_equal qr.modules, MATRIX_4_H
   end
+
+	def test_to_console
+		qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
+		assert_equal qr.to_console[0..21], "xxxxxxx xx x  xxxxxxx\n"
+	end
 end

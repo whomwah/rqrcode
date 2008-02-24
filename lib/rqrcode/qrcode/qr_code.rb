@@ -83,18 +83,20 @@ module RQRCode #:nodoc:
       @modules[row][col]
     end
 
-    def to_console
-      (0...@module_count).each do |col|
+    def to_console( row = 'x', col = ' ' )
+			res = []
+      @modules.each_index do |c|
         tmp = []
-        (0...@module_count).each do |row|
-          if is_dark(col,row)
-            tmp << "x"
+        @modules.each_index do |r|
+          if is_dark(c,r)
+            tmp << row 
           else
-            tmp << " "
+            tmp << col 
           end
         end 
-        puts tmp.join
+        res << tmp.join
       end
+			res.join("\n")
     end
 
 		protected
