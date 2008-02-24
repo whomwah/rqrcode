@@ -75,11 +75,11 @@ You have installed the gem already, yeah?
  <% @qr.modules.each_index do |x| %>
    <tr>  
    <% x.each_index do |y| %>
-     <% if @qr.is_dark(x,y) %>
+    <% if @qr.is_dark(x,y) %>
  		<td class="black"/>
-     <% else %>
+    <% else %>
  		<td class="white"/>
-     <% end %>
+    <% end %>
    <% end %>
    </tr>
  <% end %>

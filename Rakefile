@@ -49,11 +49,15 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-Rake::RDocTask.new do |rd|
-		rd.rdoc_dir = "rdoc"
-    rd.main = "README"
-    rd.rdoc_files.include("README", "CHANGELOG", "COPYING", "lib/**/*.rb")
-end
+desc "Generate documentation for the library"
+Rake::RDocTask.new("rdoc") { |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = "rQRCode Documentation"
+  rdoc.template = "~/bin/jamis.rb"
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.main = "README"
+  rdoc.rdoc_files.include("README", "CHANGELOG", "COPYING", 'lib/**/*.rb')
+}
 
 desc "rdoc to rubyforge"
 task :rubyforge => [:rdoc] do
