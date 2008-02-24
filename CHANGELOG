@@ -1,3 +1,10 @@
+*0.2.1* (Feb 24th, 2008)
+
+* small changes to rakefile and readme
+* small change to to_console method
+* make console_count method private (use modules.size instead)
+* slowy updating rdocs 
+
 *0.2.0* (Feb 23rd, 2008)
 
 * Split files up [DR]
