@@ -31,7 +31,7 @@ You may get the latest stable version from Rubyforge. Source gems are also avail
 You have installed the gem already, yeah?
 
  require 'rubygems'
- require 'qrqcode'
+ require 'rqrcode'
 
 === Simple QRCode generation to screen
 
