@@ -59,8 +59,13 @@ module RQRCode #:nodoc:
     # Expects a string to be parsed in, other args are optional 
     #
     #   # string - the string you wish to encode 
-    #   # size   - the size of the qrcode
-    #   # level  - the error correction level 
+    #   # size   - the size of the qrcode (default 4)
+    #   # level  - the error correction level, can be:
+    #      * Level :l 7%  of code can be restored
+    #      * Level :m 15% of code can be restored
+    #      * Level :q 25% of code can be restored
+    #      * Level :h 30% of code can be restored (default :h) 
+    #
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
     #
 
