@@ -1,3 +1,9 @@
+*0.3.0* (Feb 28th, 2008)
+
+* added more documentation
+* changed to_console to to_s (what was I thinking)
+* add more tests
+
 *0.2.1* (Feb 24th, 2008)
 
 * small changes to rakefile and readme

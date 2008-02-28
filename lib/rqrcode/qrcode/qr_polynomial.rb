@@ -63,7 +63,7 @@ module RQRCode #:nodoc:
 
       ( 0...get_length ).each do |i|
         num[i] = get(i)
-      end	
+      end  
 
       ( 0...e.get_length ).each do |i|
         tmp = num[i].nil? ? 0 : num[i]

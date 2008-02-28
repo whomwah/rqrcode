@@ -44,7 +44,7 @@ module RQRCode #:nodoc:
       [2, 35, 17],
       [2, 35, 13],
 
-      # 4		
+      # 4    
       [1, 100, 80],
       [2, 50, 32],
       [2, 50, 24],
@@ -62,7 +62,7 @@ module RQRCode #:nodoc:
       [4, 43, 19],
       [4, 43, 15],
 
-      # 7		
+      # 7    
       [2, 98, 78],
       [4, 49, 31],
       [2, 32, 14, 4, 33, 15],
@@ -80,7 +80,7 @@ module RQRCode #:nodoc:
       [4, 36, 16, 4, 37, 17],
       [4, 36, 12, 4, 37, 13],
 
-      # 10		
+      # 10    
       [2, 86, 68, 2, 87, 69],
       [4, 69, 43, 1, 70, 44],
       [6, 43, 19, 2, 44, 20],
@@ -94,7 +94,7 @@ module RQRCode #:nodoc:
 
       if rs_block.nil?
         raise QRCodeRunTimeError,
-					"bad rsblock @ typeno: #{type_no}/error_correct_level:#{error_correct_level}"
+          "bad rsblock @ typeno: #{type_no}/error_correct_level:#{error_correct_level}"
       end
 
       length = rs_block.size / 3

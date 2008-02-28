@@ -25,7 +25,7 @@ module RQRCode #:nodoc:
       [6, 24, 42],
       [6, 26, 46],
       [6, 28, 50],
-      [6, 30, 54],		
+      [6, 30, 54],    
       [6, 32, 58],
       [6, 34, 62],
       [6, 26, 46, 66],
@@ -57,7 +57,7 @@ module RQRCode #:nodoc:
       [6, 30, 58, 86, 114, 142, 170]
     ]
 
-    G15 = 1 << 10 | 1 << 8 | 1 << 5 | 1 << 4 | 1 << 2 | 1 << 1 | 1 << 0	
+    G15 = 1 << 10 | 1 << 8 | 1 << 5 | 1 << 4 | 1 << 2 | 1 << 1 | 1 << 0  
     G18 = 1 << 12 | 1 << 11 | 1 << 10 | 1 << 9 | 1 << 8 | 1 << 5 | 1 << 2 | 1 << 0
     G15_MASK = 1 << 14 | 1 << 12 | 1 << 10 | 1 << 4 | 1 << 1
 
@@ -116,7 +116,7 @@ module RQRCode #:nodoc:
       when QRMASKPATTERN[:pattern111]
         ( (i * j) % 3 + (i + j) % 2) % 2 == 0
       else
-        raise QRCodeRunTimeError, "bad mask_pattern: #{mask_pattern}"	
+        raise QRCodeRunTimeError, "bad mask_pattern: #{mask_pattern}"  
       end
     end
 
@@ -137,7 +137,7 @@ module RQRCode #:nodoc:
 
         # 1 - 9
         case mode
-        when QRMODE[:mode_number] :	10
+        when QRMODE[:mode_number] :  10
         when QRMODE[:mode_alpha_num] : 9
         when QRMODE[:mode_8bit_byte] : 8
         when QRMODE[:mode_kanji] : 8
@@ -149,7 +149,7 @@ module RQRCode #:nodoc:
 
         # 10 -26
         case mode
-        when QRMODE[:mode_number] :	12
+        when QRMODE[:mode_number] :  12
         when QRMODE[:mode_alpha_num] : 11
         when QRMODE[:mode_8bit_byte] : 16
         when QRMODE[:mode_kanji] : 10
@@ -161,7 +161,7 @@ module RQRCode #:nodoc:
 
         # 27 - 40
         case mode
-        when QRMODE[:mode_number] :	14
+        when QRMODE[:mode_number] :  14
         when QRMODE[:mode_alpha_num] : 13
         when QRMODE[:mode_8bit_byte] : 16
         when QRMODE[:mode_kanji] : 12
@@ -199,7 +199,7 @@ module RQRCode #:nodoc:
 
           if same_count > 5
             lost_point += (3 + same_count - 5)
-          end	
+          end  
         end
       end
 
@@ -211,8 +211,8 @@ module RQRCode #:nodoc:
           count = count + 1 if qr_code.is_dark( row + 1, col )
           count = count + 1 if qr_code.is_dark( row, col + 1 )
           count = count + 1 if qr_code.is_dark( row + 1, col + 1 )
-          lost_point = lost_point + 3 if (count == 0 || count == 4)	
-        end	
+          lost_point = lost_point + 3 if (count == 0 || count == 4)  
+        end  
       end
 
       # level 3
@@ -239,15 +239,15 @@ module RQRCode #:nodoc:
         ( 0...module_count ).each do |row|
           if qr_code.is_dark(row, col)
             dark_count = dark_count + 1
-          end	
+          end  
         end
       end
 
       ratio = (100 * dark_count / module_count / module_count - 50).abs / 5
       lost_point = lost_point * 10
 
-      lost_point			
-    end	
+      lost_point      
+    end  
 
   end
 

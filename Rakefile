@@ -6,30 +6,30 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 NAME = "rqrcode"
-VERS = "0.2.1"
+VERS = "0.3.0"
 CLEAN.include ['pkg', 'rdoc']
 
 Gem::manage_gems
 
 spec = Gem::Specification.new do |s|
-  s.name						= NAME
-  s.version					= VERS
-  s.author					= "Duncan Robertson"
-  s.email						= "duncan@whomwah.com"
-  s.homepage				= "http://rqrcode.rubyforge.org"
-  s.platform				= Gem::Platform::RUBY
-  s.summary					= "A library to encode QR Codes" 
-	s.rubyforge_project = NAME 
-	s.description = <<EOF
-rQRCode is a library for encoding QRCodes. The simple
-interace allows you to simply create QRCodes ready to
-be displayed in the way you choose. 
+  s.name            = NAME
+  s.version          = VERS
+  s.author          = "Duncan Robertson"
+  s.email            = "duncan@whomwah.com"
+  s.homepage        = "http://rqrcode.rubyforge.org"
+  s.platform        = Gem::Platform::RUBY
+  s.summary          = "A library to encode QR Codes" 
+  s.rubyforge_project = NAME 
+  s.description = <<EOF
+rQRCode is a library for encoding QR Codes. The simple
+interface allows you to simply create QR Code data
+structures ready to be displayed in the way you choose. 
 EOF
   s.files = FileList["lib/**/*", "test/*"].exclude("rdoc").to_a
-  s.require_path		= "lib"
-	s.has_rdoc				= true
+  s.require_path    = "lib"
+  s.has_rdoc        = true
   s.extra_rdoc_files = ["README", "CHANGELOG", "COPYING"]  
-	s.test_file       = "test/runtest.rb"
+  s.test_file       = "test/runtest.rb"
 end
 
 task :build_package => [:repackage]
@@ -61,5 +61,5 @@ Rake::RDocTask.new("rdoc") { |rdoc|
 
 desc "rdoc to rubyforge"
 task :rubyforge => [:rdoc] do
-	sh %{/usr/bin/scp -r -p rdoc/* rubyforge:/var/www/gforge-projects/rqrcode}
+  sh %{/usr/bin/scp -r -p rdoc/* rubyforge:/var/www/gforge-projects/rqrcode}
 end
