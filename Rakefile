@@ -22,8 +22,8 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = NAME 
   s.description = <<EOF
 rQRCode is a library for encoding QR Codes. The simple
-interface allows you to simply create QR Code data
-structures ready to be displayed in the way you choose. 
+interface allows you to create QR Code data structures 
+ready to be displayed in the way you choose. 
 EOF
   s.files = FileList["lib/**/*", "test/*"].exclude("rdoc").to_a
   s.require_path    = "lib"
