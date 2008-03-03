@@ -206,14 +206,8 @@ module RQRCode #:nodoc:
 
 
     def setup_timing_pattern #:nodoc:
-      ( 8...@module_count - 8 ).each do |r|
-        next unless @modules[r][6].nil?
-        @modules[r][6] = (r % 2 == 0)
-      end
-
-      ( 8...@module_count - 8 ).each do |c|
-        next unless @modules[6][c].nil?
-        @modules[6][c] = (c % 2 == 0)
+      ( 8...@module_count - 8 ).each do |i|
+        @modules[i][6] = @modules[6][i] = i % 2 == 0 
       end
     end
 
@@ -248,10 +242,6 @@ module RQRCode #:nodoc:
       ( 0...18 ).each do |i|
         mod = ( !test && ( (bits >> i) & 1) == 1 )
         @modules[ (i / 3).floor ][ i % 3 + @module_count - 8 - 3 ] = mod
-      end
-
-      ( 0...18 ).each do |i|
-        mod = ( !test && ( (bits >> i) & 1) == 1 )
         @modules[ i % 3 + @module_count - 8 - 3 ][ (i / 3).floor ] = mod
       end
     end
@@ -261,10 +251,10 @@ module RQRCode #:nodoc:
       data = (@error_correct_level << 3 | mask_pattern)
       bits = QRUtil.get_bch_type_info( data )
 
-      # vertical
       ( 0...15 ).each do |i|
         mod = (!test && ( (bits >> i) & 1) == 1)
 
+        # vertical
         if i < 6
           @modules[i][8] = mod
         elsif i < 8
@@ -273,12 +263,7 @@ module RQRCode #:nodoc:
           @modules[ @module_count - 15 + i ][8] = mod
         end
 
-      end
-
-      # horizontal
-      ( 0...15 ).each do |i|
-        mod = (!test && ( (bits >> i) & 1) == 1)
-
+        # horizontal
         if i < 8
           @modules[8][ @module_count - i - 1 ] = mod
         elsif i < 9
