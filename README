@@ -13,7 +13,7 @@ Let's clear up some rQRCode stuff.
  # The interface is simple and assumes you just want to encode a string into a QR code
  # QR code is trademarked by Denso Wave inc
 
-== Rescources
+== Resources
 
 wikipedia:: http://en.wikipedia.org/wiki/QR_Code
 Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
