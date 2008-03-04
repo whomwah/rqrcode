@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 #--
-# Copyright 2004 by Duncan Robertson (duncan@whomwah.com).
+# Copyright 2008 by Duncan Robertson (duncan@whomwah.com).
 # All rights reserved.
 
 # Permission is granted for use, copying, modification, distribution,
