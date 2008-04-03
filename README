@@ -22,9 +22,14 @@ kaywa:: http://qrcode.kaywa.com
 
 == Installing
 
-You may get the latest stable version from Rubyforge. Source gems are also available.
+You may get the latest stable version from Rubyforge. 
 
   $ gem install rqrcode
+
+You can also get the source from http://github.com/whomwah/rqrcode/tree/master
+
+  $ git clone git://github.com/whomwah/rqrcode.git
+ 
 
 === Loading rQRCode Itself
 
