@@ -137,10 +137,10 @@ module RQRCode #:nodoc:
 
         # 1 - 9
         case mode
-        when QRMODE[:mode_number] :  10
-        when QRMODE[:mode_alpha_num] : 9
-        when QRMODE[:mode_8bit_byte] : 8
-        when QRMODE[:mode_kanji] : 8
+        when QRMODE[:mode_number] then  10
+        when QRMODE[:mode_alpha_num] then 9
+        when QRMODE[:mode_8bit_byte] then 8
+        when QRMODE[:mode_kanji] then 8
         else
           raise QRCodeRunTimeError, "mode: #{mode}"
         end
@@ -149,10 +149,10 @@ module RQRCode #:nodoc:
 
         # 10 -26
         case mode
-        when QRMODE[:mode_number] :  12
-        when QRMODE[:mode_alpha_num] : 11
-        when QRMODE[:mode_8bit_byte] : 16
-        when QRMODE[:mode_kanji] : 10
+        when QRMODE[:mode_number] then  12
+        when QRMODE[:mode_alpha_num] then 11
+        when QRMODE[:mode_8bit_byte] then 16
+        when QRMODE[:mode_kanji] then 10
         else
           raise QRCodeRunTimeError, "mode: #{mode}"
         end
@@ -161,10 +161,10 @@ module RQRCode #:nodoc:
 
         # 27 - 40
         case mode
-        when QRMODE[:mode_number] :  14
-        when QRMODE[:mode_alpha_num] : 13
-        when QRMODE[:mode_8bit_byte] : 16
-        when QRMODE[:mode_kanji] : 12
+        when QRMODE[:mode_number] then  14
+        when QRMODE[:mode_alpha_num] then 13
+        when QRMODE[:mode_8bit_byte] then 16
+        when QRMODE[:mode_kanji] then 12
         else
           raise QRCodeRunTimeError, "mode: #{mode}"
         end
