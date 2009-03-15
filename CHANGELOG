@@ -1,3 +1,7 @@
+*0.3.2* (Mar 15th, 2009)
+
+* Ruby 1.9 fixes by [Tore Darell http://tore.darell.no] [Chris Mowforth http://blog.99th.st]
+
 *0.3.1* (Nov 24th, 2008)
 
 * expanded RS block table to QRcode version 40  [Vladislav Gorodetskiy]
