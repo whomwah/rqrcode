@@ -27,7 +27,9 @@ module RQRCode
 
     def write( buffer )
       ( 0...@data.size ).each do |i|
-        buffer.put( @data[i], 8 )
+        c = @data[i]
+        c = c.ord if c.respond_to?(:ord)#String#[] returns single-char string in 1.9, .ord gets ASCII pos
+        buffer.put( c, 8 )
       end
     end
   end
