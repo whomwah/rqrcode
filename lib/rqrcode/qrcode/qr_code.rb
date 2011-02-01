@@ -69,18 +69,21 @@ module RQRCode #:nodoc:
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
     #
 
- 		def initialize( *args )
+    def initialize( *args )
       raise QRCodeArgumentError unless args.first.kind_of?( String )
 
       @data                 = args.shift
       options               = args.extract_options!
       level                 = options[:level] || :h 
+
+      raise QRCodeArgumentError unless %w(l m q h).include?(level.to_s) 
+
       @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
       @type_number          = options[:size] || 4
       @module_count         = @type_number * 4 + 17
-      @modules              = nil
-      @data_cache           = nil
+      @modules              = Array.new( @module_count )
       @data_list            = QR8bitByte.new( @data )
+      @data_cache           = nil
 
       self.make
     end
@@ -149,7 +152,6 @@ module RQRCode #:nodoc:
 
 
     def make_impl( test, mask_pattern ) #:nodoc:
-      @modules = Array.new( @module_count )
 
       ( 0...@module_count ).each do |row|
         @modules[row] = Array.new( @module_count )
@@ -292,7 +294,7 @@ module RQRCode #:nodoc:
 
             if @modules[row][ col - c ].nil?
               dark = false
-              if byte_index < data.size
+              if byte_index < data.size && !data[byte_index].nil?
                 dark = (( (data[byte_index]).rszf( bit_index ) & 1) == 1 )
               end
               mask = QRUtil.get_mask( mask_pattern, row, col - c )

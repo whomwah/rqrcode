@@ -1,3 +1,8 @@
+*0.3.3* (Feb 1st, 2011)
+
+* check to see if the level is valid
+* fix for 'rszf' bug by [Rob la Lau https://github.com/toretore]
+
 *0.3.2* (Mar 15th, 2009)
 
 * Ruby 1.9 fixes by [Tore Darell http://tore.darell.no] [Chris Mowforth http://blog.99th.st]

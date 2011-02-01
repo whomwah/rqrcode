@@ -6,17 +6,15 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 NAME = "rqrcode"
-VERS = "0.3.2"
+VERS = "0.3.3"
 CLEAN.include ['pkg', 'rdoc']
-
-Gem::manage_gems
 
 spec = Gem::Specification.new do |s|
   s.name            = NAME
-  s.version          = VERS
+  s.version         = VERS
   s.author          = "Duncan Robertson"
-  s.email            = "duncan@whomwah.com"
-  s.homepage        = "http://rqrcode.rubyforge.org"
+  s.email           = "duncan@whomwah.com"
+  s.homepage        = "http://whomwah.github.com/rqrcode/"
   s.platform        = Gem::Platform::RUBY
   s.summary          = "A library to encode QR Codes" 
   s.rubyforge_project = NAME 

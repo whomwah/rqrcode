@@ -72,7 +72,27 @@ class QRCodeTest < Test::Unit::TestCase
   def test_to_s
     qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
     assert_equal qr.to_s[0..21], "xxxxxxx xx x  xxxxxxx\n"
-    assert_equal qr.to_s( :true => 'q', :false => 'n' )[0..21], "qqqqqqqnqqnqnnqqqqqqq\n"
+    assert_equal qr.to_s( :true => 'q', :false => 'n' )[0..21], 
+      "qqqqqqqnqqnqnnqqqqqqq\n"
     assert_equal qr.to_s( :true => '@' )[0..21], "@@@@@@@ @@ @  @@@@@@@\n"
   end
+
+  def test_rszf_error_not_thrown
+    assert RQRCode::QRCode.new('2 1058 657682')
+    assert RQRCode::QRCode.new("40952", :size => 1, :level => :h)
+    assert RQRCode::QRCode.new("40932", :size => 1, :level => :h)
+  end
+
+  def test_levels
+    assert RQRCode::QRCode.new("duncan", :level => :l)
+    assert RQRCode::QRCode.new("duncan", :level => :m)
+    assert RQRCode::QRCode.new("duncan", :level => :q)
+    assert RQRCode::QRCode.new("duncan", :level => :h)
+    assert_raise(RQRCode::QRCodeArgumentError) {
+      %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
+        RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
+      end
+    }
+  end
+
 end
