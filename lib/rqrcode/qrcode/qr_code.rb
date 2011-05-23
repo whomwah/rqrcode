@@ -103,6 +103,8 @@ module RQRCode #:nodoc:
       @modules[row][col]
     end
 
+    alias dark? is_dark
+
     # This is a public method that returns the QR Code you have
     # generated as a string. It will not be able to be read
     # in this format by a QR Code reader, but will give you an
