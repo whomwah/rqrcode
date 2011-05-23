@@ -6,7 +6,7 @@ require 'rake/rdoctask'
 require 'rake/testtask'
 
 NAME = "rqrcode"
-VERS = "0.3.3"
+VERS = "0.3.4"
 CLEAN.include ['pkg', 'rdoc']
 
 spec = Gem::Specification.new do |s|

@@ -1,3 +1,7 @@
+*0.3.4* (May 23rd, 2011)
+
+* add the more Rubyish QRCode#dark? alias for #is_dark [https://github.com/dasch] 
+
 *0.3.3* (Feb 1st, 2011)
 
 * check to see if the level is valid
