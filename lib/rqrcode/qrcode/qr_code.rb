@@ -384,21 +384,24 @@ module RQRCode #:nodoc:
         ec_count = rs_block.total_count - dc_count
         max_dc_count = [ max_dc_count, dc_count ].max
         max_ec_count = [ max_ec_count, ec_count ].max
-        dcdata[r] = Array.new( dc_count ) 
 
-        ( 0...dcdata[r].size ).each do |i|
-          dcdata[r][i] = 0xff & buffer.buffer[ i + offset ] 
+        dcdata_block = Array.new(dc_count)
+        dcdata_block.size.times do |i|
+          dcdata_block[i] = 0xff & buffer.buffer[ i + offset ]
         end
+        dcdata[r] = dcdata_block
 
         offset = offset + dc_count
         rs_poly = QRUtil.get_error_correct_polynomial( ec_count )
         raw_poly = QRPolynomial.new( dcdata[r], rs_poly.get_length - 1 )
         mod_poly = raw_poly.mod( rs_poly )
-        ecdata[r] = Array.new( rs_poly.get_length - 1 )
-        ( 0...ecdata[r].size ).each do |i|
-          mod_index = i + mod_poly.get_length - ecdata[r].size
-          ecdata[r][i] = mod_index >= 0 ? mod_poly.get( mod_index ) : 0
+
+        ecdata_block = Array.new(rs_poly.get_length - 1)
+        ecdata_block.size.times do |i|
+          mod_index = i + mod_poly.get_length - ecdata_block.size
+          ecdata_block[i] = mod_index >= 0 ? mod_poly.get( mod_index ) : 0
         end
+        ecdata[r] = ecdata_block
       end
 
       total_code_count = rs_blocks.reduce(0) do |sum, rs_block|
