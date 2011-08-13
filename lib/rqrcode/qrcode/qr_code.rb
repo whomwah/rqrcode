@@ -36,6 +36,17 @@ module RQRCode #:nodoc:
     :pattern111 => 7
   }
 
+  QRMASKCOMPUTATIONS = [
+        Proc.new { |i,j| (i + j) % 2 == 0 },
+        Proc.new { |i,j| i % 2 == 0 },
+        Proc.new { |i,j| j % 3 == 0 },
+        Proc.new { |i,j| (i + j) % 3 == 0 },
+        Proc.new { |i,j| ((i / 2).floor + (j / 3).floor) % 2 == 0 },
+        Proc.new { |i,j| (i * j) % 2 + (i * j) % 3 == 0 },
+        Proc.new { |i,j| ((i * j) % 2 + (i * j) % 3) % 2 == 0 },
+        Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
+  ]
+
   # StandardErrors
 
   class QRCodeArgumentError < ArgumentError; end
@@ -69,17 +80,22 @@ module RQRCode #:nodoc:
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
     #
 
-    def initialize( *args )
-      raise QRCodeArgumentError unless args.first.kind_of?( String )
+    def initialize( string, *args )
+      if !string.is_a? String
+        raise QRCodeArgumentError, "The passed data is #{string.class}, not String"
+      end
 
-      @data                 = args.shift
       options               = args.extract_options!
-      level                 = options[:level] || :h 
+      level                 = (options[:level] || :h).to_sym
+      size                  = options[:size] || 4
 
-      raise QRCodeArgumentError unless %w(l m q h).include?(level.to_s) 
+      if !QRERRORCORRECTLEVEL.has_key?(level)
+        raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
+      end
 
-      @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
-      @type_number          = options[:size] || 4
+      @data                 = string
+      @error_correct_level  = QRERRORCORRECTLEVEL[level]
+      @type_number          = size
       @module_count         = @type_number * 4 + 17
       @modules              = Array.new( @module_count )
       @data_list            = QR8bitByte.new( @data )
@@ -98,7 +114,7 @@ module RQRCode #:nodoc:
 
     def is_dark( row, col )
       if row < 0 || @module_count <= row || col < 0 || @module_count <= col
-        raise QRCodeRunTimeError, "#{row},#{col}"
+        raise QRCodeRunTimeError, "Invalid row/column pair: #{row}, #{col}"
       end
       @modules[row][col]
     end
@@ -198,7 +214,7 @@ module RQRCode #:nodoc:
 
       ( 0...8 ).each do |i|
         make_impl( true, i )
-        lost_point = QRUtil.get_lost_point( self )
+        lost_point = QRUtil.get_lost_points(self.modules)
 
         if i == 0 || min_lost_point > lost_point
           min_lost_point = lost_point
@@ -322,6 +338,14 @@ module RQRCode #:nodoc:
       end  
     end
 
+    def QRCode.count_max_data_bits(rs_blocks)
+      max_data_bytes = rs_blocks.reduce(0) do |sum, rs_block|
+        sum + rs_block.data_count
+      end
+
+      return max_data_bytes * 8
+    end
+
     def QRCode.create_data( type_number, error_correct_level, data_list ) #:nodoc:
       rs_blocks = QRRSBlock.get_rs_blocks( type_number, error_correct_level )
       buffer = QRBitBuffer.new
@@ -333,17 +357,14 @@ module RQRCode #:nodoc:
       )
       data.write( buffer )  
 
-      total_data_count = 0
-      ( 0...rs_blocks.size ).each do |i|
-        total_data_count = total_data_count + rs_blocks[i].data_count  
-      end
+      max_data_bits = QRCode.count_max_data_bits(rs_blocks)
 
-      if buffer.get_length_in_bits > total_data_count * 8
+      if buffer.get_length_in_bits > max_data_bits
         raise QRCodeRunTimeError, 
-          "code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
+          "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
 
-      if buffer.get_length_in_bits + 4 <= total_data_count * 8
+      if buffer.get_length_in_bits + 4 <= max_data_bits
         buffer.put( 0, 4 )
       end
 
@@ -352,9 +373,9 @@ module RQRCode #:nodoc:
       end
 
       while true
-        break if buffer.get_length_in_bits >= total_data_count * 8
+        break if buffer.get_length_in_bits >= max_data_bits
         buffer.put( QRCode::PAD0, 8 )
-        break if buffer.get_length_in_bits >= total_data_count * 8
+        break if buffer.get_length_in_bits >= max_data_bits
         buffer.put( QRCode::PAD1, 8 )
       end
 
@@ -369,50 +390,52 @@ module RQRCode #:nodoc:
       dcdata = Array.new( rs_blocks.size )
       ecdata = Array.new( rs_blocks.size )
 
-      ( 0...rs_blocks.size ).each do |r|
-        dc_count = rs_blocks[r].data_count
-        ec_count = rs_blocks[r].total_count - dc_count
+      rs_blocks.each_with_index do |rs_block, r|
+        dc_count = rs_block.data_count
+        ec_count = rs_block.total_count - dc_count
         max_dc_count = [ max_dc_count, dc_count ].max
         max_ec_count = [ max_ec_count, ec_count ].max
-        dcdata[r] = Array.new( dc_count ) 
 
-        ( 0...dcdata[r].size ).each do |i|
-          dcdata[r][i] = 0xff & buffer.buffer[ i + offset ] 
+        dcdata_block = Array.new(dc_count)
+        dcdata_block.size.times do |i|
+          dcdata_block[i] = 0xff & buffer.buffer[ i + offset ]
         end
+        dcdata[r] = dcdata_block
 
         offset = offset + dc_count
         rs_poly = QRUtil.get_error_correct_polynomial( ec_count )
         raw_poly = QRPolynomial.new( dcdata[r], rs_poly.get_length - 1 )
         mod_poly = raw_poly.mod( rs_poly )
-        ecdata[r] = Array.new( rs_poly.get_length - 1 )
-        ( 0...ecdata[r].size ).each do |i|
-          mod_index = i + mod_poly.get_length - ecdata[r].size
-          ecdata[r][i] = mod_index >= 0 ? mod_poly.get( mod_index ) : 0
+
+        ecdata_block = Array.new(rs_poly.get_length - 1)
+        ecdata_block.size.times do |i|
+          mod_index = i + mod_poly.get_length - ecdata_block.size
+          ecdata_block[i] = mod_index >= 0 ? mod_poly.get( mod_index ) : 0
         end
+        ecdata[r] = ecdata_block
       end
 
-      total_code_count = 0
-      ( 0...rs_blocks.size ).each do |i|
-        total_code_count = total_code_count + rs_blocks[i].total_count
+      total_code_count = rs_blocks.reduce(0) do |sum, rs_block|
+        sum + rs_block.total_count
       end
 
       data = Array.new( total_code_count )
       index = 0
 
-      ( 0...max_dc_count ).each do |i|
-        ( 0...rs_blocks.size ).each do |r|
+      max_dc_count.times do |i|
+        rs_blocks.size.times do |r|
           if i < dcdata[r].size
+            data[index] = dcdata[r][i]
             index += 1
-            data[index-1] = dcdata[r][i]      
           end  
         end
       end
 
-      ( 0...max_ec_count ).each do |i|
-        ( 0...rs_blocks.size ).each do |r|
+      max_ec_count.times do |i|
+        rs_blocks.size.times do |r|
           if i < ecdata[r].size
+            data[index] = ecdata[r][i]
             index += 1
-            data[index-1] = ecdata[r][i]      
           end  
         end
       end
