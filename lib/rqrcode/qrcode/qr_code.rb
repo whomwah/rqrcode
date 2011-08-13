@@ -327,6 +327,14 @@ module RQRCode #:nodoc:
       end  
     end
 
+    def QRCode.count_max_data_bits(rs_blocks)
+      max_data_bytes = rs_blocks.reduce(0) do |sum, rs_block|
+        sum + rs_block.data_count
+      end
+
+      return max_data_bytes * 8
+    end
+
     def QRCode.create_data( type_number, error_correct_level, data_list ) #:nodoc:
       rs_blocks = QRRSBlock.get_rs_blocks( type_number, error_correct_level )
       buffer = QRBitBuffer.new
@@ -338,17 +346,14 @@ module RQRCode #:nodoc:
       )
       data.write( buffer )  
 
-      total_data_count = 0
-      ( 0...rs_blocks.size ).each do |i|
-        total_data_count = total_data_count + rs_blocks[i].data_count  
-      end
+      max_data_bits = QRCode.count_max_data_bits(rs_blocks)
 
-      if buffer.get_length_in_bits > total_data_count * 8
+      if buffer.get_length_in_bits > max_data_bits
         raise QRCodeRunTimeError, 
-          "code length overflow. (#{buffer.get_length_in_bits}>#{total_data_count})"
+          "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
 
-      if buffer.get_length_in_bits + 4 <= total_data_count * 8
+      if buffer.get_length_in_bits + 4 <= max_data_bits
         buffer.put( 0, 4 )
       end
 
@@ -357,9 +362,9 @@ module RQRCode #:nodoc:
       end
 
       while true
-        break if buffer.get_length_in_bits >= total_data_count * 8
+        break if buffer.get_length_in_bits >= max_data_bits
         buffer.put( QRCode::PAD0, 8 )
-        break if buffer.get_length_in_bits >= total_data_count * 8
+        break if buffer.get_length_in_bits >= max_data_bits
         buffer.put( QRCode::PAD1, 8 )
       end
 
