@@ -197,10 +197,10 @@ module RQRCode #:nodoc:
       ( 0...( module_count - 1 ) ).each do |row|
         ( 0...( module_count - 1 ) ).each do |col|
           count = 0
-          count = count + 1 if modules[row][col]
-          count = count + 1 if modules[row + 1][col]
-          count = count + 1 if modules[row][col + 1]
-          count = count + 1 if modules[row + 1][col + 1]
+          count += 1 if modules[row][col]
+          count += 1 if modules[row + 1][col]
+          count += 1 if modules[row][col + 1]
+          count += 1 if modules[row + 1][col + 1]
           if (count == 0 || count == 4)
             lost_point = lost_point + DEMERIT_POINTS_2
           end
