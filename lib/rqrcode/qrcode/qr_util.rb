@@ -208,15 +208,15 @@ module RQRCode #:nodoc:
       end
 
       # level 3
-      ( 0...module_count ).each do |row|
-        ( 0...( module_count - 6 ) ).each do |col|
-          if modules[row][col] &&
-             !modules[row][col + 1] &&
-             modules[row][col + 2] &&
-             modules[row][col + 3] &&
-             modules[row][col + 4] &&
-             !modules[row][col + 5] &&
-             modules[row][col + 6]
+      modules.each do |row|
+        (module_count - 6).times do |col_idx|
+          if row[col_idx] &&
+             !row[col_idx + 1] &&
+             row[col_idx + 2] &&
+             row[col_idx + 3] &&
+             row[col_idx + 4] &&
+             !row[col_idx + 5] &&
+             row[col_idx + 6]
             lost_point += DEMERIT_POINTS_3
           end
         end
