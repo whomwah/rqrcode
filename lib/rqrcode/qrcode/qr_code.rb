@@ -214,7 +214,7 @@ module RQRCode #:nodoc:
 
       ( 0...8 ).each do |i|
         make_impl( true, i )
-        lost_point = QRUtil.get_lost_point( self )
+        lost_point = QRUtil.get_lost_points(self.modules)
 
         if i == 0 || min_lost_point > lost_point
           min_lost_point = lost_point

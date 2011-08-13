@@ -164,9 +164,8 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_lost_point( qr_code )
-      modules = qr_code.modules
-      module_count = qr_code.module_count
+    def QRUtil.get_lost_points(modules)
+      module_count = modules.size
       lost_point = 0
 
       # level1
