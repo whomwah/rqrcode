@@ -75,7 +75,7 @@ module RQRCode #:nodoc:
       options               = args.extract_options!
       level                 = options[:level] || :h 
 
-      raise QRCodeArgumentError unless %w(l m q h).include?(level.to_s) 
+      raise QRCodeArgumentError unless QRERRORCORRECTLEVEL.has_key?(level)
 
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
