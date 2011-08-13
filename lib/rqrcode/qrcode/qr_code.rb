@@ -75,14 +75,14 @@ module RQRCode #:nodoc:
       end
 
       options               = args.extract_options!
-      level                 = options[:level] || :h 
+      level                 = (options[:level] || :h).to_sym
 
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
 
       @data                 = string
-      @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
+      @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @type_number          = options[:size] || 4
       @module_count         = @type_number * 4 + 17
       @modules              = Array.new( @module_count )
