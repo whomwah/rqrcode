@@ -411,8 +411,8 @@ module RQRCode #:nodoc:
       max_dc_count.times do |i|
         rs_blocks.size.times do |r|
           if i < dcdata[r].size
+            data[index] = dcdata[r][i]
             index += 1
-            data[index-1] = dcdata[r][i]      
           end  
         end
       end
@@ -420,8 +420,8 @@ module RQRCode #:nodoc:
       max_ec_count.times do |i|
         rs_blocks.size.times do |r|
           if i < ecdata[r].size
+            data[index] = ecdata[r][i]
             index += 1
-            data[index-1] = ecdata[r][i]      
           end  
         end
       end
