@@ -231,14 +231,8 @@ module RQRCode #:nodoc:
       end
 
       # level 4
-      dark_count = 0
-
-      ( 0...module_count ).each do |col|
-        ( 0...module_count ).each do |row|
-          if modules[row][col]
-            dark_count = dark_count + 1
-          end  
-        end
+      dark_count = modules.reduce(0) do |sum, col|
+         sum + col.count(true)
       end
 
       ratio = (100 * dark_count / module_count / module_count - 50).abs / 5
