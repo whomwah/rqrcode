@@ -151,14 +151,24 @@ module RQRCode #:nodoc:
       return BITS_FOR_MODE[mode][macro_type]
     end
 
-
     def QRUtil.get_lost_points(modules)
+      demerit_points = 0
+
+      demerit_points += QRUtil.demerit_points_1_same_color(modules)
+      demerit_points += QRUtil.demerit_points_2_full_blocks(modules)
+      demerit_points += QRUtil.demerit_points_3_dangerous_patterns(modules)
+      demerit_points += QRUtil.demerit_points_4_dark_ratio(modules)
+
+      return demerit_points
+    end
+
+    def QRUtil.demerit_points_1_same_color(modules)
+      demerit_points = 0
       module_count = modules.size
-      lost_point = 0
 
       # level1
-      ( 0...module_count ).each do |row|
-        ( 0...module_count ).each do |col|
+      (0...module_count).each do |row|
+        (0...module_count).each do |col|
           same_count = 0
           dark = modules[row][col]
 
@@ -175,24 +185,38 @@ module RQRCode #:nodoc:
           end
 
           if same_count > 5
-            lost_point += (DEMERIT_POINTS_1 + same_count - 5)
-          end  
+            demerit_points += (DEMERIT_POINTS_1 + same_count - 5)
+          end
         end
       end
 
+      return demerit_points
+    end
+
+    def QRUtil.demerit_points_2_full_blocks(modules)
+      demerit_points = 0
+      module_count = modules.size
+
       # level 2
-      ( 0...( module_count - 1 ) ).each do |row|
-        ( 0...( module_count - 1 ) ).each do |col|
+      (0...(module_count - 1)).each do |row|
+        (0...(module_count - 1)).each do |col|
           count = 0
           count += 1 if modules[row][col]
           count += 1 if modules[row + 1][col]
           count += 1 if modules[row][col + 1]
           count += 1 if modules[row + 1][col + 1]
           if (count == 0 || count == 4)
-            lost_point = lost_point + DEMERIT_POINTS_2
+            demerit_points += DEMERIT_POINTS_2
           end
-        end  
+        end
       end
+
+      return demerit_points
+    end
+
+    def QRUtil.demerit_points_3_dangerous_patterns(modules)
+      demerit_points = 0
+      module_count = modules.size
 
       # level 3
       modules.each do |row|
@@ -204,13 +228,13 @@ module RQRCode #:nodoc:
              row[col_idx + 4] &&
              !row[col_idx + 5] &&
              row[col_idx + 6]
-            lost_point += DEMERIT_POINTS_3
+            demerit_points += DEMERIT_POINTS_3
           end
         end
       end
 
-      ( 0...module_count ).each do |col|
-        ( 0...( module_count - 6 ) ).each do |row|
+      (0...module_count).each do |col|
+        (0...(module_count - 6)).each do |row|
           if modules[row][col] &&
              !modules[row + 1][col] &&
              modules[row + 2][col] &&
@@ -218,21 +242,26 @@ module RQRCode #:nodoc:
              modules[row + 4][col] &&
              !modules[row + 5][col] &&
              modules[row + 6][col]
-            lost_point += DEMERIT_POINTS_3
+            demerit_points += DEMERIT_POINTS_3
           end
         end
       end
 
+      return demerit_points
+    end
+
+    def QRUtil.demerit_points_4_dark_ratio(modules)
       # level 4
       dark_count = modules.reduce(0) do |sum, col|
          sum + col.count(true)
       end
-      ratio = dark_count / (module_count * module_count)
-      ratio_delta = (100 * ratio - 50).abs / 5
-      lost_point += ratio_delta * DEMERIT_POINTS_4
 
-      return lost_point
-    end  
+      ratio = dark_count / (modules.size * modules.size)
+      ratio_delta = (100 * ratio - 50).abs / 5
+
+      demerit_points = ratio_delta * DEMERIT_POINTS_4
+      return demerit_points
+    end
 
   end
 
