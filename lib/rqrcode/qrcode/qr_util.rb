@@ -161,6 +161,7 @@ module RQRCode #:nodoc:
 
 
     def QRUtil.get_lost_point( qr_code )
+      modules = qr_code.modules
       module_count = qr_code.module_count
       lost_point = 0
 
@@ -168,7 +169,7 @@ module RQRCode #:nodoc:
       ( 0...module_count ).each do |row|
         ( 0...module_count ).each do |col|
           same_count = 0
-          dark = qr_code.is_dark( row, col )
+          dark = modules[row][col]
 
           ( -1..1 ).each do |r|
             next if row + r < 0 || module_count <= row + r
@@ -176,7 +177,7 @@ module RQRCode #:nodoc:
             ( -1..1 ).each do |c|
               next if col + c < 0 || module_count <= col + c
               next if r == 0 && c == 0
-              if dark == qr_code.is_dark( row + r, col + c )
+              if dark == modules[row + r][col + c]
                 same_count += 1
               end
             end
@@ -192,10 +193,10 @@ module RQRCode #:nodoc:
       ( 0...( module_count - 1 ) ).each do |row|
         ( 0...( module_count - 1 ) ).each do |col|
           count = 0
-          count = count + 1 if qr_code.is_dark( row, col )
-          count = count + 1 if qr_code.is_dark( row + 1, col )
-          count = count + 1 if qr_code.is_dark( row, col + 1 )
-          count = count + 1 if qr_code.is_dark( row + 1, col + 1 )
+          count = count + 1 if modules[row][col]
+          count = count + 1 if modules[row + 1][col]
+          count = count + 1 if modules[row][col + 1]
+          count = count + 1 if modules[row + 1][col + 1]
           lost_point = lost_point + 3 if (count == 0 || count == 4)  
         end  
       end
@@ -203,7 +204,13 @@ module RQRCode #:nodoc:
       # level 3
       ( 0...module_count ).each do |row|
         ( 0...( module_count - 6 ) ).each do |col|
-          if qr_code.is_dark( row, col ) && !qr_code.is_dark( row, col + 1 ) && qr_code.is_dark( row, col + 2 ) && qr_code.is_dark( row, col + 3 ) && qr_code.is_dark( row, col + 4 ) && !qr_code.is_dark( row, col + 5 ) && qr_code.is_dark( row, col + 6 )
+          if modules[row][col] &&
+             !modules[row][col + 1] &&
+             modules[row][col + 2] &&
+             modules[row][col + 3] &&
+             modules[row][col + 4] &&
+             !modules[row][col + 5] &&
+             modules[row][col + 6]
             lost_point = lost_point + 40
           end
         end
@@ -211,7 +218,13 @@ module RQRCode #:nodoc:
 
       ( 0...module_count ).each do |col|
         ( 0...( module_count - 6 ) ).each do |row|
-          if qr_code.is_dark(row, col) && !qr_code.is_dark(row + 1, col) &&  qr_code.is_dark(row + 2, col) &&  qr_code.is_dark(row + 3, col) &&  qr_code.is_dark(row + 4, col) && !qr_code.is_dark(row + 5, col) &&  qr_code.is_dark(row + 6, col)
+          if modules[row][col] &&
+             !modules[row + 1][col] &&
+             modules[row + 2][col] &&
+             modules[row + 3][col] &&
+             modules[row + 4][col] &&
+             !modules[row + 5][col] &&
+             modules[row + 6][col]
             lost_point = lost_point + 40
           end
         end
@@ -222,7 +235,7 @@ module RQRCode #:nodoc:
 
       ( 0...module_count ).each do |col|
         ( 0...module_count ).each do |row|
-          if qr_code.is_dark(row, col)
+          if modules[row][col]
             dark_count = dark_count + 1
           end  
         end
