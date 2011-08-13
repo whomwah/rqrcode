@@ -98,26 +98,11 @@ module RQRCode #:nodoc:
 
 
     def QRUtil.get_mask( mask_pattern, i, j )
-      case mask_pattern
-      when QRMASKPATTERN[:pattern000]
-        (i + j) % 2 == 0
-      when QRMASKPATTERN[:pattern001]
-        i % 2 == 0
-      when QRMASKPATTERN[:pattern010]
-        j % 3 == 0
-      when QRMASKPATTERN[:pattern011]
-        (i + j) % 3 == 0
-      when QRMASKPATTERN[:pattern100]
-        ((i / 2).floor + (j / 3).floor ) % 2 == 0
-      when QRMASKPATTERN[:pattern101]
-        (i * j) % 2 + (i * j) % 3 == 0
-      when QRMASKPATTERN[:pattern110]
-        ( (i * j) % 2 + (i * j) % 3) % 2 == 0
-      when QRMASKPATTERN[:pattern111]
-        ( (i * j) % 3 + (i + j) % 2) % 2 == 0
-      else
+      if mask_pattern > QRMASKCOMPUTATIONS.size
         raise QRCodeRunTimeError, "bad mask_pattern: #{mask_pattern}"  
       end
+
+      return QRMASKCOMPUTATIONS[mask_pattern].call(i, j)
     end
 
 

@@ -36,6 +36,17 @@ module RQRCode #:nodoc:
     :pattern111 => 7
   }
 
+  QRMASKCOMPUTATIONS = [
+        Proc.new { |i,j| (i + j) % 2 == 0 },
+        Proc.new { |i,j| i % 2 == 0 },
+        Proc.new { |i,j| j % 3 == 0 },
+        Proc.new { |i,j| (i + j) % 3 == 0 },
+        Proc.new { |i,j| ((i / 2).floor + (j / 3).floor) % 2 == 0 },
+        Proc.new { |i,j| (i * j) % 2 + (i * j) % 3 == 0 },
+        Proc.new { |i,j| ((i * j) % 2 + (i * j) % 3) % 2 == 0 },
+        Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
+  ]
+
   # StandardErrors
 
   class QRCodeArgumentError < ArgumentError; end
