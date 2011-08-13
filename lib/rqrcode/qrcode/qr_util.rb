@@ -61,6 +61,10 @@ module RQRCode #:nodoc:
     G18 = 1 << 12 | 1 << 11 | 1 << 10 | 1 << 9 | 1 << 8 | 1 << 5 | 1 << 2 | 1 << 0
     G15_MASK = 1 << 14 | 1 << 12 | 1 << 10 | 1 << 4 | 1 << 1
 
+    DEMERIT_POINTS_1 = 3
+    DEMERIT_POINTS_2 = 3
+    DEMERIT_POINTS_3 = 40
+    DEMERIT_POINTS_4 = 10
 
     def QRUtil.get_bch_type_info( data )
       d = data << 10
@@ -184,7 +188,7 @@ module RQRCode #:nodoc:
           end
 
           if same_count > 5
-            lost_point += (3 + same_count - 5)
+            lost_point += (DEMERIT_POINTS_1 + same_count - 5)
           end  
         end
       end
@@ -197,7 +201,9 @@ module RQRCode #:nodoc:
           count = count + 1 if modules[row + 1][col]
           count = count + 1 if modules[row][col + 1]
           count = count + 1 if modules[row + 1][col + 1]
-          lost_point = lost_point + 3 if (count == 0 || count == 4)  
+          if (count == 0 || count == 4)
+            lost_point = lost_point + DEMERIT_POINTS_2
+          end
         end  
       end
 
@@ -211,7 +217,7 @@ module RQRCode #:nodoc:
              modules[row][col + 4] &&
              !modules[row][col + 5] &&
              modules[row][col + 6]
-            lost_point = lost_point + 40
+            lost_point += DEMERIT_POINTS_3
           end
         end
       end
@@ -225,7 +231,7 @@ module RQRCode #:nodoc:
              modules[row + 4][col] &&
              !modules[row + 5][col] &&
              modules[row + 6][col]
-            lost_point = lost_point + 40
+            lost_point += DEMERIT_POINTS_3
           end
         end
       end
@@ -236,7 +242,7 @@ module RQRCode #:nodoc:
       end
       ratio = dark_count / (module_count * module_count)
       ratio_delta = (100 * ratio - 50).abs / 5
-      lost_point += ratio_delta * 10
+      lost_point += ratio_delta * DEMERIT_POINTS_4
 
       return lost_point
     end  
