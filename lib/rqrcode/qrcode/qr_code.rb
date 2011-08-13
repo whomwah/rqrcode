@@ -379,9 +379,9 @@ module RQRCode #:nodoc:
       dcdata = Array.new( rs_blocks.size )
       ecdata = Array.new( rs_blocks.size )
 
-      ( 0...rs_blocks.size ).each do |r|
-        dc_count = rs_blocks[r].data_count
-        ec_count = rs_blocks[r].total_count - dc_count
+      rs_blocks.each_with_index do |rs_block, r|
+        dc_count = rs_block.data_count
+        ec_count = rs_block.total_count - dc_count
         max_dc_count = [ max_dc_count, dc_count ].max
         max_ec_count = [ max_ec_count, ec_count ].max
         dcdata[r] = Array.new( dc_count ) 
@@ -401,16 +401,15 @@ module RQRCode #:nodoc:
         end
       end
 
-      total_code_count = 0
-      ( 0...rs_blocks.size ).each do |i|
-        total_code_count = total_code_count + rs_blocks[i].total_count
+      total_code_count = rs_blocks.reduce(0) do |sum, rs_block|
+        sum + rs_block.total_count
       end
 
       data = Array.new( total_code_count )
       index = 0
 
-      ( 0...max_dc_count ).each do |i|
-        ( 0...rs_blocks.size ).each do |r|
+      max_dc_count.times do |i|
+        rs_blocks.size.times do |r|
           if i < dcdata[r].size
             index += 1
             data[index-1] = dcdata[r][i]      
@@ -418,8 +417,8 @@ module RQRCode #:nodoc:
         end
       end
 
-      ( 0...max_ec_count ).each do |i|
-        ( 0...rs_blocks.size ).each do |r|
+      max_ec_count.times do |i|
+        rs_blocks.size.times do |r|
           if i < ecdata[r].size
             index += 1
             data[index-1] = ecdata[r][i]      
