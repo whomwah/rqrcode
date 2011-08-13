@@ -69,15 +69,15 @@ module RQRCode #:nodoc:
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
     #
 
-    def initialize( *args )
-      raise QRCodeArgumentError unless args.first.kind_of?( String )
+    def initialize( string, *args )
+      raise QRCodeArgumentError unless string.is_a? String
 
-      @data                 = args.shift
       options               = args.extract_options!
       level                 = options[:level] || :h 
 
       raise QRCodeArgumentError unless %w(l m q h).include?(level.to_s) 
 
+      @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
       @type_number          = options[:size] || 4
       @module_count         = @type_number * 4 + 17
