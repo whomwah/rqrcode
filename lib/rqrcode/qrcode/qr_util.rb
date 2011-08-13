@@ -234,11 +234,11 @@ module RQRCode #:nodoc:
       dark_count = modules.reduce(0) do |sum, col|
          sum + col.count(true)
       end
+      ratio = dark_count / (module_count * module_count)
+      ratio_delta = (100 * ratio - 50).abs / 5
+      lost_point += ratio_delta * 10
 
-      ratio = (100 * dark_count / module_count / module_count - 50).abs / 5
-      lost_point = lost_point * 10
-
-      lost_point      
+      return lost_point
     end  
 
   end
