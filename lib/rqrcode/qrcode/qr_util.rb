@@ -66,6 +66,13 @@ module RQRCode #:nodoc:
     DEMERIT_POINTS_3 = 40
     DEMERIT_POINTS_4 = 10
 
+    BITS_FOR_MODE = {
+      QRMODE[:mode_number] => [10, 12, 14],
+      QRMODE[:mode_alpha_num] => [9, 11, 13],
+      QRMODE[:mode_8bit_byte] => [8, 16, 16],
+      QRMODE[:mode_kanji] => [8, 10, 12],
+    }
+
     def QRUtil.get_bch_type_info( data )
       d = data << 10
       while QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15) >= 0
@@ -121,46 +128,27 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_length_in_bits( mode, type )
-      if 1 <= type && type < 10
-
-        # 1 - 9
-        case mode
-        when QRMODE[:mode_number] then  10
-        when QRMODE[:mode_alpha_num] then 9
-        when QRMODE[:mode_8bit_byte] then 8
-        when QRMODE[:mode_kanji] then 8
-        else
-          raise QRCodeRunTimeError, "mode: #{mode}"
-        end
-
-      elsif type < 27
-
-        # 10 -26
-        case mode
-        when QRMODE[:mode_number] then  12
-        when QRMODE[:mode_alpha_num] then 11
-        when QRMODE[:mode_8bit_byte] then 16
-        when QRMODE[:mode_kanji] then 10
-        else
-          raise QRCodeRunTimeError, "mode: #{mode}"
-        end
-
-      elsif type < 41
-
-        # 27 - 40
-        case mode
-        when QRMODE[:mode_number] then  14
-        when QRMODE[:mode_alpha_num] then 13
-        when QRMODE[:mode_8bit_byte] then 16
-        when QRMODE[:mode_kanji] then 12
-        else
-          raise QRCodeRunTimeError, "mode: #{mode}"
-        end
-
-      else
-        raise QRCodeRunTimeError, "type: #{type}"
+    def QRUtil.get_length_in_bits(mode, type)
+      if !QRMODE.value?(mode)
+          raise QRCodeRunTimeError, "Unknown mode: #{mode}"
       end
+
+      if type > 40
+        raise QRCodeRunTimeError, "Unknown type: #{type}"
+      end
+
+      if 1 <= type && type <= 9
+        # 1 - 9
+        macro_type = 0
+      elsif type <= 26
+        # 10 - 26
+        macro_type = 1
+      elsif type <= 40
+        # 27 - 40
+        macro_type = 2
+      end
+
+      return BITS_FOR_MODE[mode][macro_type]
     end
 
 
