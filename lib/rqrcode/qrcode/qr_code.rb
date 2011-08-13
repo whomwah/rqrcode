@@ -70,12 +70,16 @@ module RQRCode #:nodoc:
     #
 
     def initialize( string, *args )
-      raise QRCodeArgumentError unless string.is_a? String
+      if !string.is_a? String
+        raise QRCodeArgumentError, "The passed data is #{string.class}, not String"
+      end
 
       options               = args.extract_options!
       level                 = options[:level] || :h 
 
-      raise QRCodeArgumentError unless QRERRORCORRECTLEVEL.has_key?(level)
+      if !QRERRORCORRECTLEVEL.has_key?(level)
+        raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
+      end
 
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[ level.to_sym ] 
@@ -98,7 +102,7 @@ module RQRCode #:nodoc:
 
     def is_dark( row, col )
       if row < 0 || @module_count <= row || col < 0 || @module_count <= col
-        raise QRCodeRunTimeError, "#{row},#{col}"
+        raise QRCodeRunTimeError, "Invalid row/column pair: #{row}, #{col}"
       end
       @modules[row][col]
     end
