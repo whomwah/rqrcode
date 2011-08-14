@@ -2,7 +2,7 @@ require "test/unit"
 require "lib/rqrcode"
 
 class QRCodeTest < Test::Unit::TestCase
-  require "test/test_data"
+  require "test/data"
  
   def test_no_data_given
     assert_raise(RQRCode::QRCodeArgumentError) {
