@@ -178,7 +178,7 @@ module RQRCode #:nodoc:
       place_position_probe_pattern(0, 0)
       place_position_probe_pattern(@module_count - 7, 0)
       place_position_probe_pattern(0, @module_count - 7)
-      setup_position_adjust_pattern
+      place_position_adjust_pattern
       setup_timing_pattern
       setup_type_info( test, mask_pattern )
       setup_type_number( test ) if @type_number >= 7
@@ -235,23 +235,17 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_position_adjust_pattern #:nodoc:
-      pos = QRUtil.get_pattern_position(@type_number)
+    def place_position_adjust_pattern #:nodoc:
+      positions = QRUtil.get_pattern_positions(@type_number)
 
-      ( 0...pos.size ).each do |i|
-        ( 0...pos.size ).each do |j|
-          row = pos[i]
-          col = pos[j]
-
+      positions.each do |row|
+        positions.each do |col|
           next unless @modules[row][col].nil?
 
           ( -2..2 ).each do |r|
             ( -2..2 ).each do |c|
-              if r == -2 || r == 2 || c == -2 || c == 2 || ( r == 0 && c == 0 )
-                @modules[row + r][col + c] = true
-              else
-                @modules[row + r][col + c] = false
-              end
+              is_part_of_pattern = (r.abs == 2 || c.abs == 2 || ( r == 0 && c == 0 ))
+              @modules[row + r][col + c] = is_part_of_pattern
             end
           end  
         end

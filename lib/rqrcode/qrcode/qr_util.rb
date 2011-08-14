@@ -103,7 +103,7 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_pattern_position( type_number )
+    def QRUtil.get_pattern_positions(type_number)
       PATTERN_POSITION_TABLE[ type_number - 1 ]
     end
 
