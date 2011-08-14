@@ -73,7 +73,7 @@ module RQRCode #:nodoc:
       QRMODE[:mode_kanji] => [8, 10, 12],
     }
 
-    def QRUtil.get_bch_type_info( data )
+    def QRUtil.get_bch_format_info( data )
       d = data << 10
       while QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15) >= 0
         d ^= (G15 << (QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15)))

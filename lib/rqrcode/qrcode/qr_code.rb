@@ -48,6 +48,7 @@ module RQRCode #:nodoc:
   ]
 
   QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
+  QRFORMATINFOLENGTH = 15
 
   # StandardErrors
 
@@ -186,7 +187,7 @@ module RQRCode #:nodoc:
     def make_impl( test, mask_pattern ) #:nodoc:
       @modules = @common_patterns.map(&:clone)
 
-      setup_type_info( test, mask_pattern )
+      place_format_info(test, mask_pattern)
       place_version_info(test) if @version >= 7
 
       if @data_cache.nil?
@@ -270,30 +271,32 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_type_info( test, mask_pattern ) #:nodoc:
+    def place_format_info(test, mask_pattern) #:nodoc:
       data = (@error_correct_level << 3 | mask_pattern)
-      bits = QRUtil.get_bch_type_info( data )
+      bits = QRUtil.get_bch_format_info(data)
 
-      ( 0...15 ).each do |i|
+      QRFORMATINFOLENGTH.times do |i|
         mod = (!test && ( (bits >> i) & 1) == 1)
 
         # vertical
         if i < 6
-          @modules[i][8] = mod
+          row = i
         elsif i < 8
-          @modules[ i + 1 ][8] = mod
+          row = i + 1
         else
-          @modules[ @module_count - 15 + i ][8] = mod
+          row = @module_count - 15 + i
         end
+        @modules[row][8] = mod
 
         # horizontal
         if i < 8
-          @modules[8][ @module_count - i - 1 ] = mod
+          col = @module_count - i - 1
         elsif i < 9
-          @modules[8][ 15 - i - 1 + 1 ] = mod
+          col = 15 - i - 1 + 1
         else
-          @modules[8][ 15 - i - 1 ] = mod
+          col = 15 - i - 1
         end
+        @modules[8][col] = mod
       end
 
       # fixed module
