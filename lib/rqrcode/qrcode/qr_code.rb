@@ -175,9 +175,9 @@ module RQRCode #:nodoc:
         @modules[row] = Array.new( @module_count )
       end
 
-      setup_position_probe_pattern( 0, 0 )
-      setup_position_probe_pattern( @module_count - 7, 0 )
-      setup_position_probe_pattern( 0, @module_count - 7 )
+      place_position_probe_pattern(0, 0)
+      place_position_probe_pattern(@module_count - 7, 0)
+      place_position_probe_pattern(0, @module_count - 7)
       setup_position_adjust_pattern
       setup_timing_pattern
       setup_type_info( test, mask_pattern )
@@ -193,16 +193,19 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_position_probe_pattern( row, col ) #:nodoc:
-      ( -1..7 ).each do |r|
-        next if ( row + r )  <= -1 || @module_count <= ( row + r )
-        ( -1..7 ).each do |c|
-          next if ( col + c ) <= -1 || @module_count <= ( col + c )
-          if 0 <= r && r <= 6 && ( c == 0 || c == 6 ) || 0 <= c && c <= 6 && ( r == 0 || r == 6 ) || 2 <= r && r <= 4 && 2 <= c && c <= 4
-            @modules[row + r][col + c] = true;
-          else
-            @modules[row + r][col + c] = false;
-          end
+    def place_position_probe_pattern( row, col ) #:nodoc:
+      (-1..7).each do |r|
+        next if !(row + r).between?(0, @module_count - 1)
+
+        (-1..7).each do |c|
+          next if !(col + c).between?(0, @module_count - 1)
+
+          is_vert_line = (r.between?(0, 6) && (c == 0 || c == 6))
+          is_horiz_line = (c.between?(0, 6) && (r == 0 || r == 6))
+          is_square = r.between?(2,4) && c.between?(2, 4)
+
+          is_part_of_probe = is_vert_line || is_horiz_line || is_square
+          @modules[row + r][col + c] = is_part_of_probe
         end
       end
     end
