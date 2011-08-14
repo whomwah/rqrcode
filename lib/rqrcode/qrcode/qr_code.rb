@@ -178,7 +178,7 @@ module RQRCode #:nodoc:
         place_position_probe_pattern(@module_count - 7, 0)
         place_position_probe_pattern(0, @module_count - 7)
         place_position_adjust_pattern
-        setup_timing_pattern
+        place_timing_pattern
 
         @common_patterns = @modules.map(&:clone)
     end
@@ -234,7 +234,7 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_timing_pattern #:nodoc:
+    def place_timing_pattern #:nodoc:
       ( 8...@module_count - 8 ).each do |i|
         @modules[i][6] = @modules[6][i] = i % 2 == 0 
       end
