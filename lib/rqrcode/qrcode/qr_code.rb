@@ -163,23 +163,27 @@ module RQRCode #:nodoc:
     protected
 
     def make #:nodoc:
+      prepare_common_patterns
       make_impl( false, get_best_mask_pattern )
     end
 
     private
 
+    def prepare_common_patterns
+        @modules.map! { |row| Array.new(@module_count) }
+
+        place_position_probe_pattern(0, 0)
+        place_position_probe_pattern(@module_count - 7, 0)
+        place_position_probe_pattern(0, @module_count - 7)
+        place_position_adjust_pattern
+        setup_timing_pattern
+
+        @common_patterns = @modules.map(&:clone)
+    end
 
     def make_impl( test, mask_pattern ) #:nodoc:
+      @modules = @common_patterns.map(&:clone)
 
-      ( 0...@module_count ).each do |row|
-        @modules[row] = Array.new( @module_count )
-      end
-
-      place_position_probe_pattern(0, 0)
-      place_position_probe_pattern(@module_count - 7, 0)
-      place_position_probe_pattern(0, @module_count - 7)
-      place_position_adjust_pattern
-      setup_timing_pattern
       setup_type_info( test, mask_pattern )
       setup_type_number( test ) if @type_number >= 7
 
