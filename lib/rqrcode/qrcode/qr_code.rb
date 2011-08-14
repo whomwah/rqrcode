@@ -113,7 +113,7 @@ module RQRCode #:nodoc:
     #
 
     def is_dark( row, col )
-      if row < 0 || @module_count <= row || col < 0 || @module_count <= col
+      if !row.between?(0, @module_count - 1) || !col.between?(0, @module_count - 1)
         raise QRCodeRunTimeError, "Invalid row/column pair: #{row}, #{col}"
       end
       @modules[row][col]
