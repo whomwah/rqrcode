@@ -47,6 +47,8 @@ module RQRCode #:nodoc:
         Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
   ]
 
+  QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
+
   # StandardErrors
 
   class QRCodeArgumentError < ArgumentError; end
@@ -95,8 +97,8 @@ module RQRCode #:nodoc:
 
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
-      @type_number          = size
-      @module_count         = @type_number * 4 + 17
+      @version              = size
+      @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
       @data_list            = QR8bitByte.new( @data )
       @data_cache           = nil
@@ -185,11 +187,11 @@ module RQRCode #:nodoc:
       @modules = @common_patterns.map(&:clone)
 
       setup_type_info( test, mask_pattern )
-      setup_type_number( test ) if @type_number >= 7
+      place_version_info(test) if @version >= 7
 
       if @data_cache.nil?
         @data_cache = QRCode.create_data( 
-          @type_number, @error_correct_level, @data_list 
+          @version, @error_correct_level, @data_list
         ) 
       end
 
@@ -240,7 +242,7 @@ module RQRCode #:nodoc:
 
 
     def place_position_adjust_pattern #:nodoc:
-      positions = QRUtil.get_pattern_positions(@type_number)
+      positions = QRUtil.get_pattern_positions(@version)
 
       positions.each do |row|
         positions.each do |col|
@@ -257,8 +259,8 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_type_number( test ) #:nodoc:
-      bits = QRUtil.get_bch_type_number( @type_number )
+    def place_version_info(test) #:nodoc:
+      bits = QRUtil.get_bch_version(@version)
 
       ( 0...18 ).each do |i|
         mod = ( !test && ( (bits >> i) & 1) == 1 )
@@ -347,14 +349,14 @@ module RQRCode #:nodoc:
       return max_data_bytes * 8
     end
 
-    def QRCode.create_data( type_number, error_correct_level, data_list ) #:nodoc:
-      rs_blocks = QRRSBlock.get_rs_blocks( type_number, error_correct_level )
+    def QRCode.create_data(version, error_correct_level, data_list) #:nodoc:
+      rs_blocks = QRRSBlock.get_rs_blocks(version, error_correct_level)
       buffer = QRBitBuffer.new
 
       data = data_list
       buffer.put( data.mode, 4 )
       buffer.put( 
-        data.get_length, QRUtil.get_length_in_bits( data.mode, type_number ) 
+        data.get_length, QRUtil.get_length_in_bits(data.mode, version)
       )
       data.write( buffer )  
 

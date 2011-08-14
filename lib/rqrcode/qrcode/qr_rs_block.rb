@@ -268,12 +268,12 @@ RQRCode::QRRSBlock::RS_BLOCK_TABLE = [
 
     ]
 
-    def QRRSBlock.get_rs_blocks( type_no, error_correct_level )
-      rs_block = QRRSBlock.get_rs_block_table( type_no, error_correct_level )
+    def QRRSBlock.get_rs_blocks(version, error_correct_level)
+      rs_block = QRRSBlock.get_rs_block_table(version, error_correct_level)
 
       if rs_block.nil?
         raise QRCodeRunTimeError,
-          "bad rsblock @ typeno: #{type_no}/error_correct_level:#{error_correct_level}"
+          "bad rsblock @ version: #{version}/error_correct_level:#{error_correct_level}"
       end
 
       length = rs_block.size / 3
@@ -293,16 +293,16 @@ RQRCode::QRRSBlock::RS_BLOCK_TABLE = [
     end
 
 
-    def QRRSBlock.get_rs_block_table( type_number, error_correct_level )
+    def QRRSBlock.get_rs_block_table(version, error_correct_level)
       case error_correct_level
       when QRERRORCORRECTLEVEL[:l]
-        QRRSBlock::RS_BLOCK_TABLE[(type_number - 1) * 4 + 0]
+        QRRSBlock::RS_BLOCK_TABLE[(version - 1) * 4 + 0]
       when QRERRORCORRECTLEVEL[:m]
-        QRRSBlock::RS_BLOCK_TABLE[(type_number - 1) * 4 + 1]
+        QRRSBlock::RS_BLOCK_TABLE[(version - 1) * 4 + 1]
       when QRERRORCORRECTLEVEL[:q]
-        QRRSBlock::RS_BLOCK_TABLE[(type_number - 1) * 4 + 2]
+        QRRSBlock::RS_BLOCK_TABLE[(version - 1) * 4 + 2]
       when QRERRORCORRECTLEVEL[:h]
-        QRRSBlock::RS_BLOCK_TABLE[(type_number - 1) * 4 + 3]
+        QRRSBlock::RS_BLOCK_TABLE[(version - 1) * 4 + 3]
       else
         nil
       end
