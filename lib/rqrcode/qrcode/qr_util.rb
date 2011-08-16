@@ -73,7 +73,7 @@ module RQRCode #:nodoc:
       QRMODE[:mode_kanji] => [8, 10, 12],
     }
 
-    def QRUtil.get_bch_type_info( data )
+    def QRUtil.get_bch_format_info( data )
       d = data << 10
       while QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15) >= 0
         d ^= (G15 << (QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15)))
@@ -82,7 +82,7 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_bch_type_number( data )
+    def QRUtil.get_bch_version(data)
       d = data << 12
       while QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G18) >= 0
         d ^= (G18 << (QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G18)))
@@ -103,8 +103,8 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_pattern_position( type_number )
-      PATTERN_POSITION_TABLE[ type_number - 1 ]
+    def QRUtil.get_pattern_positions(version)
+      PATTERN_POSITION_TABLE[version - 1]
     end
 
 
@@ -128,27 +128,27 @@ module RQRCode #:nodoc:
     end
 
 
-    def QRUtil.get_length_in_bits(mode, type)
+    def QRUtil.get_length_in_bits(mode, version)
       if !QRMODE.value?(mode)
           raise QRCodeRunTimeError, "Unknown mode: #{mode}"
       end
 
-      if type > 40
-        raise QRCodeRunTimeError, "Unknown type: #{type}"
+      if version > 40
+        raise QRCodeRunTimeError, "Unknown version: #{version}"
       end
 
-      if 1 <= type && type <= 9
+      if version.between?(1, 9)
         # 1 - 9
-        macro_type = 0
-      elsif type <= 26
+        macro_version = 0
+      elsif version <= 26
         # 10 - 26
-        macro_type = 1
-      elsif type <= 40
+        macro_version = 1
+      elsif version <= 40
         # 27 - 40
-        macro_type = 2
+        macro_version = 2
       end
 
-      return BITS_FOR_MODE[mode][macro_type]
+      return BITS_FOR_MODE[mode][macro_version]
     end
 
     def QRUtil.get_lost_points(modules)
