@@ -47,6 +47,9 @@ module RQRCode #:nodoc:
         Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
   ]
 
+  QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
+  QRFORMATINFOLENGTH = 15
+
   # StandardErrors
 
   class QRCodeArgumentError < ArgumentError; end
@@ -95,8 +98,8 @@ module RQRCode #:nodoc:
 
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
-      @type_number          = size
-      @module_count         = @type_number * 4 + 17
+      @version              = size
+      @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
       @data_list            = QR8bitByte.new( @data )
       @data_cache           = nil
@@ -113,7 +116,7 @@ module RQRCode #:nodoc:
     #
 
     def is_dark( row, col )
-      if row < 0 || @module_count <= row || col < 0 || @module_count <= col
+      if !row.between?(0, @module_count - 1) || !col.between?(0, @module_count - 1)
         raise QRCodeRunTimeError, "Invalid row/column pair: #{row}, #{col}"
       end
       @modules[row][col]
@@ -163,29 +166,33 @@ module RQRCode #:nodoc:
     protected
 
     def make #:nodoc:
+      prepare_common_patterns
       make_impl( false, get_best_mask_pattern )
     end
 
     private
 
+    def prepare_common_patterns
+        @modules.map! { |row| Array.new(@module_count) }
+
+        place_position_probe_pattern(0, 0)
+        place_position_probe_pattern(@module_count - 7, 0)
+        place_position_probe_pattern(0, @module_count - 7)
+        place_position_adjust_pattern
+        place_timing_pattern
+
+        @common_patterns = @modules.map(&:clone)
+    end
 
     def make_impl( test, mask_pattern ) #:nodoc:
+      @modules = @common_patterns.map(&:clone)
 
-      ( 0...@module_count ).each do |row|
-        @modules[row] = Array.new( @module_count )
-      end
-
-      setup_position_probe_pattern( 0, 0 )
-      setup_position_probe_pattern( @module_count - 7, 0 )
-      setup_position_probe_pattern( 0, @module_count - 7 )
-      setup_position_adjust_pattern
-      setup_timing_pattern
-      setup_type_info( test, mask_pattern )
-      setup_type_number( test ) if @type_number >= 7
+      place_format_info(test, mask_pattern)
+      place_version_info(test) if @version >= 7
 
       if @data_cache.nil?
         @data_cache = QRCode.create_data( 
-          @type_number, @error_correct_level, @data_list 
+          @version, @error_correct_level, @data_list
         ) 
       end
 
@@ -193,16 +200,19 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_position_probe_pattern( row, col ) #:nodoc:
-      ( -1..7 ).each do |r|
-        next if ( row + r )  <= -1 || @module_count <= ( row + r )
-        ( -1..7 ).each do |c|
-          next if ( col + c ) <= -1 || @module_count <= ( col + c )
-          if 0 <= r && r <= 6 && ( c == 0 || c == 6 ) || 0 <= c && c <= 6 && ( r == 0 || r == 6 ) || 2 <= r && r <= 4 && 2 <= c && c <= 4
-            @modules[row + r][col + c] = true;
-          else
-            @modules[row + r][col + c] = false;
-          end
+    def place_position_probe_pattern( row, col ) #:nodoc:
+      (-1..7).each do |r|
+        next if !(row + r).between?(0, @module_count - 1)
+
+        (-1..7).each do |c|
+          next if !(col + c).between?(0, @module_count - 1)
+
+          is_vert_line = (r.between?(0, 6) && (c == 0 || c == 6))
+          is_horiz_line = (c.between?(0, 6) && (r == 0 || r == 6))
+          is_square = r.between?(2,4) && c.between?(2, 4)
+
+          is_part_of_probe = is_vert_line || is_horiz_line || is_square
+          @modules[row + r][col + c] = is_part_of_probe
         end
       end
     end
@@ -225,30 +235,24 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_timing_pattern #:nodoc:
+    def place_timing_pattern #:nodoc:
       ( 8...@module_count - 8 ).each do |i|
         @modules[i][6] = @modules[6][i] = i % 2 == 0 
       end
     end
 
 
-    def setup_position_adjust_pattern #:nodoc:
-      pos = QRUtil.get_pattern_position(@type_number)
+    def place_position_adjust_pattern #:nodoc:
+      positions = QRUtil.get_pattern_positions(@version)
 
-      ( 0...pos.size ).each do |i|
-        ( 0...pos.size ).each do |j|
-          row = pos[i]
-          col = pos[j]
-
+      positions.each do |row|
+        positions.each do |col|
           next unless @modules[row][col].nil?
 
           ( -2..2 ).each do |r|
             ( -2..2 ).each do |c|
-              if r == -2 || r == 2 || c == -2 || c == 2 || ( r == 0 && c == 0 )
-                @modules[row + r][col + c] = true
-              else
-                @modules[row + r][col + c] = false
-              end
+              is_part_of_pattern = (r.abs == 2 || c.abs == 2 || ( r == 0 && c == 0 ))
+              @modules[row + r][col + c] = is_part_of_pattern
             end
           end  
         end
@@ -256,8 +260,8 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_type_number( test ) #:nodoc:
-      bits = QRUtil.get_bch_type_number( @type_number )
+    def place_version_info(test) #:nodoc:
+      bits = QRUtil.get_bch_version(@version)
 
       ( 0...18 ).each do |i|
         mod = ( !test && ( (bits >> i) & 1) == 1 )
@@ -267,30 +271,32 @@ module RQRCode #:nodoc:
     end
 
 
-    def setup_type_info( test, mask_pattern ) #:nodoc:
+    def place_format_info(test, mask_pattern) #:nodoc:
       data = (@error_correct_level << 3 | mask_pattern)
-      bits = QRUtil.get_bch_type_info( data )
+      bits = QRUtil.get_bch_format_info(data)
 
-      ( 0...15 ).each do |i|
+      QRFORMATINFOLENGTH.times do |i|
         mod = (!test && ( (bits >> i) & 1) == 1)
 
         # vertical
         if i < 6
-          @modules[i][8] = mod
+          row = i
         elsif i < 8
-          @modules[ i + 1 ][8] = mod
+          row = i + 1
         else
-          @modules[ @module_count - 15 + i ][8] = mod
+          row = @module_count - 15 + i
         end
+        @modules[row][8] = mod
 
         # horizontal
         if i < 8
-          @modules[8][ @module_count - i - 1 ] = mod
+          col = @module_count - i - 1
         elsif i < 9
-          @modules[8][ 15 - i - 1 + 1 ] = mod
+          col = 15 - i - 1 + 1
         else
-          @modules[8][ 15 - i - 1 ] = mod
+          col = 15 - i - 1
         end
+        @modules[8][col] = mod
       end
 
       # fixed module
@@ -346,14 +352,14 @@ module RQRCode #:nodoc:
       return max_data_bytes * 8
     end
 
-    def QRCode.create_data( type_number, error_correct_level, data_list ) #:nodoc:
-      rs_blocks = QRRSBlock.get_rs_blocks( type_number, error_correct_level )
+    def QRCode.create_data(version, error_correct_level, data_list) #:nodoc:
+      rs_blocks = QRRSBlock.get_rs_blocks(version, error_correct_level)
       buffer = QRBitBuffer.new
 
       data = data_list
       buffer.put( data.mode, 4 )
       buffer.put( 
-        data.get_length, QRUtil.get_length_in_bits( data.mode, type_number ) 
+        data.get_length, QRUtil.get_length_in_bits(data.mode, version)
       )
       data.write( buffer )  
 

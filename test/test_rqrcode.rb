@@ -71,10 +71,10 @@ class QRCodeTest < Test::Unit::TestCase
 
   def test_to_s
     qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
-    assert_equal qr.to_s[0..21], "xxxxxxx xx x  xxxxxxx\n"
-    assert_equal qr.to_s( :true => 'q', :false => 'n' )[0..21], 
-      "qqqqqqqnqqnqnnqqqqqqq\n"
-    assert_equal qr.to_s( :true => '@' )[0..21], "@@@@@@@ @@ @  @@@@@@@\n"
+    assert_equal "xxxxxxx xx x  xxxxxxx\n", qr.to_s[0..21]
+    assert_equal "qqqqqqqnqqnqnnqqqqqqq\n",
+                 qr.to_s( :true => 'q', :false => 'n' )[0..21]
+    assert_equal "@@@@@@@ @@ @  @@@@@@@\n", qr.to_s( :true => '@' )[0..21]
   end
 
   def test_rszf_error_not_thrown
