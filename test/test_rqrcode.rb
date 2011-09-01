@@ -1,8 +1,17 @@
 require "test/unit"
-require "lib/rqrcode"
+require_relative "../lib/rqrcode"
+
+# fix for require_relative in < 1.9
+unless Kernel.respond_to?(:require_relative)
+  module Kernel
+    def require_relative(path)
+      require File.join(File.dirname(caller[0]), path.to_str)
+    end
+  end
+end
 
 class QRCodeTest < Test::Unit::TestCase
-  require "test/data"
+  require_relative "data"
  
   def test_no_data_given
     assert_raise(RQRCode::QRCodeArgumentError) {
