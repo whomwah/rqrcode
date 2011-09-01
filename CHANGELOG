@@ -1,3 +1,8 @@
+*0.4.2* (Sep 1st, 2011)
+
+* Proper namespace CoreExtensions and only extend when needed [https://github.com/metaskills]
+* fix for running tests on 1.9
+
 *0.4.1* (Aug 16th, 2011)
 
 * Compute common patterns only once (5% to 10% speedup) [https://github.com/gioele]
