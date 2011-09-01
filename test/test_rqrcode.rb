@@ -1,5 +1,4 @@
 require "test/unit"
-require_relative "../lib/rqrcode"
 
 # fix for require_relative in < 1.9
 unless Kernel.respond_to?(:require_relative)
@@ -9,6 +8,8 @@ unless Kernel.respond_to?(:require_relative)
     end
   end
 end
+
+require_relative "../lib/rqrcode"
 
 class QRCodeTest < Test::Unit::TestCase
   require_relative "data"
