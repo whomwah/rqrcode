@@ -102,11 +102,12 @@ Original author: Duncan Robertson
 
 Special thanks to the following people for submitting patches:
 
-* [Gioele Barabucci](https://github.com/gioele) 
-* [Rob la Lau](https://github.com/ohreally)
 * [Chris Mowforth](http://blog.99th.st)
-* [Tore Darell](http://tore.darell.no)
 * [Daniel Schierbeck](https://github.com/dasch)
+* [Gioele Barabucci](https://github.com/gioele) 
+* [Ken Collins](https://github.com/metaskills)
+* [Rob la Lau](https://github.com/ohreally)
+* [Tore Darell](http://tore.darell.no)
 * Vladislav Gorodetskiy
 
 ## Contributing
