@@ -1,5 +1,5 @@
 require 'rqrcode/core_ext/integer/bitwise'
 
 class Integer #:nodoc:
-  include CoreExtensions::Integer::Bitwise
+  include RQRCode::CoreExtensions::Integer::Bitwise
 end
