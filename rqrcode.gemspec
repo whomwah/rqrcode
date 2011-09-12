@@ -20,6 +20,7 @@ EOF
 
   s.add_development_dependency "rake"
   s.add_development_dependency("bundler", ">= 1.0.0")
+	s.add_dependency('chunky_png')
 
   s.has_rdoc      = true
   s.extra_rdoc_files = ["README.md", "CHANGELOG", "LICENSE"]  

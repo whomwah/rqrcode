@@ -53,6 +53,15 @@ puts qr.to_s
 # ... etc
 ```
 
+## Simple QRCode generation to image using chunky_png
+```ruby
+qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+qr.to_img
+qr.to_img(330) # set the size of the image
+qr.to_img.save('path/to_image.png')
+```
+
+
 ## Simple QRCode generation to template (RubyOnRails)
 
 ```erb
