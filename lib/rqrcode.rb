@@ -9,5 +9,6 @@
 # above copyright notice is included.
 #++
 
+require 'chunky_png'
 require "rqrcode/core_ext"
 require "rqrcode/qrcode"

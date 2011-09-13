@@ -163,6 +163,35 @@ module RQRCode #:nodoc:
       res.join("\n")
     end
 
+		#
+		# This method saves a PNG to disk using the chunky_png library.
+		# 
+		# It creates a 33x33 image and then resizes up to 90x90 (customizable by option).
+		#
+		def to_img(options = {})
+			default_img_options = { :size => 90 }
+			options = default_img_options.merge(options) # reverse_merge
+
+			border = 2
+			total_border = border * 2
+
+			img_size = 33 # a square 33 by 33 "modules"
+			total_img_size = img_size + total_border
+
+			png = ChunkyPNG::Image.new(total_img_size, total_img_size, ChunkyPNG::Color::WHITE)
+
+			self.modules.each_index do |x|
+				self.modules.each_index do |y|
+					if self.dark?(x, y)
+						png[y + border , x+border] = ChunkyPNG::Color('black')
+					end
+				end
+			end
+
+			png.resize(options[:size], options[:size])
+
+		end
+
     protected
 
     def make #:nodoc:
