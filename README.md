@@ -96,7 +96,7 @@ td.white { background-color: #fff; }
 </table>
 ```
 
-# Exporting
+## Exporting
 
 You can also require optional export features:
 
@@ -113,14 +113,13 @@ image = RQRCode::QRCode.new("nice qr").as_png
 
 Notice the 'as\_png'. Same goes for 'as\_svg', 'as\_xxx'.
 
-## Options
+### Export Options
 
 Exporters support these options:
 
 * size  - Image size, in pixels.
 * fill  - Background color, defaults to 'white'
 * color - Foreground color, defaults to 'black'
-
 
 ## Authors
 
