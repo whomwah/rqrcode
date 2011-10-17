@@ -19,7 +19,7 @@ Let's clear up some rQRCode stuff.
 
 ## Installing
 
-You may get the latest stable version from Rubygems. 
+You may get the latest stable version from Rubygems.
 
     gem install rqrcode
 
@@ -32,7 +32,7 @@ You can also get the latest source from http://github.com/whomwah/rqrcode
 To run the tests:
 
     $ rake
- 
+
 ## Loading rQRCode Itself
 
 You have installed the gem already, yeah?
@@ -68,14 +68,14 @@ table {
   border-collapse: collapse;
 }
 td {
-  border-width: 0; 
+  border-width: 0;
   border-style: none;
-  border-color: #0000ff; 
-  border-collapse: collapse; 
-  padding: 0; 
-  margin: 0; 
-  width: 10px; 
-  height: 10px; 
+  border-color: #0000ff;
+  border-collapse: collapse;
+  padding: 0;
+  margin: 0;
+  width: 10px;
+  height: 10px;
 }
 td.black { background-color: #000; }
 td.white { background-color: #fff; }
@@ -83,7 +83,7 @@ td.white { background-color: #fff; }
 
 <table>
 <% @qr.modules.each_index do |x| %>
-  <tr>  
+  <tr>
   <% @qr.modules.each_index do |y| %>
    <% if @qr.dark?(x,y) %>
     <td class="black"/>
@@ -96,6 +96,32 @@ td.white { background-color: #fff; }
 </table>
 ```
 
+# Exporting
+
+You can also require optional export features:
+
+* SVG -> no dependencies
+* PNG -> depends on 'chunky_png' gem
+* JPG -> depends on 'mini_magick' gem
+
+Example to render png:
+
+```ruby
+require 'rqrcode/export/png'
+image = RQRCode::QRCode.new("nice qr").as_png
+```
+
+Notice the 'as\_png'. Same goes for 'as\_svg', 'as\_xxx'.
+
+## Options
+
+Exporters support these options:
+
+* size  - Image size, in pixels.
+* fill  - Background color, defaults to 'white'
+* color - Foreground color, defaults to 'black'
+
+
 ## Authors
 
 Original author: Duncan Robertson
@@ -104,7 +130,7 @@ Special thanks to the following people for submitting patches:
 
 * [Chris Mowforth](http://blog.99th.st)
 * [Daniel Schierbeck](https://github.com/dasch)
-* [Gioele Barabucci](https://github.com/gioele) 
+* [Gioele Barabucci](https://github.com/gioele)
 * [Ken Collins](https://github.com/metaskills)
 * [Rob la Lau](https://github.com/ohreally)
 * [Tore Darell](http://tore.darell.no)
