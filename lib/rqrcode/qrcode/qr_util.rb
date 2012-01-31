@@ -68,7 +68,7 @@ module RQRCode #:nodoc:
 
     BITS_FOR_MODE = {
       QRMODE[:mode_number] => [10, 12, 14],
-      QRMODE[:mode_alpha_num] => [9, 11, 13],
+      QRMODE[:mode_alpha_numk] => [9, 11, 13],
       QRMODE[:mode_8bit_byte] => [8, 16, 16],
       QRMODE[:mode_kanji] => [8, 10, 12],
     }
