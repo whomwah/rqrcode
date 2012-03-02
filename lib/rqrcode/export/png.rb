@@ -25,7 +25,7 @@ module RQRCode
           :color => 'black',
           :border => 2,
           :file => false,
-          :px_multiplier => 4
+          :px_multiplier => 6
         }
         options = default_img_options.merge(options) # reverse_merge
 
@@ -45,8 +45,8 @@ module RQRCode
         self.modules.each_index do |x|
           self.modules.each_index do |y|
             if self.dark?(x, y)
-              (0..px_multiplier).each do |i|
-                (0..px_multiplier).each do |j|
+              (0...px_multiplier).each do |i|
+                (0...px_multiplier).each do |j|
                   png[(y * px_multiplier) + border + j , (x * px_multiplier) + border + i] = color
                 end
               end

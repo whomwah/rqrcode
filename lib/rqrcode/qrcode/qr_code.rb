@@ -90,7 +90,7 @@ module RQRCode #:nodoc:
 
       options               = args.extract_options!
       level                 = (options[:level] || :h).to_sym
-      size                  = options[:size] || 4
+      size                  = options[:size] || smallest_size_for(string, level)
 
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
@@ -342,6 +342,11 @@ module RQRCode #:nodoc:
           end
         end
       end
+    end
+
+    def smallest_size_for(string, level) #:nodoc:
+      #http://www.denso-wave.com/qrcode/vertable1-e.html
+        return 4 # TODO: find smallest size for given string and level
     end
 
     def QRCode.count_max_data_bits(rs_blocks)

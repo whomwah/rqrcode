@@ -25,7 +25,7 @@ describe :QRCodeExportTest do
   end
 
   it "must export to png file" do
-    RQRCode::QRCode.new('png', :size => 20).as_png.must_be_instance_of ChunkyPNG::Image
+    RQRCode::QRCode.new('png').as_png.must_be_instance_of ChunkyPNG::Image
   end
 
   it "must export to svg file" do
