@@ -13,7 +13,7 @@ require_relative "../lib/rqrcode"
 
 class QRCodeTest < Test::Unit::TestCase
   require_relative "data"
- 
+
   def test_no_data_given
     assert_raise(RQRCode::QRCodeArgumentError) {
       RQRCode::QRCode.new( :size => 1, :level => :h )
@@ -98,11 +98,12 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("duncan", :level => :m)
     assert RQRCode::QRCode.new("duncan", :level => :q)
     assert RQRCode::QRCode.new("duncan", :level => :h)
-    assert_raise(RQRCode::QRCodeArgumentError) {
-      %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
+
+    %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
+      assert_raise(RQRCode::QRCodeArgumentError) {
         RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
-      end
-    }
+      }
+    end
   end
 
 end
