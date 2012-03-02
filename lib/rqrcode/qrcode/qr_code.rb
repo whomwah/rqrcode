@@ -47,8 +47,29 @@ module RQRCode #:nodoc:
         Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
   ]
 
+
   QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
   QRFORMATINFOLENGTH = 15
+
+  #http://www.denso-wave.com/qrcode/vertable1-e.html
+  QRMAXDIGITS = {
+    :l => {:mode_number     => [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
+           :mode_alpha_numk => [25, 47,  77, 114, 154, 195, 224, 279, 335, 395],
+           :mode_8bit_byte  => [17, 32,  53,  78, 106, 134, 154, 192, 230, 271],
+           :mode_kanji      => [10, 20,  32,  48,  65,  82,  95, 118, 141, 167]},
+    :m => {:mode_number     => [34, 63, 101, 149, 202, 255, 293, 365, 432, 513],
+           :mode_alpha_numk => [20, 38,  61,  90, 122, 154, 178, 221, 262, 311],
+           :mode_8bit_byte  => [14, 26,  42,  62,  84, 106, 122, 152, 180, 213],
+           :mode_kanji      => [ 8, 16,  26,  38,  54,  65,  75,  93, 111, 131]},
+    :q => {:mode_number     => [27, 48, 77, 111, 144, 178, 207, 259, 312, 364],
+           :mode_alpha_numk => [16, 29, 47,  67,  87, 108, 125, 157, 189, 221],
+           :mode_8bit_byte  => [11, 20, 32,  46,  60,  74,  86, 108, 130, 151],
+           :mode_kanji      => [ 7, 12, 20,  28,  37,  45,  53,  66,  80,  93]},
+    :h => {:mode_number     => [17, 34, 58, 82, 106, 139, 154, 202, 235, 288],
+           :mode_alpha_numk => [10, 20, 35, 50,  64,  84,  93, 122, 143, 174],
+           :mode_8bit_byte  => [ 7, 14, 24, 34,  44,  58,  64,  84,  98, 119],
+           :mode_kanji      => [ 4,  8, 15, 21,  27,  36,  39,  52,  60, 74]},
+  }
 
   # StandardErrors
 
@@ -90,11 +111,12 @@ module RQRCode #:nodoc:
 
       options               = args.extract_options!
       level                 = (options[:level] || :h).to_sym
-      size                  = options[:size] || smallest_size_for(string, level)
-
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
+      max_size_array        = QRMAXDIGITS[level][:mode_8bit_byte]
+      size                  = options[:size] || smallest_size_for(string, max_size_array)
+
 
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
@@ -103,7 +125,6 @@ module RQRCode #:nodoc:
       @modules              = Array.new( @module_count )
       @data_list            = QR8bitByte.new( @data )
       @data_cache           = nil
-
       self.make
     end
 
@@ -344,9 +365,11 @@ module RQRCode #:nodoc:
       end
     end
 
-    def smallest_size_for(string, level) #:nodoc:
-      #http://www.denso-wave.com/qrcode/vertable1-e.html
-        return 4 # TODO: find smallest size for given string and level
+    def smallest_size_for(string, max_size_array) #:nodoc:
+      l = string.length
+      ver = max_size_array.index{|i| i >= l}
+      raise QRCodeRunTimeError,"code length overflow. (#{1} digits > any version capacity)" unless ver
+      ver + 1
     end
 
     def QRCode.count_max_data_bits(rs_blocks)

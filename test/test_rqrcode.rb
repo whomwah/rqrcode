@@ -65,13 +65,13 @@ class QRCodeTest < Test::Unit::TestCase
 
   def test_4_H_
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :l )
+      :level => :l, :size => 4 )
     assert_equal qr.modules, MATRIX_4_L
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :m )
+      :level => :m, :size => 4 )
     assert_equal qr.modules, MATRIX_4_M
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :q )
+      :level => :q, :size => 4 )
     assert_equal qr.modules, MATRIX_4_Q
 
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw')
