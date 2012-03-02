@@ -96,6 +96,31 @@ td.white { background-color: #fff; }
 </table>
 ```
 
+## Exporting
+
+You can also require optional export features:
+
+* SVG -> no dependencies
+* PNG -> depends on 'chunky_png' gem
+* JPG -> depends on 'mini_magick' gem
+
+Example to render png:
+
+```ruby
+require 'rqrcode/export/png'
+image = RQRCode::QRCode.new("nice qr").as_png
+```
+
+Notice the 'as\_png'. Same goes for 'as\_svg', 'as\_xxx'.
+
+### Export Options
+
+Exporters support these options:
+
+* size  - Image size, in pixels.
+* fill  - Background color, defaults to 'white'
+* color - Foreground color, defaults to 'black'
+
 ## Authors
 
 Original author: Duncan Robertson
