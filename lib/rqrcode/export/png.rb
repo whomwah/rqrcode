@@ -64,7 +64,7 @@ module RQRCode
         png = png.resize(resize_to, resize_to) if resize_to
 
         if output_file
-          png.save(output_file,:constraints => { :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
+          png.save(output_file,{ :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
         end
         png
       end
