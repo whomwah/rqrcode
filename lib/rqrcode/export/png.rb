@@ -9,7 +9,7 @@ module RQRCode
       # Render the PNG from the Qrcode.
       #
       # Options:
-      # size  - Image size, in pixels.
+      # module_px_size  - Image size, in pixels.
       # fill  - Background ChunkyPNG::Color, defaults to 'white'
       # color - Foreground ChunkyPNG::Color, defaults to 'black'
       # border - Border thickness, in pixels
@@ -20,41 +20,48 @@ module RQRCode
       def as_png(options = {})
 
         default_img_options = {
-          :resize_to => false,
+          :resize_gte_to => false,
+          :resize_exactly_to => false,
           :fill => 'white',
           :color => 'black',
-          :border => 2,
+          :border_modules => 4,
           :file => false,
-          :px_multiplier => 6
+          :module_px_size => 6
         }
         options = default_img_options.merge(options) # reverse_merge
 
         fill   = ChunkyPNG::Color(options[:fill])
         color  = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
-        border = options[:border]
+        border = options[:border_modules]
         total_border = border * 2
-        px_multiplier = options[:px_multiplier]
-        resize_to = options[:resize_to]
+        module_px_size = if options[:resize_gte_to]
+          (options[:resize_gte_to].to_f / (self.module_count + total_border).to_f).ceil.to_i
+        else
+          options[:module_px_size]
+        end
+        border_px = border *  module_px_size
+        total_border_px = border_px * 2
+        resize_to = options[:resize_exactly_to]
 
-        img_size = px_multiplier * self.module_count# a square 33 by 33 "modules"
-        total_img_size = img_size + total_border
+        img_size = module_px_size * self.module_count
+        total_img_size = img_size + total_border_px
 
         png = ChunkyPNG::Image.new(total_img_size, total_img_size, fill)
 
         self.modules.each_index do |x|
           self.modules.each_index do |y|
             if self.dark?(x, y)
-              (0...px_multiplier).each do |i|
-                (0...px_multiplier).each do |j|
-                  png[(y * px_multiplier) + border + j , (x * px_multiplier) + border + i] = color
+              (0...module_px_size).each do |i|
+                (0...module_px_size).each do |j|
+                  png[(y * module_px_size) + border_px + j , (x * module_px_size) + border_px + i] = color
                 end
               end
             end
           end
         end
 
-        png.resize(resize_to, resize_to) if resize_to
+        png = png.resize(resize_to, resize_to) if resize_to
 
         if output_file
           png.save(output_file,:constraints => { :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
