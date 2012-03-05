@@ -14,7 +14,8 @@ module RQRCode
   class QRBitBuffer
     attr_reader :buffer
 
-    def initialize
+    def initialize(version)
+      @version = version
       @buffer = []
       @length = 0
     end
@@ -50,6 +51,31 @@ module RQRCode
 
       @length += 1
     end 
+    
+    def byte_encoding_start(length)
+      
+      put( QRMODE[:mode_8bit_byte], 4 )
+      put(length, QRUtil.get_length_in_bits(QRMODE[:mode_8bit_byte], @version))
+      
+    end
+    
+    def alphanumeric_encoding_start(length)
+      
+      put( QRMODE[:mode_alpha_numk], 4 )
+      put(length, QRUtil.get_length_in_bits(QRMODE[:mode_alpha_numk], @version))
+      
+    end
+    
+    def pad_until(prefered_size)
+      while get_length_in_bits < prefered_size
+        put( 0, 1 )
+      end
+    end
+    
+    def end_of_message
+      put( 0, 4 )
+    end
+      
 
   end
 

@@ -113,11 +113,12 @@ module RQRCode #:nodoc:
 
       options               = args.extract_options!
       level                 = (options[:level] || :h).to_sym
+
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
       max_size_array        = QRMAXDIGITS[level][:mode_8bit_byte]
-      size                  = options[:size] || smallest_size_for(string, max_size_array)
+      size                  = 1 #options[:size] || smallest_size_for(string, max_size_array)
 
 
       @data                 = string
@@ -125,7 +126,8 @@ module RQRCode #:nodoc:
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
-      @data_list            = QR8bitByte.new( @data )
+      puts QRAlphanumeric.valid_data?( @data )
+      @data_list            = QRAlphanumeric.valid_data?( @data ) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
       @data_cache           = nil
       self.make
     end
@@ -384,36 +386,17 @@ module RQRCode #:nodoc:
 
     def QRCode.create_data(version, error_correct_level, data_list) #:nodoc:
       rs_blocks = QRRSBlock.get_rs_blocks(version, error_correct_level)
-      buffer = QRBitBuffer.new
+      buffer = QRBitBuffer.new(version)
 
-      data = data_list
-      buffer.put( data.mode, 4 )
-      buffer.put(
-        data.get_length, QRUtil.get_length_in_bits(data.mode, version)
-      )
-      data.write( buffer )
+      data_list.write(buffer)
+      buffer.end_of_message
 
       max_data_bits = QRCode.count_max_data_bits(rs_blocks)
-
       if buffer.get_length_in_bits > max_data_bits
-        raise QRCodeRunTimeError,
-          "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
+        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
 
-      if buffer.get_length_in_bits + 4 <= max_data_bits
-        buffer.put( 0, 4 )
-      end
-
-      while buffer.get_length_in_bits % 8 != 0
-        buffer.put_bit( false )
-      end
-
-      while true
-        break if buffer.get_length_in_bits >= max_data_bits
-        buffer.put( QRCode::PAD0, 8 )
-        break if buffer.get_length_in_bits >= max_data_bits
-        buffer.put( QRCode::PAD1, 8 )
-      end
+      buffer.pad_until(max_data_bits)
 
       QRCode.create_bytes( buffer, rs_blocks )
     end
