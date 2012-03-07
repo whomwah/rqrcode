@@ -80,7 +80,7 @@ class QRCodeTest < Test::Unit::TestCase
   end
 
   def test_to_s
-    qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
+    qr = RQRCode::QRCode.new( 'DUNCAN', :size => 1 )
     assert_equal "xxxxxxx xx x  xxxxxxx\n", qr.to_s[0..21]
     assert_equal "qqqqqqqnqqnqnnqqqqqqq\n",
                  qr.to_s( :true => 'q', :false => 'n' )[0..21]

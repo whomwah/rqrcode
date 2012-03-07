@@ -117,11 +117,12 @@ module RQRCode #:nodoc:
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
-      max_size_array        = QRMAXDIGITS[level][:mode_8bit_byte]
-      size                  = 1 #options[:size] || smallest_size_for(string, max_size_array)
-
-
       @data                 = string
+      max_size_array        = QRAlphanumeric.valid_data?( @data ) ? QRMAXDIGITS[level][:mode_alpha_numk] : QRMAXDIGITS[level][:mode_8bit_byte]
+      size                  = options[:size] || smallest_size_for(string, max_size_array)
+
+
+
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
