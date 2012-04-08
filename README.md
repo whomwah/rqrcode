@@ -54,12 +54,12 @@ puts qr.to_s
 ```
 
 ## Simple QRCode generation to template (RubyOnRails)
-
-```erb
-# Controller
+### Controller
+```ruby
 @qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-
-# View: (minimal styling added)
+```
+### View: (minimal styling added)
+```erb
 <style type="text/css">
 table {
   border-width: 0;
