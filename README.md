@@ -82,10 +82,10 @@ td.white { background-color: #fff; }
 </style>
 
 <table>
-<% @qr.modules.each_index do |x| %>
+<% @qr.modules.each_index do |y| %>
   <tr>  
-  <% @qr.modules.each_index do |y| %>
-   <% if @qr.dark?(x,y) %>
+  <% @qr.modules.each_index do |x| %>
+   <% if @qr.dark?(y,x) %>
     <td class="black"/>
    <% else %>
     <td class="white"/>
