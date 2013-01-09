@@ -127,7 +127,6 @@ module RQRCode #:nodoc:
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
-      puts QRAlphanumeric.valid_data?( @data )
       @data_list            = QRAlphanumeric.valid_data?( @data ) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
       @data_cache           = nil
       self.make
