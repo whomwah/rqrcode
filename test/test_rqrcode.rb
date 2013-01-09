@@ -80,11 +80,16 @@ class QRCodeTest < Test::Unit::TestCase
   end
 
   def test_to_s
-    qr = RQRCode::QRCode.new( 'DUNCAN', :size => 1 )
+    qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
     assert_equal "xxxxxxx xx x  xxxxxxx\n", qr.to_s[0..21]
     assert_equal "qqqqqqqnqqnqnnqqqqqqq\n",
                  qr.to_s( :true => 'q', :false => 'n' )[0..21]
     assert_equal "@@@@@@@ @@ @  @@@@@@@\n", qr.to_s( :true => '@' )[0..21]
+  end
+  
+  def test_auto_alphanumeric
+    # Overflowws without the alpha version
+    assert RQRCode::QRCode.new( '1234567890', :size => 1, :level => :h )
   end
 
   def test_rszf_error_not_thrown
