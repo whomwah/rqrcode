@@ -1,6 +1,6 @@
 # rQRCode, Encode QRCodes
 
-I have republished this gem as rqrcode-with-patches as Duncan seams to have aboned the project.
+I have republished this gem as rqrcode-with-patches as Duncan seams to have abandoned the project.
 
 ## Overview
 
