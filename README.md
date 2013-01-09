@@ -1,5 +1,7 @@
 # rQRCode, Encode QRCodes
 
+I have republished this gem as rqrcode-with-patches as Duncan seams to have aboned the project.
+
 ## Overview
 
 rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface with all the standard qrcode options. It was adapted from the Javascript library by Kazuhiko Arase.

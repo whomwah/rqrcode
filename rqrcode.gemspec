@@ -3,12 +3,12 @@ $:.push File.expand_path("../lib", __FILE__)
 require "rqrcode/version"
 
 Gem::Specification.new do |s|
-  s.name        = "rqrcode"
+  s.name        = "rqrcode-with-patches"
   s.version     = RQRCode::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Duncan Robertson"]
+  s.authors     = ["Bjorn Blomqvist and others","Duncan Robertson"]
   s.email       = ["duncan@whomwah.com"]
-  s.homepage    = "http://whomwah.github.com/rqrcode/"
+  s.homepage    = "https://github.com/bjornblomqvist/rqrcode"
   s.summary     = "A library to encode QR Codes"
   s.description = <<EOF
 rQRCode is a library for encoding QR Codes. The simple
@@ -17,6 +17,8 @@ ready to be displayed in the way you choose.
 EOF
 
   s.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
+  
+  s.add_dependency 'chunky_png'
 
   s.add_development_dependency "rake"
   s.add_development_dependency("bundler", ">= 1.0.0")
