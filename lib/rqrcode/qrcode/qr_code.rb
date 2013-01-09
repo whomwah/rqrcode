@@ -90,9 +90,6 @@ module RQRCode #:nodoc:
   class QRCode
     attr_reader :modules, :module_count, :version, :error_correction_level
 
-    PAD0 = 0xEC
-    PAD1 = 0x11
-
     # Expects a string to be parsed in, other args are optional
     #
     #   # string - the string you wish to encode
@@ -386,12 +383,12 @@ module RQRCode #:nodoc:
 
     def QRCode.create_data(version, error_correct_level, data_list) #:nodoc:
       rs_blocks = QRRSBlock.get_rs_blocks(version, error_correct_level)
+      max_data_bits = QRCode.count_max_data_bits(rs_blocks)
       buffer = QRBitBuffer.new(version)
 
       data_list.write(buffer)
-      buffer.end_of_message
+      buffer.end_of_message(max_data_bits)
 
-      max_data_bits = QRCode.count_max_data_bits(rs_blocks)
       if buffer.get_length_in_bits > max_data_bits
         raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
