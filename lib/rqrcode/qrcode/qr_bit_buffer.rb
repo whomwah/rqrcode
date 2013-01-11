@@ -83,7 +83,7 @@ module RQRCode
     end
     
     def end_of_message(max_data_bits)
-      put( 0, 4 ) if get_length_in_bits+4 >= max_data_bits
+      put( 0, 4 ) unless get_length_in_bits+4 > max_data_bits
     end
       
 
