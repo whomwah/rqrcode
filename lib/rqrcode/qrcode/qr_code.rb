@@ -65,7 +65,7 @@ module RQRCode #:nodoc:
   #
 
   class QRCode
-    attr_reader :modules, :module_count
+    attr_reader :modules, :module_count, :version
 
     PAD0 = 0xEC
     PAD1 = 0x11  
@@ -96,15 +96,24 @@ module RQRCode #:nodoc:
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
 
+
       @data                 = string
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
-      @version              = size
-      @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
-      @modules              = Array.new( @module_count )
-      @data_list            = QR8bitByte.new( @data )
-      @data_cache           = nil
+      self.version = size
 
-      self.make
+      if options[:size]
+        self.make
+      else
+        ret = nil
+        while not ret
+          begin
+            ret = self.make
+          rescue QRCodeRunTimeError
+            self.version = @version + 1
+          end
+        end
+        ret
+      end
     end
 
     # <tt>is_dark</tt> is called with a +col+ and +row+ parameter. This will
