@@ -114,17 +114,19 @@ module RQRCode #:nodoc:
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
+
       @data                 = string
-      max_size_array        = QRAlphanumeric.valid_data?( @data ) ? QRMAXDIGITS[level][:mode_alpha_numk] : QRMAXDIGITS[level][:mode_8bit_byte]
+
+      mode = QRAlphanumeric.valid_data?( @data ) ? :mode_alpha_numk : :mode_8bit_byte
+
+      max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)
-
-
 
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
-      @data_list            = QRAlphanumeric.valid_data?( @data ) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
+      @data_list            = (mode == :mode_alpha_numk) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
       @data_cache           = nil
       self.make
     end
@@ -367,7 +369,7 @@ module RQRCode #:nodoc:
     end
 
     def smallest_size_for(string, max_size_array) #:nodoc:
-      l = string.length
+      l = string.bytesize
       ver = max_size_array.index{|i| i >= l}
       raise QRCodeRunTimeError,"code length overflow. (#{1} digits > any version capacity)" unless ver
       ver + 1
