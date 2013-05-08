@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "test/unit"
 
 # fix for require_relative in < 1.9
@@ -112,6 +113,11 @@ class QRCodeTest < Test::Unit::TestCase
         RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
       }
     end
+  end
+
+  def test_utf8
+    qr = RQRCode::QRCode.new('тест')
+    assert_equal qr.modules, MATRIX_UTF8_RU_test
   end
 
 end
