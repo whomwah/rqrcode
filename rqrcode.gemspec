@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = RQRCode::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Bjorn Blomqvist and others","Duncan Robertson"]
-  s.email       = ["duncan@whomwah.com"]
+  s.email       = ["darwin@bits2life.com"]
   s.homepage    = "https://github.com/bjornblomqvist/rqrcode"
   s.summary     = "A library to encode QR Codes"
   s.description = <<EOF
