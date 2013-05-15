@@ -1,3 +1,3 @@
 module RQRCode
-  VERSION = "0.4.2"
+  VERSION = "0.5.3"
 end

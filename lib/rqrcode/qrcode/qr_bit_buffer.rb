@@ -14,7 +14,11 @@ module RQRCode
   class QRBitBuffer
     attr_reader :buffer
 
-    def initialize
+    PAD0 = 0xEC
+    PAD1 = 0x11
+
+    def initialize(version)
+      @version = version
       @buffer = []
       @length = 0
     end
@@ -50,6 +54,38 @@ module RQRCode
 
       @length += 1
     end 
+    
+    def byte_encoding_start(length)
+      
+      put( QRMODE[:mode_8bit_byte], 4 )
+      put(length, QRUtil.get_length_in_bits(QRMODE[:mode_8bit_byte], @version))
+      
+    end
+    
+    def alphanumeric_encoding_start(length)
+      
+      put( QRMODE[:mode_alpha_numk], 4 )
+      put(length, QRUtil.get_length_in_bits(QRMODE[:mode_alpha_numk], @version))
+      
+    end
+    
+    def pad_until(prefered_size)
+      # Align on byte
+      while get_length_in_bits % 8 != 0
+        put_bit( false )
+      end
+      
+      # Pad with padding code words
+      while get_length_in_bits < prefered_size
+        put( QRBitBuffer::PAD0, 8 )
+        put( QRBitBuffer::PAD1, 8 ) if get_length_in_bits < prefered_size
+      end
+    end
+    
+    def end_of_message(max_data_bits)
+      put( 0, 4 ) unless get_length_in_bits+4 > max_data_bits
+    end
+      
 
   end
 

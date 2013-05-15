@@ -47,8 +47,31 @@ module RQRCode #:nodoc:
         Proc.new { |i,j| ((i * j) % 3 + (i + j) % 2) % 2 == 0 },
   ]
 
+
+
   QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
   QRFORMATINFOLENGTH = 15
+
+  #http://www.denso-wave.com/qrcode/vertable1-e.html
+  QRMAXDIGITS = {
+    :l => {:mode_number     => [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
+           :mode_alpha_numk => [25, 47,  77, 114, 154, 195, 224, 279, 335, 395],
+           :mode_8bit_byte  => [17, 32,  53,  78, 106, 134, 154, 192, 230, 271, 321, 367, 425, 458, 520, 586, 644, 718, 792, 858],
+           :mode_kanji      => [10, 20,  32,  48,  65,  82,  95, 118, 141, 167]},
+    :m => {:mode_number     => [34, 63, 101, 149, 202, 255, 293, 365, 432, 513],
+           :mode_alpha_numk => [20, 38,  61,  90, 122, 154, 178, 221, 262, 311],
+           :mode_8bit_byte  => [14, 26,  42,  62,  84, 106, 122, 152, 180, 213, 251, 287, 331, 362, 412, 450, 504, 560, 624, 666],
+           :mode_kanji      => [ 8, 16,  26,  38,  54,  65,  75,  93, 111, 131]},
+    :q => {:mode_number     => [27, 48, 77, 111, 144, 178, 207, 259, 312, 364],
+           :mode_alpha_numk => [16, 29, 47,  67,  87, 108, 125, 157, 189, 221],
+           :mode_8bit_byte  => [11, 20, 32,  46,  60,  74,  86, 108, 130, 151, 177, 203, 241, 258, 292, 22, 364, 394, 442, 482],
+           :mode_kanji      => [ 7, 12, 20,  28,  37,  45,  53,  66,  80,  93]},
+    :h => {:mode_number     => [17, 34, 58, 82, 106, 139, 154, 202, 235, 288],
+           :mode_alpha_numk => [10, 20, 35, 50,  64,  84,  93, 122, 143, 174],
+           :mode_8bit_byte  => [ 7, 14, 24, 34,  44,  58,  64,  84,  98, 119, 137, 155, 177, 194, 220, 250, 280, 310, 338, 382],
+           :mode_kanji      => [ 4,  8, 15, 21,  27,  36,  39,  52,  60, 74]},
+  }
+
 
   # StandardErrors
 
@@ -58,29 +81,26 @@ module RQRCode #:nodoc:
   # == Creation
   #
   # QRCode objects expect only one required constructor parameter
-  # and an optional hash of any other. Here's a few examples: 
+  # and an optional hash of any other. Here's a few examples:
   #
   #  qr = RQRCode::QRCode.new('hello world')
-  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
+  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
   #
 
   class QRCode
-    attr_reader :modules, :module_count
+    attr_reader :modules, :module_count, :version, :error_correction_level
 
-    PAD0 = 0xEC
-    PAD1 = 0x11  
-
-    # Expects a string to be parsed in, other args are optional 
+    # Expects a string to be parsed in, other args are optional
     #
-    #   # string - the string you wish to encode 
+    #   # string - the string you wish to encode
     #   # size   - the size of the qrcode (default 4)
     #   # level  - the error correction level, can be:
     #      * Level :l 7%  of code can be restored
     #      * Level :m 15% of code can be restored
     #      * Level :q 25% of code can be restored
-    #      * Level :h 30% of code can be restored (default :h) 
+    #      * Level :h 30% of code can be restored (default :h)
     #
-    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
+    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
     #
 
     def initialize( string, *args )
@@ -90,28 +110,32 @@ module RQRCode #:nodoc:
 
       options               = args.extract_options!
       level                 = (options[:level] || :h).to_sym
-      size                  = options[:size] || 4
 
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
 
       @data                 = string
+
+      mode                  = QRAlphanumeric.valid_data?( @data ) ? :mode_alpha_numk : :mode_8bit_byte
+
+      max_size_array        = QRMAXDIGITS[level][mode]
+      size                  = options[:size] || smallest_size_for(string, max_size_array)
+
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
-      @data_list            = QR8bitByte.new( @data )
+      @data_list            = (mode == :mode_alpha_numk) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
       @data_cache           = nil
-
       self.make
     end
 
     # <tt>is_dark</tt> is called with a +col+ and +row+ parameter. This will
-    # return true or false based on whether that coordinate exists in the 
+    # return true or false based on whether that coordinate exists in the
     # matrix returned. It would normally be called while iterating through
     # <tt>modules</tt>. A simple example would be:
-    #   
+    #
     #  instance.is_dark( 10, 10 ) => true
     #
 
@@ -144,8 +168,8 @@ module RQRCode #:nodoc:
 
     def to_s( *args )
       options                = args.extract_options!
-      row                    = options[:true] || 'x' 
-      col                    = options[:false] || ' ' 
+      row                    = options[:true] || 'x'
+      col                    = options[:false] || ' '
 
       res = []
 
@@ -153,11 +177,11 @@ module RQRCode #:nodoc:
         tmp = []
         @modules.each_index do |r|
           if is_dark(c,r)
-            tmp << row 
+            tmp << row
           else
-            tmp << col 
+            tmp << col
           end
-        end 
+        end
         res << tmp.join
      end
       res.join("\n")
@@ -191,9 +215,9 @@ module RQRCode #:nodoc:
       place_version_info(test) if @version >= 7
 
       if @data_cache.nil?
-        @data_cache = QRCode.create_data( 
+        @data_cache = QRCode.create_data(
           @version, @error_correct_level, @data_list
-        ) 
+        )
       end
 
       map_data( @data_cache, mask_pattern )
@@ -237,7 +261,7 @@ module RQRCode #:nodoc:
 
     def place_timing_pattern #:nodoc:
       ( 8...@module_count - 8 ).each do |i|
-        @modules[i][6] = @modules[6][i] = i % 2 == 0 
+        @modules[i][6] = @modules[6][i] = i % 2 == 0
       end
     end
 
@@ -254,7 +278,7 @@ module RQRCode #:nodoc:
               is_part_of_pattern = (r.abs == 2 || c.abs == 2 || ( r == 0 && c == 0 ))
               @modules[row + r][col + c] = is_part_of_pattern
             end
-          end  
+          end
         end
       end
     end
@@ -300,7 +324,7 @@ module RQRCode #:nodoc:
       end
 
       # fixed module
-      @modules[ @module_count - 8 ][8] = !test  
+      @modules[ @module_count - 8 ][8] = !test
     end
 
 
@@ -341,7 +365,14 @@ module RQRCode #:nodoc:
             break
           end
         end
-      end  
+      end
+    end
+
+    def smallest_size_for(string, max_size_array) #:nodoc:
+      l = string.bytesize
+      ver = max_size_array.index{|i| i >= l}
+      raise QRCodeRunTimeError,"code length overflow. (#{1} digits > any version capacity)" unless ver
+      ver + 1
     end
 
     def QRCode.count_max_data_bits(rs_blocks)
@@ -354,36 +385,17 @@ module RQRCode #:nodoc:
 
     def QRCode.create_data(version, error_correct_level, data_list) #:nodoc:
       rs_blocks = QRRSBlock.get_rs_blocks(version, error_correct_level)
-      buffer = QRBitBuffer.new
-
-      data = data_list
-      buffer.put( data.mode, 4 )
-      buffer.put( 
-        data.get_length, QRUtil.get_length_in_bits(data.mode, version)
-      )
-      data.write( buffer )  
-
       max_data_bits = QRCode.count_max_data_bits(rs_blocks)
+      buffer = QRBitBuffer.new(version)
+
+      data_list.write(buffer)
+      buffer.end_of_message(max_data_bits)
 
       if buffer.get_length_in_bits > max_data_bits
-        raise QRCodeRunTimeError, 
-          "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
+        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
 
-      if buffer.get_length_in_bits + 4 <= max_data_bits
-        buffer.put( 0, 4 )
-      end
-
-      while buffer.get_length_in_bits % 8 != 0
-        buffer.put_bit( false )
-      end
-
-      while true
-        break if buffer.get_length_in_bits >= max_data_bits
-        buffer.put( QRCode::PAD0, 8 )
-        break if buffer.get_length_in_bits >= max_data_bits
-        buffer.put( QRCode::PAD1, 8 )
-      end
+      buffer.pad_until(max_data_bits)
 
       QRCode.create_bytes( buffer, rs_blocks )
     end
@@ -433,7 +445,7 @@ module RQRCode #:nodoc:
           if i < dcdata[r].size
             data[index] = dcdata[r][i]
             index += 1
-          end  
+          end
         end
       end
 
@@ -442,12 +454,12 @@ module RQRCode #:nodoc:
           if i < ecdata[r].size
             data[index] = ecdata[r][i]
             index += 1
-          end  
+          end
         end
       end
 
       data
-    end 
+    end
 
   end
 
