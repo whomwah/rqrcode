@@ -1,6 +1,7 @@
 # rQRCode, Encode QRCodes
 
 I have republished this gem as rqrcode-with-patches as Duncan seams to have abandoned the project.
+You can find the original project here: http://github.com/whomwah/rqrcode
 
 ## Overview
 
@@ -23,11 +24,11 @@ Let's clear up some rQRCode stuff.
 
 You may get the latest stable version from Rubygems.
 
-    gem install rqrcode
+    gem install rqrcode-with-patches
 
-You can also get the latest source from http://github.com/whomwah/rqrcode
+You can also get the latest source from https://github.com/bjornblomqvist/rqrcode
 
-    git clone git://github.com/whomwah/rqrcode.git
+    git clone git://github.com/bjornblomqvist/rqrcode.git
 
 ## Tests
 
@@ -122,6 +123,13 @@ Exporters support these options:
 * size  - Image size, in pixels.
 * fill  - Background color, defaults to 'white'
 * color - Foreground color, defaults to 'black'
+
+SVG Export supports the parameter `module_size` to generate smaller or larger QR Codes
+
+```ruby
+require 'rqrcode/export/svg'
+svg = RQRCode::QRCode.new("nice qr").as_svg(:module_size => 6)
+```
 
 ## Authors
 
