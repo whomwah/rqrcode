@@ -146,11 +146,14 @@ module RQRCode #:nodoc:
       options                = args.extract_options!
       row                    = options[:true] || 'x' 
       col                    = options[:false] || ' ' 
+      padding                = options[:padding].to_i
 
       res = []
 
+      padding.times { res << ([col] * (@modules.size + padding * 2)).join  }
+
       @modules.each_index do |c|
-        tmp = []
+        tmp = [col] * padding
         @modules.each_index do |r|
           if is_dark(c,r)
             tmp << row 
@@ -158,8 +161,12 @@ module RQRCode #:nodoc:
             tmp << col 
           end
         end 
+        tmp += [col] * padding
         res << tmp.join
-     end
+      end
+
+      padding.times { res << ([col] * (@modules.size + padding * 2)).join }
+
       res.join("\n")
     end
 
