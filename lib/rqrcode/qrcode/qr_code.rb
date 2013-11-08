@@ -163,6 +163,58 @@ module RQRCode #:nodoc:
       res.join("\n")
     end
 
+    def to_s_ansi(light="\033[47m", dark="\033[40m")
+      normal = "\033[m"
+
+      output = ''
+
+      fill_character = '  '
+
+      @modules.each_index do |c|
+
+        # start row with quiet zone
+        row = light + fill_character * 2
+        previous_dark = false
+
+        @modules.each_index do |r|
+          if is_dark(c, r)
+            # dark
+            if previous_dark != true
+              row << dark
+              previous_dark = true
+            end
+            row << fill_character
+          else
+            # light
+            if previous_dark != false
+              row << light
+              previous_dark = false
+            end
+            row << fill_character
+          end
+        end
+
+        # add quiet zone
+        if previous_dark != false
+          row << light
+        end
+        row << fill_character * 2
+
+        # always end with reset and newline
+        row << normal + "\n"
+
+        output << row
+      end
+
+      # count the row width so we can add quiet zone rows
+      width = output.each_line.first.scan(fill_character).length
+
+      quiet_row = light + fill_character * width + normal + "\n"
+
+
+      quiet_row * 2 + output + quiet_row * 2
+    end
+
     protected
 
     def make #:nodoc:
