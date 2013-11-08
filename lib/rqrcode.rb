@@ -9,5 +9,7 @@
 # above copyright notice is included.
 #++
 
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+
 require "rqrcode/core_ext"
 require "rqrcode/qrcode"
