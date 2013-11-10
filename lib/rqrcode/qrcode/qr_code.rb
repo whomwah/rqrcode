@@ -163,17 +163,26 @@ module RQRCode #:nodoc:
       res.join("\n")
     end
 
-    def to_s_ansi(light="\033[47m", dark="\033[40m")
+    def to_s_ansi(options={})
+      options = {
+        light: "\033[47m",
+        dark: "\033[40m",
+        fill_character: '  ',
+        quiet_zone_size: 4
+      }.merge(options)
+
       normal = "\033[m"
+      light = options.fetch(:light)
+      dark = options.fetch(:dark)
+      fill_character = options.fetch(:fill_character)
+      quiet_zone_size = options.fetch(:quiet_zone_size)
 
       output = ''
-
-      fill_character = '  '
 
       @modules.each_index do |c|
 
         # start row with quiet zone
-        row = light + fill_character * 2
+        row = light + fill_character * quiet_zone_size
         previous_dark = false
 
         @modules.each_index do |r|
@@ -198,7 +207,7 @@ module RQRCode #:nodoc:
         if previous_dark != false
           row << light
         end
-        row << fill_character * 2
+        row << fill_character * quiet_zone_size
 
         # always end with reset and newline
         row << normal + "\n"
@@ -210,9 +219,9 @@ module RQRCode #:nodoc:
       width = output.each_line.first.scan(fill_character).length
 
       quiet_row = light + fill_character * width + normal + "\n"
+      quiet_rows = quiet_row * quiet_zone_size
 
-
-      quiet_row * 2 + output + quiet_row * 2
+      return quiet_rows + output + quiet_rows
     end
 
     protected
