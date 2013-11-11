@@ -1,3 +1,7 @@
+*0.5.4* (Nov 11th, 2013)
+  
+* Added as_html, Big thanks to Jon Evans!
+
 *0.4.2* (Sep 1st, 2011)
 
 * Proper namespace CoreExtensions and only extend when needed [https://github.com/metaskills]
