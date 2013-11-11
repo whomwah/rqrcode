@@ -84,6 +84,12 @@ td.black { background-color: #000; }
 td.white { background-color: #fff; }
 </style>
 
+<%= raw @qr.as_html %>
+```
+
+If you want to generate the HTML manually for customization, you can start with the following:
+
+```erb
 <table>
 <% @qr.modules.each_index do |x| %>
   <tr>
@@ -152,4 +158,4 @@ Special thanks to the following people for submitting patches:
 
 ## Copyright
 
-MIT Licence (http://www.opensource.org/licenses/mit-license.html)
+MIT License (http://www.opensource.org/licenses/mit-license.html)

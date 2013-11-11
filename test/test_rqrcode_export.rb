@@ -3,6 +3,7 @@ require 'minitest/autorun'
 
 require 'rqrcode/export/png'
 require 'rqrcode/export/svg'
+require 'rqrcode/export/html'
 
 # fix for require_relative in < 1.9
 unless Kernel.respond_to?(:require_relative)
@@ -18,8 +19,8 @@ require_relative "../lib/rqrcode"
 describe :QRCodeExportTest do
   # require_relative "data"
 
-  [:svg, :png].each do |ext|
-    it "must respond_to to #{ext}" do
+  [:svg, :png, :html].each do |ext|
+    it "must respond_to #{ext}" do
       RQRCode::QRCode.new('x').must_respond_to :"as_#{ext}"
     end
   end
@@ -29,8 +30,11 @@ describe :QRCodeExportTest do
   end
 
   it "must export to svg file" do
-     RQRCode::QRCode.new('png').as_svg.must_match(/<\/svg>/)
+    RQRCode::QRCode.new('svg').as_svg.must_match(/<\/svg>/)
   end
 
+  it "must export to html" do
+    RQRCode::QRCode.new('html').as_html.must_match(/<table>.+<\/table>/)
+  end
 
 end
