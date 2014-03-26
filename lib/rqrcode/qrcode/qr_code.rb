@@ -58,29 +58,29 @@ module RQRCode #:nodoc:
   # == Creation
   #
   # QRCode objects expect only one required constructor parameter
-  # and an optional hash of any other. Here's a few examples: 
+  # and an optional hash of any other. Here's a few examples:
   #
   #  qr = RQRCode::QRCode.new('hello world')
-  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
+  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
   #
 
   class QRCode
     attr_reader :modules, :module_count
 
     PAD0 = 0xEC
-    PAD1 = 0x11  
+    PAD1 = 0x11
 
-    # Expects a string to be parsed in, other args are optional 
+    # Expects a string to be parsed in, other args are optional
     #
-    #   # string - the string you wish to encode 
+    #   # string - the string you wish to encode
     #   # size   - the size of the qrcode (default 4)
     #   # level  - the error correction level, can be:
     #      * Level :l 7%  of code can be restored
     #      * Level :m 15% of code can be restored
     #      * Level :q 25% of code can be restored
-    #      * Level :h 30% of code can be restored (default :h) 
+    #      * Level :h 30% of code can be restored (default :h)
     #
-    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m ) 
+    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
     #
 
     def initialize( string, *args )
@@ -108,10 +108,10 @@ module RQRCode #:nodoc:
     end
 
     # <tt>is_dark</tt> is called with a +col+ and +row+ parameter. This will
-    # return true or false based on whether that coordinate exists in the 
+    # return true or false based on whether that coordinate exists in the
     # matrix returned. It would normally be called while iterating through
     # <tt>modules</tt>. A simple example would be:
-    #   
+    #
     #  instance.is_dark( 10, 10 ) => true
     #
 
@@ -144,8 +144,8 @@ module RQRCode #:nodoc:
 
     def to_s( *args )
       options                = args.extract_options!
-      row                    = options[:true] || 'x' 
-      col                    = options[:false] || ' ' 
+      row                    = options[:true] || 'x'
+      col                    = options[:false] || ' '
 
       res = []
 
@@ -153,14 +153,75 @@ module RQRCode #:nodoc:
         tmp = []
         @modules.each_index do |r|
           if is_dark(c,r)
-            tmp << row 
+            tmp << row
           else
-            tmp << col 
+            tmp << col
           end
-        end 
+        end
         res << tmp.join
      end
       res.join("\n")
+    end
+
+    def to_s_ansi(options={})
+      options = {
+        light: "\033[47m",
+        dark: "\033[40m",
+        fill_character: '  ',
+        quiet_zone_size: 4
+      }.merge(options)
+
+      normal = "\033[m"
+      light = options.fetch(:light)
+      dark = options.fetch(:dark)
+      fill_character = options.fetch(:fill_character)
+      quiet_zone_size = options.fetch(:quiet_zone_size)
+
+      output = ''
+
+      @modules.each_index do |c|
+
+        # start row with quiet zone
+        row = light + fill_character * quiet_zone_size
+        previous_dark = false
+
+        @modules.each_index do |r|
+          if is_dark(c, r)
+            # dark
+            if previous_dark != true
+              row << dark
+              previous_dark = true
+            end
+            row << fill_character
+          else
+            # light
+            if previous_dark != false
+              row << light
+              previous_dark = false
+            end
+            row << fill_character
+          end
+        end
+
+        # add quiet zone
+        if previous_dark != false
+          row << light
+        end
+        row << fill_character * quiet_zone_size
+
+        # always end with reset and newline
+        row << normal + "\n"
+
+        output << row
+      end
+
+      # count the row width so we can add quiet zone rows
+      width = output.each_line.first.scan(fill_character).length
+
+      quiet_row = light + fill_character * width + normal + "\n"
+      quiet_rows = quiet_row * quiet_zone_size
+
+      return quiet_rows + output + quiet_rows
     end
 
     protected
@@ -191,9 +252,9 @@ module RQRCode #:nodoc:
       place_version_info(test) if @version >= 7
 
       if @data_cache.nil?
-        @data_cache = QRCode.create_data( 
+        @data_cache = QRCode.create_data(
           @version, @error_correct_level, @data_list
-        ) 
+        )
       end
 
       map_data( @data_cache, mask_pattern )
@@ -237,7 +298,7 @@ module RQRCode #:nodoc:
 
     def place_timing_pattern #:nodoc:
       ( 8...@module_count - 8 ).each do |i|
-        @modules[i][6] = @modules[6][i] = i % 2 == 0 
+        @modules[i][6] = @modules[6][i] = i % 2 == 0
       end
     end
 
@@ -254,7 +315,7 @@ module RQRCode #:nodoc:
               is_part_of_pattern = (r.abs == 2 || c.abs == 2 || ( r == 0 && c == 0 ))
               @modules[row + r][col + c] = is_part_of_pattern
             end
-          end  
+          end
         end
       end
     end
@@ -300,7 +361,7 @@ module RQRCode #:nodoc:
       end
 
       # fixed module
-      @modules[ @module_count - 8 ][8] = !test  
+      @modules[ @module_count - 8 ][8] = !test
     end
 
 
@@ -341,7 +402,7 @@ module RQRCode #:nodoc:
             break
           end
         end
-      end  
+      end
     end
 
     def QRCode.count_max_data_bits(rs_blocks)
@@ -358,15 +419,15 @@ module RQRCode #:nodoc:
 
       data = data_list
       buffer.put( data.mode, 4 )
-      buffer.put( 
+      buffer.put(
         data.get_length, QRUtil.get_length_in_bits(data.mode, version)
       )
-      data.write( buffer )  
+      data.write( buffer )
 
       max_data_bits = QRCode.count_max_data_bits(rs_blocks)
 
       if buffer.get_length_in_bits > max_data_bits
-        raise QRCodeRunTimeError, 
+        raise QRCodeRunTimeError,
           "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
       end
 
@@ -433,7 +494,7 @@ module RQRCode #:nodoc:
           if i < dcdata[r].size
             data[index] = dcdata[r][i]
             index += 1
-          end  
+          end
         end
       end
 
@@ -442,12 +503,12 @@ module RQRCode #:nodoc:
           if i < ecdata[r].size
             data[index] = ecdata[r][i]
             index += 1
-          end  
+          end
         end
       end
 
       data
-    end 
+    end
 
   end
 
