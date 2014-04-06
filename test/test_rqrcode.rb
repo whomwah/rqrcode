@@ -26,6 +26,13 @@ class QRCodeTest < Test::Unit::TestCase
     }
   end
 
+  def test_exceed_max_size
+    assert_raise_with_message(RQRCode::QRCodeArgumentError, 
+                              "Given size greater than maximum possible size of #{RQRCode::QRUtil.max_size}") {
+      RQRCode::QRCode.new( 'duncan', :size => RQRCode::QRUtil.max_size + 1 )
+    }
+  end
+
   def test_H_
     qr = RQRCode::QRCode.new( 'duncan', :size => 1 )
 

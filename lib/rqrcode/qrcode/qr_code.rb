@@ -92,6 +92,10 @@ module RQRCode #:nodoc:
       level                 = (options[:level] || :h).to_sym
       size                  = options[:size] || 4
 
+      if size > QRUtil.max_size
+        raise QRCodeArgumentError, "Given size greater than maximum possible size of #{QRUtil.max_size}"
+      end
+
       if !QRERRORCORRECTLEVEL.has_key?(level)
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
