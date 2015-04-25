@@ -19,6 +19,7 @@ module RQRCode #:nodoc:
       @data_count = data_count
     end
 
+# http://www.thonky.com/qr-code-tutorial/error-correction-table/
 RQRCode::QRRSBlock::RS_BLOCK_TABLE = [
 
       # L
@@ -114,7 +115,7 @@ RQRCode::QRRSBlock::RS_BLOCK_TABLE = [
       [5, 109, 87, 1, 110, 88],
       [5, 65, 41, 5, 66, 42],
       [5, 54, 24, 7, 55, 25],
-      [11, 36, 12],
+      [11, 36, 12, 7, 37, 13],
 
       # 16
       [5, 122, 98, 1, 123, 99],

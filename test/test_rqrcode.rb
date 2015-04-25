@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "test/unit"
 
 # fix for require_relative in < 1.9
@@ -13,7 +14,7 @@ require_relative "../lib/rqrcode"
 
 class QRCodeTest < Test::Unit::TestCase
   require_relative "data"
- 
+
   def test_no_data_given
     assert_raise(RQRCode::QRCodeArgumentError) {
       RQRCode::QRCode.new( :size => 1, :level => :h )
@@ -65,13 +66,13 @@ class QRCodeTest < Test::Unit::TestCase
 
   def test_4_H_
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :l )
+      :level => :l, :size => 4 )
     assert_equal qr.modules, MATRIX_4_L
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :m )
+      :level => :m, :size => 4 )
     assert_equal qr.modules, MATRIX_4_M
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw',
-      :level => :q )
+      :level => :q, :size => 4 )
     assert_equal qr.modules, MATRIX_4_Q
 
     qr = RQRCode::QRCode.new('www.bbc.co.uk/programmes/b0090blw')
@@ -86,6 +87,14 @@ class QRCodeTest < Test::Unit::TestCase
                  qr.to_s( :true => 'q', :false => 'n' )[0..21]
     assert_equal "@@@@@@@ @@ @  @@@@@@@\n", qr.to_s( :true => '@' )[0..21]
   end
+  
+  def test_auto_alphanumeric
+    # Overflowws without the alpha version
+    assert RQRCode::QRCode.new( '1234567890', :size => 1, :level => :h )
+    
+    qr = RQRCode::QRCode.new( 'DUNCAN', :size => 1, :level => :h )
+    assert_equal "xxxxxxx xxx   xxxxxxx\n", qr.to_s[0..21]
+  end
 
   def test_rszf_error_not_thrown
     assert RQRCode::QRCode.new('2 1058 657682')
@@ -98,11 +107,17 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("duncan", :level => :m)
     assert RQRCode::QRCode.new("duncan", :level => :q)
     assert RQRCode::QRCode.new("duncan", :level => :h)
-    assert_raise(RQRCode::QRCodeArgumentError) {
-      %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
+
+    %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
+      assert_raise(RQRCode::QRCodeArgumentError) {
         RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
-      end
-    }
+      }
+    end
+  end
+
+  def test_utf8
+    qr = RQRCode::QRCode.new('тест')
+    assert_equal qr.modules, MATRIX_UTF8_RU_test
   end
 
 end
