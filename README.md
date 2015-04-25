@@ -3,6 +3,13 @@
 I have republished this gem as rqrcode-with-patches as Duncan seams to have abandoned the project.
 You can find the original project here: http://github.com/whomwah/rqrcode
 
+## Short changelog
+
+*0.5.5* (Apr 25, 2015)
+
+- Fixed major bug. The rs block data was missing resulting in qr codes failing to be generated.
+  *Upgrade highly recomended!!*
+
 ## Overview
 
 rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface with all the standard qrcode options. It was adapted from the Javascript library by Kazuhiko Arase.
