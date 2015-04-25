@@ -1,4 +1,6 @@
-# rQRCode, Encode QRCodes
+# rQRCode, Encode QRCodes 
+
+[![Build Status](https://travis-ci.org/bjornblomqvist/rqrcode.svg?branch=master)](https://travis-ci.org/bjornblomqvist/rqrcode)
 
 I have republished this gem as rqrcode-with-patches as Duncan seams to have abandoned the project.
 You can find the original project here: http://github.com/whomwah/rqrcode
