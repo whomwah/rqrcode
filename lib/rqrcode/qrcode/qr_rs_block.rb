@@ -19,6 +19,7 @@ module RQRCode #:nodoc:
       @data_count = data_count
     end
 
+# http://www.thonky.com/qr-code-tutorial/error-correction-table/
 RQRCode::QRRSBlock::RS_BLOCK_TABLE = [
 
       # L

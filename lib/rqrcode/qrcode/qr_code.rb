@@ -52,7 +52,7 @@ module RQRCode #:nodoc:
   QRPOSITIONPATTERNLENGTH = (7 + 1) * 2 + 1
   QRFORMATINFOLENGTH = 15
 
-  #http://www.denso-wave.com/qrcode/vertable1-e.html
+  #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable1-e.html
   QRMAXDIGITS = {
     :l => {:mode_number     => [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
            :mode_alpha_numk => [25, 47,  77, 114, 154, 195, 224, 279, 335, 395],
