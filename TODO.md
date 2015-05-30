@@ -1,0 +1,4 @@
+- Add Numeric mode
+- Add Kanji mode
+- Add ECI Mode
+- Improved performance for large QR codes
