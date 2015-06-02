@@ -7,6 +7,11 @@ You can find the original project here: http://github.com/whomwah/rqrcode
 
 ## Short changelog
 
+*0.6.0* (Jun 2, 2015)
+
+- Improved png rendering. Previous png rendering could result in hard to scan qrcodes.
+  *Big thanks to Bart Jedrocha*
+
 *0.5.5* (Apr 25, 2015)
 
 - Fixed major bug. The rs block data was missing resulting in qr codes failing to be generated.
