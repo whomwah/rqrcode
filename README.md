@@ -29,68 +29,80 @@ Let's clear up some rQRCode stuff.
 
 You may get the latest stable version from Rubygems.
 
-    gem install rqrcode
+```ruby
+gem install rqrcode
+```
 
 ## Using rQRCode
 
-    require 'rqrcode'
+```ruby
+require 'rqrcode'
 
-    qrcode = RQRCode::QRCode.new("http://github.com/")
-    image = qrcode.as_png
-    html = qrcode.as_html
-    svg = qrcode.as_svg
-    string = qrcode.to_s
+qrcode = RQRCode::QRCode.new("http://github.com/")
+image = qrcode.as_png
+html = qrcode.as_html
+svg = qrcode.as_svg
+string = qrcode.to_s
+```
 
 ## HTML Rendering
 ### In your controller
-
-    @qr = RQRCode::QRCode.new( 'https://github.com/whomwah/rqrcode', :size => 4, :level => :h )
+```ruby
+@qr = RQRCode::QRCode.new( 'https://github.com/whomwah/rqrcode', :size => 4, :level => :h )
+```
 
 ### In your view
-
-    <%= raw @qr.as_html %>
+```html
+<%= raw @qr.as_html %>
+```
 
 ### CSS
+```css
+table {
+  border-width: 0;
+  border-style: none;
+  border-color: #0000ff;
+  border-collapse: collapse;
+}
 
-    table {
-      border-width: 0;
-      border-style: none;
-      border-color: #0000ff;
-      border-collapse: collapse;
-    }
+td {
+  border-left: solid 10px #000;
+  padding: 0; 
+  margin: 0; 
+  width: 0px; 
+  height: 10px; 
+}
 
-    td {
-      border-left: solid 10px #000;
-      padding: 0; 
-      margin: 0; 
-      width: 0px; 
-      height: 10px; 
-    }
-
-    td.black { border-color: #000; }
-    td.white { border-color: #fff; }
+td.black { border-color: #000; }
+td.white { border-color: #fff; }
+```
     
 ## On the console
 
-    qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-    puts qr.to_s
+```ruby
+qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+puts qr.to_s
+```
 
 Output:
 
-    xxxxxxx x  x x   x x  xx  xxxxxxx
-    x     x  xxx  xxxxxx xxx  x     x
-    x xxx x  xxxxx x       xx x xxx x
-    ... etc 
+```
+xxxxxxx x  x x   x x  xx  xxxxxxx
+x     x  xxx  xxxxxx xxx  x     x
+x xxx x  xxxxx x       xx x xxx x
+... etc 
+```
 
 ## Doing your own rendering
-
-    qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-    qr.modules.each do |row|
-        row.each do |col| 
-            print col ? "X" : " "
-        end
-        print "\n"
+```ruby
+qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+qr.modules.each do |row|
+    row.each do |col| 
+        print col ? "X" : " "
     end
+    print "\n"
+end
+```
 
 ## API Documentation
 
