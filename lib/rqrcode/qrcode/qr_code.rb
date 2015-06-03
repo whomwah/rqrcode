@@ -392,7 +392,7 @@ module RQRCode #:nodoc:
       buffer.end_of_message(max_data_bits)
 
       if buffer.get_length_in_bits > max_data_bits
-        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
+        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits}). (Try a larger size!)"
       end
 
       buffer.pad_until(max_data_bits)
