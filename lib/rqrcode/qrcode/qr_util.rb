@@ -73,6 +73,10 @@ module RQRCode #:nodoc:
       QRMODE[:mode_kanji] => [8, 10, 12],
     }
 
+    def QRUtil.max_size
+      PATTERN_POSITION_TABLE.count
+    end
+
     def QRUtil.get_bch_format_info( data )
       d = data << 10
       while QRUtil.get_bch_digit(d) - QRUtil.get_bch_digit(G15) >= 0

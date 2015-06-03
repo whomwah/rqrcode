@@ -121,6 +121,10 @@ module RQRCode #:nodoc:
 
       max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)
+      
+      if size > QRUtil.max_size
+        raise QRCodeArgumentError, "Given size greater than maximum possible size of #{QRUtil.max_size}"
+      end
 
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @version              = size

@@ -101,6 +101,12 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("40952", :size => 1, :level => :h)
     assert RQRCode::QRCode.new("40932", :size => 1, :level => :h)
   end
+  
+  def test_exceed_max_size
+    assert_raise RQRCode::QRCodeArgumentError do
+      RQRCode::QRCode.new( 'duncan', :size => 41 )
+    end
+  end
 
   def test_levels
     assert RQRCode::QRCode.new("duncan", :level => :l)
