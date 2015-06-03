@@ -25,128 +25,82 @@ Let's clear up some rQRCode stuff.
 * The interface is simple and assumes you just want to encode a string into a QR code
 * QR code is trademarked by Denso Wave inc
 
-## Resources
-
-* wikipedia:: http://en.wikipedia.org/wiki/QR_Code
-* Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
-* kaywa:: http://qrcode.kaywa.com
-
 ## Installing
 
 You may get the latest stable version from Rubygems.
 
     gem install rqrcode
 
-You can also get the latest source from https://github.com/whomwah/rqrcode
+## Using rQRCode
 
-    git clone git://github.com/whomwah/rqrcode.git
-
-## Tests
-
-To run the tests:
-
-    $ rake
-
-## Loading rQRCode Itself
-
-You have installed the gem already, yeah?
-
-    require 'rubygems'
     require 'rqrcode'
 
-## Simple QRCode generation to screen
+    qrcode = RQRCode::QRCode.new("http://github.com/")
+    image = qrcode.as_png
+    html = qrcode.as_html
+    svg = qrcode.as_svg
+    string = qrcode.to_s
 
-```ruby
-qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-puts qr.to_s
-#
-# Prints:
-# xxxxxxx x  x x   x x  xx  xxxxxxx
-# x     x  xxx  xxxxxx xxx  x     x
-# x xxx x  xxxxx x       xx x xxx x
-# ... etc
-```
+## HTML Rendering
+### In your controller
 
-## Simple QRCode generation to template (RubyOnRails)
-### Controller
-```ruby
-@qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-```
-### View: (minimal styling added)
-```erb
-<style type="text/css">
-table {
-  border-width: 0;
-  border-style: none;
-  border-color: #0000ff;
-  border-collapse: collapse;
-}
-td {
-  border-width: 0;
-  border-style: none;
-  border-color: #0000ff;
-  border-collapse: collapse;
-  padding: 0;
-  margin: 0;
-  width: 10px;
-  height: 10px;
-}
-td.black { background-color: #000; }
-td.white { background-color: #fff; }
-</style>
+    @qr = RQRCode::QRCode.new( 'https://github.com/whomwah/rqrcode', :size => 4, :level => :h )
 
-<%= raw @qr.as_html %>
-```
+### In your view
 
-If you want to generate the HTML manually for customization, you can start with the following:
+    <%= raw @qr.as_html %>
 
-```erb
-<table>
-<% @qr.modules.each_index do |x| %>
-  <tr>
-  <% @qr.modules.each_index do |y| %>
-   <% if @qr.dark?(x,y) %>
-    <td class="black"/>
-   <% else %>
-    <td class="white"/>
-   <% end %>
-  <% end %>
-  </tr>
-<% end %>
-</table>
-```
+### CSS
 
-## Exporting
+    table {
+      border-width: 0;
+      border-style: none;
+      border-color: #0000ff;
+      border-collapse: collapse;
+    }
 
-You can also require optional export features:
+    td {
+      border-left: solid 10px #000;
+      padding: 0; 
+      margin: 0; 
+      width: 0px; 
+      height: 10px; 
+    }
 
-* SVG -> no dependencies
-* PNG -> depends on 'chunky_png' gem
-* JPG -> depends on 'mini_magick' gem
+    td.black { border-color: #000; }
+    td.white { border-color: #fff; }
+    
+## On the console
 
-Example to render png:
+    qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+    puts qr.to_s
 
-```ruby
-require 'rqrcode/export/png'
-image = RQRCode::QRCode.new("nice qr").as_png
-```
+Output:
 
-Notice the 'as\_png'. Same goes for 'as\_svg', 'as\_xxx'.
+    xxxxxxx x  x x   x x  xx  xxxxxxx
+    x     x  xxx  xxxxxx xxx  x     x
+    x xxx x  xxxxx x       xx x xxx x
+    ... etc 
 
-### Export Options
+## Doing your own rendering
 
-Exporters support these options:
+    qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+    qr.modules.each do |row|
+        row.each do |col| 
+            print col ? "X" : " "
+        end
+        print "\n"
+    end
 
-* size  - Image size, in pixels.
-* fill  - Background color, defaults to 'white'
-* color - Foreground color, defaults to 'black'
+## API Documentation
 
-SVG Export supports the parameter `module_size` to generate smaller or larger QR Codes
+[http://www.rubydoc.info/gems/rqrcode](http://www.rubydoc.info/gems/rqrcode)
 
-```ruby
-require 'rqrcode/export/svg'
-svg = RQRCode::QRCode.new("nice qr").as_svg(:module_size => 6)
-```
+## Resources
+
+* wikipedia:: http://en.wikipedia.org/wiki/QR_Code
+* Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
+* kaywa:: http://qrcode.kaywa.com
 
 ## Authors
 

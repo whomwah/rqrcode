@@ -2,15 +2,17 @@
 # Code from: https://github.com/samvincent/rqrcode-rails3
 module RQRCode
   module Export
-
-    # Render the SVG from the Qrcode.
-    #
-    # Options:
-    # offset - Padding around the QR Code (e.g. 10)
-    # fill - Background color (e.g "ffffff" or :white)
-    # color - Foreground color for the code (e.g. "000000" or :black)
-    # module_size - The Pixel size of each module (e.g. 11)
+    
     module SVG
+      
+      # Render the SVG from the Qrcode.
+      #
+      # Options:
+      # offset - Padding around the QR Code (e.g. 10)
+      # fill - Background color (e.g "ffffff" or :white)
+      # color - Foreground color for the code (e.g. "000000" or :black)
+      # module_size - The Pixel size of each module (e.g. 11)
+      #
       def as_svg(options={})
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
