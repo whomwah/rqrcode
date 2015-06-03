@@ -164,31 +164,32 @@ module RQRCode #:nodoc:
     #  x     x  xxx  xxxxxx xxx  x     x
     #  x xxx x  xxxxx x       xx x xxx x
     #
-    #  instance._to_s( :true => 'E', :false => 'Q') =>
+    #  instance._to_s( :dark => 'E', :light => 'Q') =>
     #  EEEEEEEQEQQEQEQQQEQEQQEEQQEEEEEEE
     #  EQQQQQEQQEEEQQEEEEEEQEEEQQEQQQQQE
     #  EQEEEQEQQEEEEEQEQQQQQQQEEQEQEEEQE
     #
-
     def to_s( *args )
       options                = args.extract_options!
-      row                    = options[:true] || 'x'
-      col                    = options[:false] || ' '
+      dark                   = options[:dark] || options[:true] || 'x'
+      light                  = options[:light] || options[:false] || ' '
+      quiet_zone_size        = options[:quiet_zone_size] || 0
 
-      res = []
+      rows = []
 
-      @modules.each_index do |c|
-        tmp = []
-        @modules.each_index do |r|
-          if is_dark(c,r)
-            tmp << row
-          else
-            tmp << col
-          end
+      @modules.each do |row|
+        cols = light * quiet_zone_size
+        row.each do |col|
+          cols += (col ? dark : light)
         end
-        res << tmp.join
-     end
-      res.join("\n")
+        rows << cols
+      end
+      
+      quiet_zone_size.times do
+        rows.unshift(light * (rows.first.length / light.size))
+        rows << light * (rows.first.length / light.size)
+      end 
+      rows.join("\n")
     end
 
     protected
