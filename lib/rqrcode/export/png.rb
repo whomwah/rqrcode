@@ -11,7 +11,7 @@ module RQRCode
       # There are two sizing algoritams.
       #
       # - Original that can result in blurry and hard to scan images
-      # - Google's Chart API inspired sizing that risizes the module size to fit within the given image size.
+      # - Google's Chart API inspired sizing that resizes the module size to fit within the given image size.
       # 
       # The Googleis one will be used when no options are given or when the new size option is used.
       #
