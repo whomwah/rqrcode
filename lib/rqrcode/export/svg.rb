@@ -16,7 +16,7 @@ module RQRCode
       def as_svg(options={})
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
-        color = options[:shape_rendering] || "crispEdges"
+        shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
 
         # height and width dependent on offset and QR complexity
