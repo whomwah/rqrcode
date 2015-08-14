@@ -2,9 +2,9 @@
 # Code from: https://github.com/samvincent/rqrcode-rails3
 module RQRCode
   module Export
-    
+
     module SVG
-      
+
       # Render the SVG from the Qrcode.
       #
       # Options:
