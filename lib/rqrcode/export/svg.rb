@@ -16,13 +16,14 @@ module RQRCode
       def as_svg(options={})
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
+        color = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
 
         # height and width dependent on offset and QR complexity
         dimension = (self.module_count*module_size) + (2*offset)
 
         xml_tag = %{<?xml version="1.0" standalone="yes"?>}
-        open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{dimension}" height="#{dimension}" shape-rendering="crispEdges">}
+        open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{dimension}" height="#{dimension}" shape-rendering="#{shape_rendering}">}
         close_tag = "</svg>"
 
         result = []
