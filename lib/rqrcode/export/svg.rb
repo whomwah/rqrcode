@@ -12,6 +12,7 @@ module RQRCode
       # fill - Background color (e.g "ffffff" or :white)
       # color - Foreground color for the code (e.g. "000000" or :black)
       # module_size - The Pixel size of each module (e.g. 11)
+      # shape_rendering - Defaults to crispEdges
       #
       def as_svg(options={})
         offset = options[:offset].to_i || 0
