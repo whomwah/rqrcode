@@ -4,6 +4,10 @@
 
 ## Short changelog
 
+*0.7.0* (Aug 15, 2015)
+
+- Added shape_rendering option for as_svg
+
 *0.6.0* (Jun 2, 2015)
 
 - Improved png rendering. Previous png rendering could result in hard to scan qrcodes.
