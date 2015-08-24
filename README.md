@@ -76,9 +76,8 @@ png = qrcode.as_png(
           color: 'black',
           size: 120,
           border_modules: 4,
-          file: false,
           module_px_size: 6,
-          output_file: nil # path to write
+          file: nil # path to write
           )
 ```
 
