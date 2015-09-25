@@ -4,6 +4,10 @@
 
 ## Short changelog
 
+*0.7.0* (Aug 15, 2015)
+
+- Added shape_rendering option for as_svg
+
 *0.6.0* (Jun 2, 2015)
 
 - Improved png rendering. Previous png rendering could result in hard to scan qrcodes.
@@ -25,128 +29,126 @@ Let's clear up some rQRCode stuff.
 * The interface is simple and assumes you just want to encode a string into a QR code
 * QR code is trademarked by Denso Wave inc
 
-## Resources
-
-* wikipedia:: http://en.wikipedia.org/wiki/QR_Code
-* Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
-* kaywa:: http://qrcode.kaywa.com
-
 ## Installing
 
 You may get the latest stable version from Rubygems.
 
-    gem install rqrcode
-
-You can also get the latest source from https://github.com/whomwah/rqrcode
-
-    git clone git://github.com/whomwah/rqrcode.git
-
-## Tests
-
-To run the tests:
-
-    $ rake
-
-## Loading rQRCode Itself
-
-You have installed the gem already, yeah?
-
-    require 'rubygems'
-    require 'rqrcode'
-
-## Simple QRCode generation to screen
-
 ```ruby
-qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
-puts qr.to_s
-#
-# Prints:
-# xxxxxxx x  x x   x x  xx  xxxxxxx
-# x     x  xxx  xxxxxx xxx  x     x
-# x xxx x  xxxxx x       xx x xxx x
-# ... etc
+gem install rqrcode
 ```
 
-## Simple QRCode generation to template (RubyOnRails)
-### Controller
+## Using rQRCode
+
 ```ruby
-@qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+require 'rqrcode'
+
+qrcode = RQRCode::QRCode.new("http://github.com/")
+image = qrcode.as_png
+svg = qrcode.as_svg
+html = qrcode.as_html
+string = qrcode.to_s
 ```
-### View: (minimal styling added)
-```erb
-<style type="text/css">
+
+## Image Rendering
+### SVG
+
+The SVG renderer will produce a stand-alone SVG as a `String`
+
+```ruby
+qrcode = RQRCode::QRCode.new("http://github.com/")
+# With default options specified explicitly
+svg = qrcode.as_svg(offset: 0, color: '000', 
+                    shape_rendering: 'crispEdges', 
+                    module_size: 11)
+```
+
+### PNG
+
+The library can produce a PNG. Result will be a `ChunkyPNG::Image` instance.
+
+```ruby
+qrcode = RQRCode::QRCode.new("http://github.com/")
+# With default options specified explicitly
+png = qrcode.as_png(
+          resize_gte_to: false,
+          resize_exactly_to: false,
+          fill: 'white',
+          color: 'black',
+          size: 120,
+          border_modules: 4,
+          module_px_size: 6,
+          file: nil # path to write
+          )
+```
+
+## HTML Rendering
+### In your controller
+```ruby
+@qr = RQRCode::QRCode.new( 'https://github.com/whomwah/rqrcode', :size => 4, :level => :h )
+```
+
+### In your view
+```html
+<%= raw @qr.as_html %>
+```
+
+### CSS
+```css
 table {
   border-width: 0;
   border-style: none;
   border-color: #0000ff;
   border-collapse: collapse;
 }
+
 td {
-  border-width: 0;
-  border-style: none;
-  border-color: #0000ff;
-  border-collapse: collapse;
-  padding: 0;
-  margin: 0;
-  width: 10px;
-  height: 10px;
+  border-left: solid 10px #000;
+  padding: 0; 
+  margin: 0; 
+  width: 0px; 
+  height: 10px; 
 }
-td.black { background-color: #000; }
-td.white { background-color: #fff; }
-</style>
 
-<%= raw @qr.as_html %>
+td.black { border-color: #000; }
+td.white { border-color: #fff; }
 ```
-
-If you want to generate the HTML manually for customization, you can start with the following:
-
-```erb
-<table>
-<% @qr.modules.each_index do |x| %>
-  <tr>
-  <% @qr.modules.each_index do |y| %>
-   <% if @qr.dark?(x,y) %>
-    <td class="black"/>
-   <% else %>
-    <td class="white"/>
-   <% end %>
-  <% end %>
-  </tr>
-<% end %>
-</table>
-```
-
-## Exporting
-
-You can also require optional export features:
-
-* SVG -> no dependencies
-* PNG -> depends on 'chunky_png' gem
-* JPG -> depends on 'mini_magick' gem
-
-Example to render png:
+    
+## On the console
 
 ```ruby
-require 'rqrcode/export/png'
-image = RQRCode::QRCode.new("nice qr").as_png
+qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+puts qr.to_s
 ```
 
-Notice the 'as\_png'. Same goes for 'as\_svg', 'as\_xxx'.
+Output:
 
-### Export Options
+```
+xxxxxxx x  x x   x x  xx  xxxxxxx
+x     x  xxx  xxxxxx xxx  x     x
+x xxx x  xxxxx x       xx x xxx x
+... etc 
+```
 
-Exporters support these options:
-
-* size  - Image size, in pixels.
-* fill  - Background color, defaults to 'white'
-* color - Foreground color, defaults to 'black'
-
-SVG Export supports the parameter `module_size` to generate smaller or larger QR Codes
-
+## Doing your own rendering
 ```ruby
-require 'rqrcode/export/svg'
-svg = RQRCode::QRCode.new("nice qr").as_svg(:module_size => 6)
+qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
+qr.modules.each do |row|
+    row.each do |col| 
+        print col ? "X" : " "
+    end
+    print "\n"
+end
 ```
+
+## API Documentation
+
+[http://www.rubydoc.info/gems/rqrcode](http://www.rubydoc.info/gems/rqrcode)
+
+## Resources
+
+* wikipedia:: http://en.wikipedia.org/wiki/QR_Code
+* Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
+* kaywa:: http://qrcode.kaywa.com
 
 ## Authors
 

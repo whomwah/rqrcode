@@ -121,6 +121,10 @@ module RQRCode #:nodoc:
 
       max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)
+      
+      if size > QRUtil.max_size
+        raise QRCodeArgumentError, "Given size greater than maximum possible size of #{QRUtil.max_size}"
+      end
 
       @error_correct_level  = QRERRORCORRECTLEVEL[level]
       @version              = size
@@ -160,31 +164,32 @@ module RQRCode #:nodoc:
     #  x     x  xxx  xxxxxx xxx  x     x
     #  x xxx x  xxxxx x       xx x xxx x
     #
-    #  instance._to_s( :true => 'E', :false => 'Q') =>
+    #  instance._to_s( :dark => 'E', :light => 'Q') =>
     #  EEEEEEEQEQQEQEQQQEQEQQEEQQEEEEEEE
     #  EQQQQQEQQEEEQQEEEEEEQEEEQQEQQQQQE
     #  EQEEEQEQQEEEEEQEQQQQQQQEEQEQEEEQE
     #
-
     def to_s( *args )
       options                = args.extract_options!
-      row                    = options[:true] || 'x'
-      col                    = options[:false] || ' '
+      dark                   = options[:dark] || options[:true] || 'x'
+      light                  = options[:light] || options[:false] || ' '
+      quiet_zone_size        = options[:quiet_zone_size] || 0
 
-      res = []
+      rows = []
 
-      @modules.each_index do |c|
-        tmp = []
-        @modules.each_index do |r|
-          if is_dark(c,r)
-            tmp << row
-          else
-            tmp << col
-          end
+      @modules.each do |row|
+        cols = light * quiet_zone_size
+        row.each do |col|
+          cols += (col ? dark : light)
         end
-        res << tmp.join
-     end
-      res.join("\n")
+        rows << cols
+      end
+      
+      quiet_zone_size.times do
+        rows.unshift(light * (rows.first.length / light.size))
+        rows << light * (rows.first.length / light.size)
+      end 
+      rows.join("\n")
     end
 
     protected
@@ -392,7 +397,7 @@ module RQRCode #:nodoc:
       buffer.end_of_message(max_data_bits)
 
       if buffer.get_length_in_bits > max_data_bits
-        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits})"
+        raise QRCodeRunTimeError, "code length overflow. (#{buffer.get_length_in_bits}>#{max_data_bits}). (Try a larger size!)"
       end
 
       buffer.pad_until(max_data_bits)
