@@ -30,18 +30,37 @@ module RQRCode
       buffer.numeric_encoding_start(get_length)
 
       (@data.size).times do |i|
-        if i % 2 == 0
-          if i == (@data.size - 1)
-            value = NUMERIC.index(@data[i])
-            buffer.put( value, 6 )
-          else
-            value = (NUMERIC.index(@data[i]) * 45) + NUMERIC.index(@data[i+1])
-            buffer.put( value, 11 )
+        if i % 3 == 0
+          chars = @data[i]
+
+          if @data[i + 1].present?
+            chars << @data[i + 1]
           end
+
+          if @data[i + 2].present?
+            chars << @data[i + 2]
+          end
+
+          bit_length = get_bit_length(chars.length)
+          buffer.put( get_code(chars), bit_length )
         end
       end
+    end
 
+    private
 
+    NUMBER_LENGTH = {
+      3 => 10,
+      2 => 7,
+      1 => 4
+    }.freeze
+
+    def get_bit_length(length)
+      NUMBER_LENGTH[length]
+    end
+
+    def get_code(chars)
+      chars.to_i
     end
   end
 end
