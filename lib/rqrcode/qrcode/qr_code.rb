@@ -21,8 +21,7 @@ module RQRCode #:nodoc:
   QRMODE_NAME = {
     :number        => :mode_number,
     :alphanumeric  => :mode_alpha_numk,
-    :byte_8bit     => :mode_8bit_byte,
-    :kanji         => :mode_kanji
+    :byte_8bit     => :mode_8bit_byte
   }
 
   QRERRORCORRECTLEVEL = {
