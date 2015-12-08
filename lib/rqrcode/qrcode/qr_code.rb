@@ -21,7 +21,7 @@ module RQRCode #:nodoc:
   QRMODE_NAME = {
     :number        => :mode_number,
     :alphanumeric  => :mode_alpha_numk,
-    :'8bit_byte'   => :mode_8bit_byte,
+    :byte_8bit     => :mode_8bit_byte,
     :kanji         => :mode_kanji
   }
 
@@ -106,10 +106,10 @@ module RQRCode #:nodoc:
     #      * Level :m 15% of code can be restored
     #      * Level :q 25% of code can be restored
     #      * Level :h 30% of code can be restored (default :h)
-    #   # mode   - the mode of the qrcode (defaults to alphanumeric or 8bit_byte, depending on the input data):
+    #   # mode   - the mode of the qrcode (defaults to alphanumeric or byte_8bit, depending on the input data):
     #      * :number
     #      * :alphanumeric
-    #      * :'8bit_byte'
+    #      * :byte_8bit
     #      * :kanji
     #
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
