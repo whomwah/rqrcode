@@ -96,6 +96,13 @@ class QRCodeTest < Test::Unit::TestCase
     assert_equal "xxxxxxx xxx   xxxxxxx\n", qr.to_s[0..21]
   end
 
+  def test_numeric_2_M
+    data = '279042272585972554922067893753871413584876543211601021503002'
+    
+    qr = RQRCode::QRCode.new(data, size: 2, level: :m, mode: :number)
+    assert_equal "xxxxxxx   x x x   xxxxxxx\n", qr.to_s[0..25]
+  end
+
   def test_rszf_error_not_thrown
     assert RQRCode::QRCode.new('2 1058 657682')
     assert RQRCode::QRCode.new("40952", :size => 1, :level => :h)
