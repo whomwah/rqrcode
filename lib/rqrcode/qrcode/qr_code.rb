@@ -91,7 +91,7 @@ module RQRCode #:nodoc:
   # and an optional hash of any other. Here's a few examples:
   #
   #  qr = RQRCode::QRCode.new('hello world')
-  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :number )
+  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
   #
 
   class QRCode
@@ -106,8 +106,13 @@ module RQRCode #:nodoc:
     #      * Level :m 15% of code can be restored
     #      * Level :q 25% of code can be restored
     #      * Level :h 30% of code can be restored (default :h)
+    #   # mode   - the mode of the qrcode (defaults to alphanumeric or 8bit_byte, depending on the input data):
+    #      * :number
+    #      * :alphanumeric
+    #      * :'8bit_byte'
+    #      * :kanji
     #
-    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
+    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
     #
 
     def initialize( string, *args )

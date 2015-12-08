@@ -4,6 +4,10 @@
 
 ## Short changelog
 
+*0.8.0* (Dec 8, 2015)
+
+- Added numeric QR code support
+
 *0.7.0* (Aug 15, 2015)
 
 - Added shape_rendering option for as_svg
@@ -139,6 +143,17 @@ qr.modules.each do |row|
     print "\n"
 end
 ```
+
+## Specifying QR code mode
+
+Sometimes you may want to specify the QR code mode explicitly. 
+
+It is done voia the `mode` option. Allowed values are: `number`, `alphanumeric`, `8bit_byte` and `kanji`.
+
+```ruby
+qr = RQRCode::QRCode.new( '1234567890', :size => 2, :level => :m, :mode => :number )
+```
+
 
 ## API Documentation
 
