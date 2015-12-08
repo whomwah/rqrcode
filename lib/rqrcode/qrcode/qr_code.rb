@@ -146,6 +146,7 @@ module RQRCode #:nodoc:
           QRAlphanumeric.new( @data )
         else
           QR8bitByte.new( @data )
+        end
 
       @data_cache           = nil
       self.make
