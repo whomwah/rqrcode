@@ -1,6 +1,7 @@
 *0.8.0* (Dec 8, 2015)
 
 - Added numeric QR code support
+- Dropped Ruby v1.8 support
 
 *0.7.0* (Aug 15, 2015)
 
