@@ -18,6 +18,12 @@ module RQRCode #:nodoc:
     :mode_kanji         => 1 << 3
   }
 
+  QRMODE_NAME = {
+    :number        => :mode_number,
+    :alphanumeric  => :mode_alpha_numk,
+    :byte_8bit     => :mode_8bit_byte
+  }
+
   QRERRORCORRECTLEVEL = {
     :l => 1,
     :m => 0,
@@ -84,7 +90,7 @@ module RQRCode #:nodoc:
   # and an optional hash of any other. Here's a few examples:
   #
   #  qr = RQRCode::QRCode.new('hello world')
-  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
+  #  qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
   #
 
   class QRCode
@@ -99,8 +105,13 @@ module RQRCode #:nodoc:
     #      * Level :m 15% of code can be restored
     #      * Level :q 25% of code can be restored
     #      * Level :h 30% of code can be restored (default :h)
+    #   # mode   - the mode of the qrcode (defaults to alphanumeric or byte_8bit, depending on the input data):
+    #      * :number
+    #      * :alphanumeric
+    #      * :byte_8bit
+    #      * :kanji
     #
-    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m )
+    #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
     #
 
     def initialize( string, *args )
@@ -117,7 +128,8 @@ module RQRCode #:nodoc:
 
       @data                 = string
 
-      mode                  = QRAlphanumeric.valid_data?( @data ) ? :mode_alpha_numk : :mode_8bit_byte
+      mode                  = QRMODE_NAME[(options[:mode] || '').to_sym]
+      mode                  ||= QRAlphanumeric.valid_data?( @data ) ? :mode_alpha_numk : :mode_8bit_byte  # deprecate?
 
       max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)
@@ -130,7 +142,16 @@ module RQRCode #:nodoc:
       @version              = size
       @module_count         = @version * 4 + QRPOSITIONPATTERNLENGTH
       @modules              = Array.new( @module_count )
-      @data_list            = (mode == :mode_alpha_numk) ? QRAlphanumeric.new( @data ) : QR8bitByte.new( @data )
+      @data_list            =
+        case mode
+        when :mode_number
+          QRNumeric.new( @data )
+        when :mode_alpha_numk
+          QRAlphanumeric.new( @data )
+        else
+          QR8bitByte.new( @data )
+        end
+
       @data_cache           = nil
       self.make
     end

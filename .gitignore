@@ -1,3 +1,5 @@
 /pkg/
 .rvmrc
 Gemfile.lock
+*.sublime-project
+*.sublime-workspace
