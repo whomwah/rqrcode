@@ -29,7 +29,7 @@ rQRCode is a library for encoding QR Codes in Ruby. It has a simple interface wi
 
 Let's clear up some rQRCode stuff.
 
-* rQRCode is a __standalone library__ It requires no other libraries. Just Ruby!
+* rQRCode is a __ruby only library__ It requires no native libraries. Just Ruby!
 * It is an encoding library. You can't decode QR codes with it.
 * The interface is simple and assumes you just want to encode a string into a QR code
 * QR code is trademarked by Denso Wave inc
