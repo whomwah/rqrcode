@@ -1,4 +1,4 @@
-require 'helper'
+require 'test_helper'
 
 class QRCodeTest < Minitest::Test
   require_relative "data"
