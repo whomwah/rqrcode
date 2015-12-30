@@ -33,11 +33,11 @@ module RQRCode
         if i % 3 == 0
           chars = @data[i]
 
-          if @data[i + 1].present?
+          if @data[i + 1]
             chars << @data[i + 1]
           end
 
-          if @data[i + 2].present?
+          if @data[i + 2]
             chars << @data[i + 2]
           end
 
