@@ -109,6 +109,13 @@ class QRCodeTest < Minitest::Test
     assert_equal RQRCode::QRCode.new('a', level: :h).error_correction_level, :h
   end
 
+  def test_version_table
+    # tables in RQRCode::QRCode::QRMAXDIGITS wasn't updated to support greater versions
+    assert_equal RQRCode::QRCode.new('1' * 289, level: :h, mode: :number).version, 11
+    assert_equal RQRCode::QRCode.new('A' * 175, level: :h, mode: :alphanumeric).version, 11
+    assert_equal RQRCode::QRCode.new('a' * 383, level: :h, mode: :byte_8bit).version, 21
+  end
+
   def test_levels
     assert RQRCode::QRCode.new("duncan", :level => :l)
     assert RQRCode::QRCode.new("duncan", :level => :m)
