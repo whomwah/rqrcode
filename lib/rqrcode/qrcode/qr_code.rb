@@ -15,7 +15,6 @@ module RQRCode #:nodoc:
     :mode_number        => 1 << 0,
     :mode_alpha_numk    => 1 << 1,
     :mode_8bit_byte     => 1 << 2,
-    :mode_kanji         => 1 << 3
   }
 
   QRMODE_NAME = {
@@ -60,22 +59,26 @@ module RQRCode #:nodoc:
 
   #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable1-e.html
   QRMAXDIGITS = {
-    :l => {:mode_number     => [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
-           :mode_alpha_numk => [25, 47,  77, 114, 154, 195, 224, 279, 335, 395],
-           :mode_8bit_byte  => [17, 32,  53,  78, 106, 134, 154, 192, 230, 271, 321, 367, 425, 458, 520, 586, 644, 718, 792, 858],
-           :mode_kanji      => [10, 20,  32,  48,  65,  82,  95, 118, 141, 167]},
-    :m => {:mode_number     => [34, 63, 101, 149, 202, 255, 293, 365, 432, 513],
-           :mode_alpha_numk => [20, 38,  61,  90, 122, 154, 178, 221, 262, 311],
-           :mode_8bit_byte  => [14, 26,  42,  62,  84, 106, 122, 152, 180, 213, 251, 287, 331, 362, 412, 450, 504, 560, 624, 666],
-           :mode_kanji      => [ 8, 16,  26,  38,  54,  65,  75,  93, 111, 131]},
-    :q => {:mode_number     => [27, 48, 77, 111, 144, 178, 207, 259, 312, 364],
-           :mode_alpha_numk => [16, 29, 47,  67,  87, 108, 125, 157, 189, 221],
-           :mode_8bit_byte  => [11, 20, 32,  46,  60,  74,  86, 108, 130, 151, 177, 203, 241, 258, 292, 22, 364, 394, 442, 482],
-           :mode_kanji      => [ 7, 12, 20,  28,  37,  45,  53,  66,  80,  93]},
-    :h => {:mode_number     => [17, 34, 58, 82, 106, 139, 154, 202, 235, 288],
-           :mode_alpha_numk => [10, 20, 35, 50,  64,  84,  93, 122, 143, 174],
-           :mode_8bit_byte  => [ 7, 14, 24, 34,  44,  58,  64,  84,  98, 119, 137, 155, 177, 194, 220, 250, 280, 310, 338, 382],
-           :mode_kanji      => [ 4,  8, 15, 21,  27,  36,  39,  52,  60, 74]},
+      l: {
+          mode_number: [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
+          mode_alpha_numk: [25, 47, 77, 114, 154, 195, 224, 279, 335, 395],
+          mode_8bit_byte: [17, 32, 53, 78, 106, 134, 154, 192, 230, 271, 321, 367, 425, 458, 520, 586, 644, 718, 792, 858],
+      },
+      m: {
+          mode_number: [34, 63, 101, 149, 202, 255, 293, 365, 432, 513],
+          mode_alpha_numk: [20, 38, 61, 90, 122, 154, 178, 221, 262, 311],
+          mode_8bit_byte: [14, 26, 42, 62, 84, 106, 122, 152, 180, 213, 251, 287, 331, 362, 412, 450, 504, 560, 624, 666],
+      },
+      q: {
+          mode_number: [27, 48, 77, 111, 144, 178, 207, 259, 312, 364],
+          mode_alpha_numk: [16, 29, 47, 67, 87, 108, 125, 157, 189, 221],
+          mode_8bit_byte: [11, 20, 32, 46, 60, 74, 86, 108, 130, 151, 177, 203, 241, 258, 292, 22, 364, 394, 442, 482],
+      },
+      h: {
+          mode_number: [17, 34, 58, 82, 106, 139, 154, 202, 235, 288],
+          mode_alpha_numk: [10, 20, 35, 50, 64, 84, 93, 122, 143, 174],
+          mode_8bit_byte: [7, 14, 24, 34, 44, 58, 64, 84, 98, 119, 137, 155, 177, 194, 220, 250, 280, 310, 338, 382],
+      },
   }
 
 
@@ -133,7 +136,7 @@ module RQRCode #:nodoc:
 
       max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)
-      
+
       if size > QRUtil.max_size
         raise QRCodeArgumentError, "Given size greater than maximum possible size of #{QRUtil.max_size}"
       end
@@ -205,11 +208,11 @@ module RQRCode #:nodoc:
         end
         rows << cols
       end
-      
+
       quiet_zone_size.times do
         rows.unshift(light * (rows.first.length / light.size))
         rows << light * (rows.first.length / light.size)
-      end 
+      end
       rows.join("\n")
     end
 
