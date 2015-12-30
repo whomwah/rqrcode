@@ -104,6 +104,11 @@ class QRCodeTest < Minitest::Test
     end
   end
 
+  def test_error_correction_level
+    # attr_reader was wrong
+    assert_equal RQRCode::QRCode.new('a', level: :h).error_correction_level, :h
+  end
+
   def test_levels
     assert RQRCode::QRCode.new("duncan", :level => :l)
     assert RQRCode::QRCode.new("duncan", :level => :m)

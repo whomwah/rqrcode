@@ -58,6 +58,9 @@ module RQRCode #:nodoc:
   QRFORMATINFOLENGTH = 15
 
   #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable1-e.html
+  #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable2-e.html
+  #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable3-e.html
+  #http://web.archive.org/web/20110710094955/http://www.denso-wave.com/qrcode/vertable4-e.html
   QRMAXDIGITS = {
       l: {
           mode_number: [41, 77, 127, 187, 255, 322, 370, 461, 552, 652],
@@ -97,7 +100,7 @@ module RQRCode #:nodoc:
   #
 
   class QRCode
-    attr_reader :modules, :module_count, :version, :error_correction_level
+    attr_reader :modules, :module_count, :version
 
     # Expects a string to be parsed in, other args are optional
     #
@@ -214,6 +217,11 @@ module RQRCode #:nodoc:
         rows << light * (rows.first.length / light.size)
       end
       rows.join("\n")
+    end
+
+    # Return a symbol for current error connection level
+    def error_correction_level
+      QRERRORCORRECTLEVEL.invert[@error_correct_level]
     end
 
     protected
