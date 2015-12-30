@@ -197,7 +197,15 @@ module RQRCode #:nodoc:
       @data                 = string
 
       mode                  = QRMODE_NAME[(options[:mode] || '').to_sym]
-      mode                  ||= QRAlphanumeric.valid_data?( @data ) ? :mode_alpha_numk : :mode_8bit_byte  # deprecate?
+      # If mode is not explicitely given choose mode according to data type
+      mode ||= case
+        when RQRCode::QRNumeric.valid_data?(@data)
+          QRMODE_NAME[:number]
+        when QRAlphanumeric.valid_data?(@data)
+          QRMODE_NAME[:alphanumeric]
+        else
+          QRMODE_NAME[:byte_8bit]
+      end
 
       max_size_array        = QRMAXDIGITS[level][mode]
       size                  = options[:size] || smallest_size_for(string, max_size_array)

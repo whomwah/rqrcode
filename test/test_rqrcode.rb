@@ -85,6 +85,21 @@ class QRCodeTest < Minitest::Test
     assert_equal "xxxxxxx xxx   xxxxxxx\n", qr.to_s[0..21]
   end
 
+  def test_auto_numeric
+    # When digit only automatically uses numeric mode, default ecc level is :h
+    digits = RQRCode::QRCode.new('1' * 17) # Version 1, numeric mode, ECC h
+    assert_equal 1, digits.version
+    assert_equal :h, digits.error_correction_level
+    # When alpha automatically works
+    alpha = RQRCode::QRCode.new('1' * 10) # Version 1, alpha mode, ECC h
+    assert_equal 1, alpha.version
+    assert_equal :h, alpha.error_correction_level
+    # Generic should use binary
+    binary = RQRCode::QRCode.new('x' * 7) # Version 1, 8bit mode, ECC h
+    assert_equal 1, binary.version
+    assert_equal :h, binary.error_correction_level
+  end
+
   def test_numeric_2_M
     data = '279042272585972554922067893753871413584876543211601021503002'
 
