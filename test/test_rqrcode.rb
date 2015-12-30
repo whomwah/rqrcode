@@ -1,17 +1,15 @@
-# encoding: utf-8
-require "test/unit"
-require_relative "../lib/rqrcode"
+require 'helper'
 
-class QRCodeTest < Test::Unit::TestCase
+class QRCodeTest < Minitest::Test
   require_relative "data"
 
   def test_no_data_given
-    assert_raise(RQRCode::QRCodeArgumentError) {
+    assert_raises(RQRCode::QRCodeArgumentError) {
       RQRCode::QRCode.new( :size => 1, :level => :h )
       RQRCode::QRCode.new( :size => 1 )
       RQRCode::QRCode.new
     }
-    assert_raise(RQRCode::QRCodeRunTimeError) {
+    assert_raises(RQRCode::QRCodeRunTimeError) {
       qr = RQRCode::QRCode.new('duncan')
       qr.is_dark(0,999999)
     }
@@ -77,18 +75,18 @@ class QRCodeTest < Test::Unit::TestCase
                  qr.to_s( :true => 'q', :false => 'n' )[0..21]
     assert_equal "@@@@@@@ @@ @  @@@@@@@\n", qr.to_s( :true => '@' )[0..21]
   end
-  
+
   def test_auto_alphanumeric
     # Overflowws without the alpha version
     assert RQRCode::QRCode.new( '1234567890', :size => 1, :level => :h )
-    
+
     qr = RQRCode::QRCode.new( 'DUNCAN', :size => 1, :level => :h )
     assert_equal "xxxxxxx xxx   xxxxxxx\n", qr.to_s[0..21]
   end
 
   def test_numeric_2_M
     data = '279042272585972554922067893753871413584876543211601021503002'
-    
+
     qr = RQRCode::QRCode.new(data, size: 2, level: :m, mode: :number)
     assert_equal "xxxxxxx   x x x   xxxxxxx\n", qr.to_s[0..25]
   end
@@ -98,9 +96,9 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("40952", :size => 1, :level => :h)
     assert RQRCode::QRCode.new("40932", :size => 1, :level => :h)
   end
-  
+
   def test_exceed_max_size
-    assert_raise RQRCode::QRCodeArgumentError do
+    assert_raises RQRCode::QRCodeArgumentError do
       RQRCode::QRCode.new( 'duncan', :size => 41 )
     end
   end
@@ -112,7 +110,7 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("duncan", :level => :h)
 
     %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
-      assert_raise(RQRCode::QRCodeArgumentError) {
+      assert_raises(RQRCode::QRCodeArgumentError) {
         RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
       }
     end

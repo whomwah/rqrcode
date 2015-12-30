@@ -1,8 +1,6 @@
-# encoding: utf-8
-require "test/unit"
+require 'helper'
 
-require_relative "../lib/rqrcode"
-class RegresionTests < Test::Unit::TestCase
+class RegresionTests < Minitest::Test
   
   # Rs block information was incomplete.
   def test_code_length_overflow_bug
