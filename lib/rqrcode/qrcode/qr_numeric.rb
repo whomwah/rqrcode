@@ -31,16 +31,7 @@ module RQRCode
 
       (@data.size).times do |i|
         if i % 3 == 0
-          chars = @data[i]
-
-          if @data[i + 1]
-            chars << @data[i + 1]
-          end
-
-          if @data[i + 2]
-            chars << @data[i + 2]
-          end
-
+          chars = @data[i, 3]
           bit_length = get_bit_length(chars.length)
           buffer.put( get_code(chars), bit_length )
         end
