@@ -91,7 +91,7 @@ class QRCodeTest < Minitest::Test
     assert_equal 1, digits.version
     assert_equal :h, digits.error_correction_level
     # When alpha automatically works
-    alpha = RQRCode::QRCode.new('1' * 10) # Version 1, alpha mode, ECC h
+    alpha = RQRCode::QRCode.new('X' * 10) # Version 1, alpha mode, ECC h
     assert_equal 1, alpha.version
     assert_equal :h, alpha.error_correction_level
     # Generic should use binary
