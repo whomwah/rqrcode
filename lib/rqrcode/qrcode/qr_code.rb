@@ -294,6 +294,18 @@ module RQRCode #:nodoc:
       QRERRORCORRECTLEVEL.invert[@error_correct_level]
     end
 
+    # Return a symbol in QRMODE.keys for current mode used
+    def mode
+      case @data_list
+      when QRNumeric
+        :mode_number
+      when QRAlphanumeric
+        :mode_alpha_numk
+      else
+        :mode_8bit_byte
+      end
+    end
+
     protected
 
     def make #:nodoc:
