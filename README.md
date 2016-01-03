@@ -6,6 +6,11 @@
 
 ## Short changelog
 
+*0.9.0* (Jan 3, 2016)
+
+- Added support for auto selecting qrcode size up to level 40. (only worked up to level 10 before)
+- Added numeric support during auto selection of qrcode mode.
+
 *0.8.1* (Jan 3, 2016)
 
 - Remove active support specific `present?`.
@@ -15,10 +20,6 @@
 
 - Added numeric QR code support
 - Dropped Ruby v1.8 support
-
-*0.7.0* (Aug 15, 2015)
-
-- Added shape_rendering option for as_svg
 
 ## Overview
 
