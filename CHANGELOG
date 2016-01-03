@@ -1,3 +1,8 @@
+*0.8.1* (Jan 3, 2016)
+
+- Remove active support specific `present?`.
+- Fix so that all tests are run.
+
 *0.8.0* (Dec 18, 2015)
 
 - Added numeric QR code support

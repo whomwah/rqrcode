@@ -2,7 +2,14 @@
 
 [![Build Status](https://travis-ci.org/whomwah/rqrcode.svg?branch=master)](https://travis-ci.org/whomwah/rqrcode)
 
+**All users of rqrcode are highly recomended to upgrade to version 0.5.5 ore later!**
+
 ## Short changelog
+
+*0.8.1* (Jan 3, 2016)
+
+- Remove active support specific `present?`.
+- Fix so that all tests are run.
 
 *0.8.0* (Dec 18, 2015)
 
@@ -12,16 +19,6 @@
 *0.7.0* (Aug 15, 2015)
 
 - Added shape_rendering option for as_svg
-
-*0.6.0* (Jun 2, 2015)
-
-- Improved png rendering. Previous png rendering could result in hard to scan qrcodes.
-  *Big thanks to Bart Jedrocha*
-
-*0.5.5* (Apr 25, 2015)
-
-- Fixed major bug. The rs block data was missing resulting in qr codes failing to be generated.
-  *Upgrade highly recomended!!*
 
 ## Overview
 
