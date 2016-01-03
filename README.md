@@ -164,6 +164,11 @@ qr = RQRCode::QRCode.new( '1234567890', :size => 2, :level => :m, :mode => :numb
 * Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
 * kaywa:: http://qrcode.kaywa.com
 
+## Scanner libraries
+
+* [zxing_cpp](https://github.com/glassechidna/zxing_cpp.rb)
+* [zxing](https://github.com/ecin/zxing.rb)
+
 ## Authors
 
 Original author: Duncan Robertson
