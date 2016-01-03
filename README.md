@@ -6,6 +6,10 @@
 
 ## Short changelog
 
+*0.8.2* (Jan 3, 2016)
+
+- Fix source encoding problem introduced in 0.8.1
+
 *0.9.0* (Jan 3, 2016)
 
 - Added support for auto selecting qrcode size up to level 40. (only worked up to level 10 before)
