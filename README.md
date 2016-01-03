@@ -6,6 +6,10 @@
 
 ## Short changelog
 
+*0.8.2* (Jan 3, 2016)
+
+- Fix source encoding problem introduced in 0.8.1
+
 *0.8.1* (Jan 3, 2016)
 
 - Remove active support specific `present?`.
