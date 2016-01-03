@@ -1,23 +1,6 @@
-require 'minitest/spec'
-require 'minitest/autorun'
-
-require 'rqrcode/export/png'
-require 'rqrcode/export/svg'
-require 'rqrcode/export/html'
-
-# fix for require_relative in < 1.9
-unless Kernel.respond_to?(:require_relative)
-  module Kernel
-    def require_relative(path)
-      require File.join(File.dirname(caller[0]), path.to_str)
-    end
-  end
-end
-
-require_relative "../lib/rqrcode"
+require 'test_helper'
 
 describe :QRCodeExportTest do
-  # require_relative "data"
 
   [:svg, :png, :html].each do |ext|
     it "must respond_to #{ext}" do

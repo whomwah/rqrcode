@@ -1,27 +1,16 @@
 # encoding: utf-8
-require "test/unit"
+require 'test_helper'
 
-# fix for require_relative in < 1.9
-unless Kernel.respond_to?(:require_relative)
-  module Kernel
-    def require_relative(path)
-      require File.join(File.dirname(caller[0]), path.to_str)
-    end
-  end
-end
-
-require_relative "../lib/rqrcode"
-
-class QRCodeTest < Test::Unit::TestCase
+class QRCodeTest < Minitest::Test
   require_relative "data"
 
   def test_no_data_given
-    assert_raise(RQRCode::QRCodeArgumentError) {
+    assert_raises(RQRCode::QRCodeArgumentError) {
       RQRCode::QRCode.new( :size => 1, :level => :h )
       RQRCode::QRCode.new( :size => 1 )
       RQRCode::QRCode.new
     }
-    assert_raise(RQRCode::QRCodeRunTimeError) {
+    assert_raises(RQRCode::QRCodeRunTimeError) {
       qr = RQRCode::QRCode.new('duncan')
       qr.is_dark(0,999999)
     }
@@ -87,18 +76,36 @@ class QRCodeTest < Test::Unit::TestCase
                  qr.to_s( :true => 'q', :false => 'n' )[0..21]
     assert_equal "@@@@@@@ @@ @  @@@@@@@\n", qr.to_s( :true => '@' )[0..21]
   end
-  
+
   def test_auto_alphanumeric
     # Overflowws without the alpha version
     assert RQRCode::QRCode.new( '1234567890', :size => 1, :level => :h )
-    
+
     qr = RQRCode::QRCode.new( 'DUNCAN', :size => 1, :level => :h )
     assert_equal "xxxxxxx xxx   xxxxxxx\n", qr.to_s[0..21]
   end
 
+  def test_auto_numeric
+    # When digit only automatically uses numeric mode, default ecc level is :h
+    digits = RQRCode::QRCode.new('1' * 17) # Version 1, numeric mode, ECC h
+    assert_equal 1, digits.version
+    assert_equal :mode_number, digits.mode
+    assert_equal :h, digits.error_correction_level
+    # When alpha automatically works
+    alpha = RQRCode::QRCode.new('X' * 10) # Version 1, alpha mode, ECC h
+    assert_equal 1, alpha.version
+    assert_equal :mode_alpha_numk, alpha.mode
+    assert_equal :h, alpha.error_correction_level
+    # Generic should use binary
+    binary = RQRCode::QRCode.new('x' * 7) # Version 1, 8bit mode, ECC h
+    assert_equal 1, binary.version
+    assert_equal :mode_8bit_byte, binary.mode
+    assert_equal :h, binary.error_correction_level
+  end
+
   def test_numeric_2_M
     data = '279042272585972554922067893753871413584876543211601021503002'
-    
+
     qr = RQRCode::QRCode.new(data, size: 2, level: :m, mode: :number)
     assert_equal "xxxxxxx   x x x   xxxxxxx\n", qr.to_s[0..25]
   end
@@ -108,11 +115,23 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("40952", :size => 1, :level => :h)
     assert RQRCode::QRCode.new("40932", :size => 1, :level => :h)
   end
-  
+
   def test_exceed_max_size
-    assert_raise RQRCode::QRCodeArgumentError do
+    assert_raises RQRCode::QRCodeArgumentError do
       RQRCode::QRCode.new( 'duncan', :size => 41 )
     end
+  end
+
+  def test_error_correction_level
+    # attr_reader was wrong
+    assert_equal RQRCode::QRCode.new('a', level: :h).error_correction_level, :h
+  end
+
+  def test_version_table
+    # tables in RQRCode::QRCode::QRMAXDIGITS wasn't updated to support greater versions
+    assert_equal RQRCode::QRCode.new('1' * 289, level: :h, mode: :number).version, 11
+    assert_equal RQRCode::QRCode.new('A' * 175, level: :h, mode: :alphanumeric).version, 11
+    assert_equal RQRCode::QRCode.new('a' * 383, level: :h, mode: :byte_8bit).version, 21
   end
 
   def test_levels
@@ -122,7 +141,7 @@ class QRCodeTest < Test::Unit::TestCase
     assert RQRCode::QRCode.new("duncan", :level => :h)
 
     %w(a b c d e f g i j k n o p r s t u v w x y z).each do |ltr|
-      assert_raise(RQRCode::QRCodeArgumentError) {
+      assert_raises(RQRCode::QRCodeArgumentError) {
         RQRCode::QRCode.new( "duncan", :level => ltr.to_sym )
       }
     end
