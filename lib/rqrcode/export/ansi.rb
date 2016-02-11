@@ -1,6 +1,16 @@
 module RQRCode
   module Export
     module ANSI
+      ##
+      # Returns a string of the QR code as
+      # characters writen with ANSI background set.
+      # 
+      # Options: 
+      # light: Foreground ("\033[47m")
+      # dark: Background ANSI code. ("\033[47m")
+      # fill_character: The written character. ('  ')
+      # quiet_zone_size: (4)
+      #
       def as_ansi(options={})
         options = {
           light: "\033[47m",
