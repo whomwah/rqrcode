@@ -6,10 +6,6 @@
 
 ## Short changelog
 
-*0.8.2* (Jan 3, 2016)
-
-- Fix source encoding problem introduced in 0.8.1
-
 *0.9.0* (Jan 3, 2016)
 
 - Added support for auto selecting qrcode size up to level 40. (only worked up to level 10 before)
@@ -70,6 +66,8 @@ svg = qrcode.as_svg(offset: 0, color: '000',
                     module_size: 11)
 ```
 
+![QR code with github url](./images/github-qrcode.svg)
+
 ### ANSI
 
 The ANSI renderer will produce as a string with ANSI color codes.
@@ -82,7 +80,7 @@ svg = qrcode.as_ansi_(light: "\033[47m", dark: "\033[40m",
                     quiet_zone_size: 4)
 ```
 
-![QR code with github url](./imgs/ansi-screen-shot.png)
+![QR code with github url](./images/ansi-screen-shot.png)
 
 ### PNG
 
@@ -101,7 +99,10 @@ png = qrcode.as_png(
           module_px_size: 6,
           file: nil # path to write
           )
+IO.write("/tmp/github-qrcode.png", png.to_s)
 ```
+
+![QR code with github url](./images/github-qrcode.png)
 
 ## HTML Rendering
 ### In your controller
@@ -182,11 +183,6 @@ qr = RQRCode::QRCode.new( '1234567890', :size => 2, :level => :m, :mode => :numb
 * wikipedia:: http://en.wikipedia.org/wiki/QR_Code
 * Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
 * kaywa:: http://qrcode.kaywa.com
-
-## Scanner libraries
-
-* [zxing_cpp](https://github.com/glassechidna/zxing_cpp.rb)
-* [zxing](https://github.com/ecin/zxing.rb)
 
 ## Authors
 
