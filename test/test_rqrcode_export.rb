@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe :QRCodeExportTest do
 
-  [:svg, :png, :html].each do |ext|
+  [:svg, :png, :html, :ansi].each do |ext|
     it "must respond_to #{ext}" do
       RQRCode::QRCode.new('x').must_respond_to :"as_#{ext}"
     end
@@ -18,6 +18,10 @@ describe :QRCodeExportTest do
 
   it "must export to html" do
     RQRCode::QRCode.new('html').as_html.must_match(/<table>.+<\/table>/)
+  end
+  
+  it "must export to ansi" do
+    RQRCode::QRCode.new('ansi').as_ansi.must_equal(AS_ANSI)
   end
 
 end
