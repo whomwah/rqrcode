@@ -1,3 +1,7 @@
+*0.10.1* (Feb 11, 2016)
+
+- Changed so that gem wont include images and tests.
+
 *0.10.0* (Feb 11, 2016)
 
 - Merged as_ansi by [Andy Brody](https://github.com/ab)

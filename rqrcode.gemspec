@@ -25,7 +25,7 @@ EOF
 
   s.has_rdoc      = true
   s.extra_rdoc_files = ["README.md", "CHANGELOG", "LICENSE"]
-  s.files         = `git ls-files`.split("\n")
+  s.files         = `git ls-files lib README.md CHANGELOG LICENSE`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
