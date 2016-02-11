@@ -53,6 +53,7 @@ qrcode = RQRCode::QRCode.new("http://github.com/")
 image = qrcode.as_png
 svg = qrcode.as_svg
 html = qrcode.as_html
+string = qrcode.as_ansi
 string = qrcode.to_s
 ```
 
@@ -68,6 +69,20 @@ svg = qrcode.as_svg(offset: 0, color: '000',
                     shape_rendering: 'crispEdges', 
                     module_size: 11)
 ```
+
+### ANSI
+
+The ANSI renderer will produce as a string with ANSI color codes.
+
+```ruby
+qrcode = RQRCode::QRCode.new("http://github.com/")
+# With default options specified explicitly
+svg = qrcode.as_ansi_(light: "\033[47m", dark: "\033[40m",
+                    fill_character: '  ',
+                    quiet_zone_size: 4)
+```
+
+![QR code with github url](./imgs/ansi-screen-shot.png)
 
 ### PNG
 
