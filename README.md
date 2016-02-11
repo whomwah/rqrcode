@@ -6,6 +6,10 @@
 
 ## Short changelog
 
+*0.10.0* (Feb 11, 2016)
+
+- Merged as_ansi by [Andy Brody](https://github.com/ab)
+
 *0.9.0* (Jan 3, 2016)
 
 - Added support for auto selecting qrcode size up to level 40. (only worked up to level 10 before)
@@ -190,6 +194,7 @@ Original author: Duncan Robertson
 
 Special thanks to the following people for submitting patches:
 
+* [Andy Brody](https://github.com/ab)
 * [Chris Mowforth](http://blog.99th.st)
 * [Daniel Schierbeck](https://github.com/dasch)
 * [Gioele Barabucci](https://github.com/gioele)

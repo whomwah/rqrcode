@@ -1,3 +1,7 @@
+*0.10.0* (Feb 11, 2016)
+
+- Merged as_ansi by [Andy Brody](https://github.com/ab)
+
 *0.8.2* (Jan 3, 2016)
 
 - Fix source encoding problem introduced in 0.8.1
