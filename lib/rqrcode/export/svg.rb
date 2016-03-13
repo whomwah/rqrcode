@@ -26,8 +26,13 @@ module RQRCode
         xml_tag = %{<?xml version="1.0" standalone="yes"?>}
         open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 #{dimension} #{dimension}" shape-rendering="#{shape_rendering}">}
         close_tag = "</svg>"
+        style_tag = <<-EOS
+<style type="text/css"><![CDATA[
+rect {width:#{module_size}px; height:#{module_size}px}
+]]></style>
+        EOS
 
-        result = []
+        result = [%{<g fill="##{options[:color]}">}]
         self.modules.each_index do |c|
           tmp = []
           self.modules.each_index do |r|
@@ -35,16 +40,17 @@ module RQRCode
             x = r*module_size + offset
 
             next unless self.is_dark(c, r)
-            tmp << %{<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" style="fill:##{color}"/>}
+            tmp << %{<rect x="#{x}" y="#{y}"/>}
           end
           result << tmp.join
         end
+        result << '</g>'
 
         if options[:fill]
           result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
         end
 
-        [xml_tag, open_tag, result, close_tag].flatten.join("\n")
+        [xml_tag, open_tag, style_tag, result, close_tag].flatten.join("\n")
       end
     end
   end
