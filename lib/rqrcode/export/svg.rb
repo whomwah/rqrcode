@@ -42,7 +42,7 @@ EOS
 <use xlink:href="#fixpoint" x="#{(self.module_count - 7) * module_size + offset}" y="#{offset}"/>
 <use xlink:href="#fixpoint" x="#{offset}" y="#{(self.module_count - 7) * module_size + offset}"/>
 EOS
-        result = [%{<g fill="##{options[:color]}">}]
+        result = [%{<g fill="##{color}">}]
         self.modules.each_index do |c|
           tmp = []
           self.modules.each_index do |r|
