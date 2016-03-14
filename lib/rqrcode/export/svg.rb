@@ -30,8 +30,18 @@ module RQRCode
 <style type="text/css"><![CDATA[
 rect {width:#{module_size}px; height:#{module_size}px}
 ]]></style>
-        EOS
-
+EOS
+        fixpoints = <<-EOS
+<defs>
+<g id="fixpoint" fill="##{color}">
+<path d="M 0 0 h #{module_size * 7} v #{module_size * 7} h -#{module_size * 7} v -#{module_size} h #{module_size * 6} v -#{module_size * 5} h -#{module_size* 5} v #{module_size * 5} h -#{module_size} z"/>
+<path d="M #{module_size * 2} #{module_size * 2} h #{module_size * 3} v #{module_size * 3} h -#{module_size * 3} z"/>
+</g>
+</defs>
+<use xlink:href="#fixpoint" x="#{offset}" y="#{offset}"/>
+<use xlink:href="#fixpoint" x="#{(self.module_count - 7) * module_size + offset}" y="#{offset}"/>
+<use xlink:href="#fixpoint" x="#{offset}" y="#{(self.module_count - 7) * module_size + offset}"/>
+EOS
         result = [%{<g fill="##{options[:color]}">}]
         self.modules.each_index do |c|
           tmp = []
@@ -40,7 +50,7 @@ rect {width:#{module_size}px; height:#{module_size}px}
             x = r*module_size + offset
 
             next unless self.is_dark(c, r)
-            tmp << %{<rect x="#{x}" y="#{y}"/>}
+            tmp << %{<rect x="#{x}" y="#{y}"/>} unless fixpoint?(r, c)
           end
           result << tmp.join
         end
@@ -50,7 +60,12 @@ rect {width:#{module_size}px; height:#{module_size}px}
           result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
         end
 
-        [xml_tag, open_tag, style_tag, result, close_tag].flatten.join("\n")
+        [xml_tag, open_tag, style_tag, fixpoints, result, close_tag].flatten.join("\n")
+      end
+
+      def fixpoint?(r, c)
+        (0..6).member?(c) && ((0..6).member?(r) || (self.module_count-7..self.module_count-1).member?(r)) ||
+        (self.module_count-7..self.module_count-1).member?(c) && (0..6).member?(r)
       end
     end
   end
