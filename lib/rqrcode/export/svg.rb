@@ -26,11 +26,6 @@ module RQRCode
         xml_tag = %{<?xml version="1.0" standalone="yes"?>}
         open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 #{dimension} #{dimension}" shape-rendering="#{shape_rendering}">}
         close_tag = "</svg>"
-        style_tag = <<-EOS
-<style type="text/css"><![CDATA[
-rect {width:#{module_size}px; height:#{module_size}px}
-]]></style>
-EOS
         fixpoints = <<-EOS
 <defs>
 <g id="fixpoint" fill="##{color}">
@@ -50,7 +45,7 @@ EOS
             x = r*module_size + offset
 
             next unless self.is_dark(c, r)
-            tmp << %{<rect x="#{x}" y="#{y}"/>} unless fixpoint?(r, c)
+            tmp << %{<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}"/>} unless fixpoint?(r, c)
           end
           result << tmp.join
         end
@@ -60,7 +55,7 @@ EOS
           result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
         end
 
-        [xml_tag, open_tag, style_tag, fixpoints, result, close_tag].flatten.join("\n")
+        [xml_tag, open_tag, fixpoints, result, close_tag].flatten.join("\n")
       end
 
       def fixpoint?(r, c)
