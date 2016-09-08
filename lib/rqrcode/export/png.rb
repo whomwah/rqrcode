@@ -12,14 +12,14 @@ module RQRCode
       #
       # - Original that can result in blurry and hard to scan images
       # - Google's Chart API inspired sizing that resizes the module size to fit within the given image size.
-      # 
+      #
       # The Googleis one will be used when no options are given or when the new size option is used.
       #
-      # Options: 
+      # Options:
       # fill  - Background ChunkyPNG::Color, defaults to 'white'
       # color - Foreground ChunkyPNG::Color, defaults to 'black'
       #
-      # *Googleis*    
+      # *Googleis*
       # size            - Total size of PNG in pixels. The module size is calculated so it fits. (defaults to 90)
       # border_modules  - Width of white border around in modules. (defaults to 4).
       #
@@ -42,21 +42,23 @@ module RQRCode
           :size => 120,
           :border_modules => 4,
           :file => false,
-          :module_px_size => 6
+          :module_px_size => 6,
+          :color_mode => ChunkyPNG::COLOR_GRAYSCALE,
+          :bit_depth => 1
         }
-        
+
         googleis = options.length == 0 || (options[:size] != nil)
-        
+
         options = default_img_options.merge(options) # reverse_merge
 
         fill   = ChunkyPNG::Color(options[:fill])
         color  = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
-        
+
         module_px_size = nil
         border_px = nil
         png = nil
-        
+
         if googleis
           total_image_size = options[:size]
           border_modules = options[:border_modules]
@@ -98,15 +100,15 @@ module RQRCode
             end
           end
         end
-        
-        if !googleis && resize_to
-          png = png.resize(resize_to, resize_to)  
-        end
 
+        if !googleis && resize_to
+          png = png.resize(resize_to, resize_to)
+        end
 
         if output_file
-          png.save(output_file,{ :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
+          png.save(output_file,{ :color_mode => options[:color_mode], :bit_depth => color_mode[:bit_depth] })
         end
+
         png
       end
 
