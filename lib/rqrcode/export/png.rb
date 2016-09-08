@@ -20,6 +20,12 @@ module RQRCode
       # fill  - Background ChunkyPNG::Color, defaults to 'white'
       # color - Foreground ChunkyPNG::Color, defaults to 'black'
       #
+      # When option :file is supplied you can use the following ChunkyPNG constraints
+      # color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants. defaults to 'ChunkyPNG::COLOR_GRAYSCALE'
+      # bit_depth   - The bit depth to use. This option is only used for indexed images. defaults to '1' bit
+      # interlace   - Whether to use interlacing (true or false). defaults to ChunkyPNG default
+      # compression - The compression level for Zlib. This can be a value between 0 and 9, or a Zlib constant like Zlib::BEST_COMPRESSION, defaults to ChunkyPNG defaults
+      #
       # *Googleis*
       # size            - Total size of PNG in pixels. The module size is calculated so it fits. (defaults to 90)
       # border_modules  - Width of white border around in modules. (defaults to 4).
@@ -106,7 +112,13 @@ module RQRCode
         end
 
         if output_file
-          png.save(output_file,{ :color_mode => options[:color_mode], :bit_depth => color_mode[:bit_depth] })
+          constraints = {
+            :color_mode => options[:color_mode],
+            :bit_depth  => options[:bit_depth]
+          }
+          constraints[:interlace]   = options[:interlace]   if options.has_key?(:interlace)
+          constraints[:compression] = options[:compression] if options.has_key?(:compression)
+          png.save(output_file, constraints)
         end
 
         png
