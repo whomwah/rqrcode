@@ -42,7 +42,9 @@ module RQRCode
           :size => 120,
           :border_modules => 4,
           :file => false,
-          :module_px_size => 6
+          :module_px_size => 6,
+          :color_mode => ChunkyPNG::COLOR_GRAYSCALE,
+          :bit_depth => 1
         }
 
         googleis = options.length == 0 || (options[:size] != nil)
@@ -103,10 +105,10 @@ module RQRCode
           png = png.resize(resize_to, resize_to)
         end
 
-
         if output_file
-          png.save(output_file,{ :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
+          png.save(output_file,{ :color_mode => options[:color_mode], :bit_depth => color_mode[:bit_depth] })
         end
+
         png
       end
     end
