@@ -4,7 +4,7 @@ module RQRCode
     module HTML
 
       def as_html
-        ['<table>', rows.as_html, '</table>'].join
+        ["<table class=\"qr\">", rows.as_html, '</table>'].join
       end
 
       private
@@ -25,7 +25,7 @@ module RQRCode
 
       class Row < Struct.new(:qr, :qr_module, :row_index)
         def as_html
-          ['<tr>', cells.map(&:as_html).join, '</tr>'].join
+          ["<tr class=\"qr\">", cells.map(&:as_html).join, '</tr>'].join
         end
 
         def cells
