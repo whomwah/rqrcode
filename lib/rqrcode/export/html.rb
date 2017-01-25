@@ -25,7 +25,7 @@ module RQRCode
 
       class Row < Struct.new(:qr, :qr_module, :row_index)
         def as_html
-          ["<tr class=\"qr\">", cells.map(&:as_html).join, '</tr>'].join
+          ['<tr>', cells.map(&:as_html).join, '</tr>'].join
         end
 
         def cells
