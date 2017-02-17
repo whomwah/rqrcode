@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/whomwah/rqrcode.svg?branch=master)](https://travis-ci.org/whomwah/rqrcode)
 
-**All users of rqrcode are highly recomended to upgrade to version 0.5.5 ore later!**
+**All users of rqrcode are highly recommended to upgrade to version 0.5.5 ore later!**
 
 ## Short changelog
 
