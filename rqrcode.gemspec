@@ -18,7 +18,7 @@ ready to be displayed in the way you choose.
 EOF
 
   s.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
-  
+
   s.add_dependency 'chunky_png', "~> 1.0"
 
   s.add_development_dependency "rake"
