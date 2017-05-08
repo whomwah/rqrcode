@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Björn Blomqvist","Duncan Robertson"]
   s.email       = ["darwin@bits2life.com"]
+  s.license     = "MIT"
   s.homepage    = "https://github.com/whomwah/rqrcode"
   s.summary     = "A library to encode QR Codes"
   s.description = <<EOF
