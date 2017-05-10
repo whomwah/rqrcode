@@ -16,6 +16,12 @@ describe :QRCodeExportTest do
     RQRCode::QRCode.new('svg').as_svg.must_match(/<\/svg>/)
   end
 
+  it "must export svg renderer" do
+    renderer = RQRCode::QRCode.new('svg').as_svg_renderer
+    renderer.render.must_match(/<\/svg>/)
+    renderer.styles.must_equal(["fill:#000"])
+  end
+
   it "must export to html" do
     RQRCode::QRCode.new('html').as_html.must_match(/<table>.+<\/table>/)
   end
