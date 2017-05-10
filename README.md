@@ -76,6 +76,18 @@ svg = qrcode.as_svg(offset: 0, color: '000',
 
 ![QR code with github url](./images/github-qrcode.svg)
 
+`as_svg_render` is helpful when you want a list of styles for assertions like
+Content Security Policy.
+```ruby
+qrcode = RQRCode::QRCode.new("http://github.com/")
+# With default options specified explicitly
+renderer = qrcode.as_svg_renderer(offset: 0, color: '000', 
+                                  shape_rendering: 'crispEdges', 
+                                  module_size: 11)
+renderer.render # Renders SVG and returns as a `String`
+renderer.styles # Returns an array of `String` representing the styles
+```
+
 ### ANSI
 
 The ANSI renderer will produce as a string with ANSI color codes.
