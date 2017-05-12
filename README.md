@@ -71,7 +71,8 @@ qrcode = RQRCode::QRCode.new("http://github.com/")
 # With default options specified explicitly
 svg = qrcode.as_svg(offset: 0, color: '000', 
                     shape_rendering: 'crispEdges', 
-                    module_size: 11)
+                    module_size: 11,
+                    use_style: false)
 ```
 
 ![QR code with github url](./images/github-qrcode.svg)

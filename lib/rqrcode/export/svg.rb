@@ -19,6 +19,7 @@ module RQRCode
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
+        use_style = options[:use_style]
 
         # height and width dependent on offset and QR complexity
         dimension = (self.module_count*module_size) + (2*offset)
@@ -35,16 +36,26 @@ module RQRCode
             x = r*module_size + offset
 
             next unless self.is_dark(c, r)
-            tmp << %{<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" style="fill:##{color}"/>}
+            tmp << square(module_size, x, y, color, use_style)
           end
           result << tmp.join
         end
 
         if options[:fill]
-          result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
+          result.unshift square(dimension, 0, 0, options[:fill], use_style)
         end
 
         [xml_tag, open_tag, result, close_tag].flatten.join("\n")
+      end
+
+      private
+
+      def square(dimension, x, y, color, use_style)
+        if use_style
+          %{<rect width="#{dimension}" height="#{dimension}" x="#{x}" y="#{y}" style="fill:##{color}"/>}
+        else
+          %{<rect width="#{dimension}" height="#{dimension}" x="#{x}" y="#{y}" fill="##{color}"/>}
+        end
       end
     end
   end
