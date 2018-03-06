@@ -182,9 +182,9 @@ module RQRCode #:nodoc:
     #   qr = RQRCode::QRCode.new('hello world', :size => 1, :level => :m, :mode => :alphanumeric )
     #
 
-    def initialize( string, *args )
-      if !string.is_a? String
-        raise QRCodeArgumentError, "The passed data is #{string.class}, not String"
+    def initialize( object, *args )
+      if !object.respond_to? :to_s
+        raise QRCodeArgumentError, 'The passed data can not be converted to String'
       end
 
       options               = args.extract_options!
@@ -194,7 +194,7 @@ module RQRCode #:nodoc:
         raise QRCodeArgumentError, "Unknown error correction level `#{level.inspect}`"
       end
 
-      @data                 = string
+      @data                 = object.to_s
 
       mode                  = QRMODE_NAME[(options[:mode] || '').to_sym]
       # If mode is not explicitely given choose mode according to data type
@@ -208,7 +208,7 @@ module RQRCode #:nodoc:
       end
 
       max_size_array        = QRMAXDIGITS[level][mode]
-      size                  = options[:size] || smallest_size_for(string, max_size_array)
+      size                  = options[:size] || smallest_size_for(@data, max_size_array)
 
       if size > QRUtil.max_size
         raise QRCodeArgumentError, "Given size greater than maximum possible size of #{QRUtil.max_size}"
