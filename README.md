@@ -83,9 +83,9 @@ The ANSI renderer will produce as a string with ANSI color codes.
 ```ruby
 qrcode = RQRCode::QRCode.new("http://github.com/")
 # With default options specified explicitly
-svg = qrcode.as_ansi_(light: "\033[47m", dark: "\033[40m",
-                    fill_character: '  ',
-                    quiet_zone_size: 4)
+svg = qrcode.as_ansi(light: "\033[47m", dark: "\033[40m",
+                     fill_character: '  ',
+                     quiet_zone_size: 4)
 ```
 
 ![QR code with github url](./images/ansi-screen-shot.png)
