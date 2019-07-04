@@ -1,6 +1,6 @@
-# rQRCode, Encode QRCodes 
+# rQRCode, Encode QRCodes
 
-[![Build Status](https://travis-ci.org/whomwah/rqrcode.svg?branch=master)](https://travis-ci.org/whomwah/rqrcode)
+[![Codeship Status for whomwah/rqrcode](https://app.codeship.com/projects/66910bf0-809b-0137-b2d8-06fb89da20d2/status?branch=master)](https://app.codeship.com/projects/352496)
 
 **All users of rqrcode are highly recommended to upgrade to version 0.5.5 ore later!**
 
@@ -69,8 +69,8 @@ The SVG renderer will produce a stand-alone SVG as a `String`
 ```ruby
 qrcode = RQRCode::QRCode.new("http://github.com/")
 # With default options specified explicitly
-svg = qrcode.as_svg(offset: 0, color: '000', 
-                    shape_rendering: 'crispEdges', 
+svg = qrcode.as_svg(offset: 0, color: '000',
+                    shape_rendering: 'crispEdges',
                     module_size: 11)
 ```
 
@@ -134,16 +134,16 @@ table {
 
 td {
   border-left: solid 10px #000;
-  padding: 0; 
-  margin: 0; 
-  width: 0px; 
-  height: 10px; 
+  padding: 0;
+  margin: 0;
+  width: 0px;
+  height: 10px;
 }
 
 td.black { border-color: #000; }
 td.white { border-color: #fff; }
 ```
-    
+
 ## On the console
 
 ```ruby
@@ -157,14 +157,14 @@ Output:
 xxxxxxx x  x x   x x  xx  xxxxxxx
 x     x  xxx  xxxxxx xxx  x     x
 x xxx x  xxxxx x       xx x xxx x
-... etc 
+... etc
 ```
 
 ## Doing your own rendering
 ```ruby
 qr = RQRCode::QRCode.new( 'my string to generate', :size => 4, :level => :h )
 qr.modules.each do |row|
-    row.each do |col| 
+    row.each do |col|
         print col ? "X" : " "
     end
     print "\n"
@@ -173,7 +173,7 @@ end
 
 ## Specifying QR code mode
 
-Sometimes you may want to specify the QR code mode explicitly. 
+Sometimes you may want to specify the QR code mode explicitly.
 
 It is done via the `mode` option. Allowed values are: `number`, `alphanumeric` and `byte_8bit`.
 
