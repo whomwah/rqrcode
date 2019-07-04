@@ -1,5 +1,12 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
 /pkg/
+/spec/reports/
+/tmp/
+/.devcontainer/
 .rvmrc
-Gemfile.lock
 *.sublime-project
 *.sublime-workspace

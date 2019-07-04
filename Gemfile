@@ -1,9 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem "chunky_png", "~> 1.0"
+gem 'rqrcode_core', github: 'whomwah/rqrcode_core'
 
-group :test, :development do
-  gem 'rake'
-  gem 'test-unit'
-  gem 'minitest'
-end
+# Specify your gem's dependencies in rqrcode-base.gemspec
+gemspec

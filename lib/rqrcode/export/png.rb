@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'chunky_png'
 
 # This class creates PNG files.
@@ -5,21 +6,21 @@ require 'chunky_png'
 module RQRCode
   module Export
     module PNG
-
+      #
       # Render the PNG from the Qrcode.
       #
       # There are two sizing algoritams.
       #
       # - Original that can result in blurry and hard to scan images
       # - Google's Chart API inspired sizing that resizes the module size to fit within the given image size.
-      # 
+      #
       # The Googleis one will be used when no options are given or when the new size option is used.
       #
-      # Options: 
+      # Options:
       # fill  - Background ChunkyPNG::Color, defaults to 'white'
       # color - Foreground ChunkyPNG::Color, defaults to 'black'
       #
-      # *Googleis*    
+      # *Googleis*
       # size            - Total size of PNG in pixels. The module size is calculated so it fits. (defaults to 90)
       # border_modules  - Width of white border around in modules. (defaults to 4).
       #
@@ -33,7 +34,6 @@ module RQRCode
       # Defaults to 90x90 pixels, customizable by option.
       #
       def as_png(options = {})
-
         default_img_options = {
           :resize_gte_to => false,
           :resize_exactly_to => false,
@@ -44,26 +44,26 @@ module RQRCode
           :file => false,
           :module_px_size => 6
         }
-        
+
         googleis = options.length == 0 || (options[:size] != nil)
-        
+
         options = default_img_options.merge(options) # reverse_merge
 
         fill   = ChunkyPNG::Color(options[:fill])
         color  = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
-        
+
         module_px_size = nil
         border_px = nil
         png = nil
-        
+
         if googleis
           total_image_size = options[:size]
           border_modules = options[:border_modules]
 
-          module_px_size = (total_image_size.to_f / (self.module_count + 2 * border_modules).to_f).floor.to_i
+          module_px_size = (total_image_size.to_f / (@qrcode.module_count + 2 * border_modules).to_f).floor.to_i
 
-          img_size = module_px_size * self.module_count
+          img_size = module_px_size * @qrcode.module_count
 
           remaining = total_image_size - img_size
           border_px = (remaining / 2.0).floor.to_i
@@ -73,7 +73,7 @@ module RQRCode
           border = options[:border_modules]
           total_border = border * 2
           module_px_size = if options[:resize_gte_to]
-            (options[:resize_gte_to].to_f / (self.module_count + total_border).to_f).ceil.to_i
+            (options[:resize_gte_to].to_f / (@qrcode.module_count + total_border).to_f).ceil.to_i
           else
             options[:module_px_size]
           end
@@ -81,15 +81,15 @@ module RQRCode
           total_border_px = border_px * 2
           resize_to = options[:resize_exactly_to]
 
-          img_size = module_px_size * self.module_count
+          img_size = module_px_size * @qrcode.module_count
           total_img_size = img_size + total_border_px
 
           png = ChunkyPNG::Image.new(total_img_size, total_img_size, fill)
         end
 
-        self.modules.each_index do |x|
-          self.modules.each_index do |y|
-            if self.dark?(x, y)
+        @qrcode.modules.each_index do |x|
+          @qrcode.modules.each_index do |y|
+            if @qrcode.checked?(x, y)
               (0...module_px_size).each do |i|
                 (0...module_px_size).each do |j|
                   png[(y * module_px_size) + border_px + j , (x * module_px_size) + border_px + i] = color
@@ -98,9 +98,9 @@ module RQRCode
             end
           end
         end
-        
+
         if !googleis && resize_to
-          png = png.resize(resize_to, resize_to)  
+          png = png.resize(resize_to, resize_to)
         end
 
 
@@ -109,7 +109,6 @@ module RQRCode
         end
         png
       end
-
     end
   end
 end

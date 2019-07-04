@@ -1,4 +1,3 @@
-Dir[File.dirname(__FILE__) + "/qrcode/*.rb"].sort.each do |path|
-  filename = File.basename(path)
-  require "rqrcode/qrcode/#{filename}"
-end
+# frozen_string_literal: true
+
+require 'rqrcode/qrcode/qrcode'
