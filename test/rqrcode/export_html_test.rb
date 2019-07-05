@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe 'Export::HTML' do
   it 'must respond_to html' do
-    RQRCode::QRCode.new('html').must_respond_to :'as_html'
+    RQRCode::QRCode.new('html').must_respond_to :as_html
   end
 
   it 'must export to html' do

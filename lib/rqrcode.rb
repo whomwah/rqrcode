@@ -2,7 +2,7 @@
 
 module RQRCode
   require 'rqrcode_core'
-  require "rqrcode/qrcode"
-  require "rqrcode/export"
-  require "rqrcode/version"
+  require 'rqrcode/qrcode'
+  require 'rqrcode/export'
+  require 'rqrcode/version'
 end

@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe 'Export::PNG' do
   it 'must respond_to png' do
-    RQRCode::QRCode.new('x').must_respond_to :'as_png'
+    RQRCode::QRCode.new('x').must_respond_to :as_png
   end
 
   it 'must export to png file' do
