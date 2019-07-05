@@ -157,6 +157,8 @@ Original RQRCode author: Duncan Robertson
 
 A massive thanks to [all the contributors of the library over the years](https://github.com/whomwah/rqrcode/graphs/contributors). It wouldn't exist if it wasn't for you all.
 
+Oh, and thanks to my bosses at https://kyan.com for giving me time to maintain this project.
+
 ## Resources
 
 * wikipedia:: http://en.wikipedia.org/wiki/QR_Code
