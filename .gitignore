@@ -10,3 +10,4 @@
 .rvmrc
 *.sublime-project
 *.sublime-workspace
+Gemfile.lock
