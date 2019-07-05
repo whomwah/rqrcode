@@ -15,10 +15,25 @@ describe 'RQRCode' do
 
 
   it 'should do a basic render' do
-    qr = RQRCode::QRCode.new('http://kyan.com', size: 4, level: :h)
+    qr = RQRCode::QRCode.new('http://kyan.com')
     str = ''
 
     qr.qrcode.modules.each do |row|
+      row.each do |col|
+        str << (col ? 'X' : 'O')
+      end
+
+      str << "\n"
+    end
+
+    str.must_equal(AS_BASIC)
+  end
+
+  it 'should do a basic render using old "modules" interface' do
+    qr = RQRCode::QRCode.new('http://kyan.com')
+    str = ''
+
+    qr.modules.each do |row|
       row.each do |col|
         str << (col ? 'X' : 'O')
       end
