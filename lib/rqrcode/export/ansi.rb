@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module RQRCode
   module Export
     module ANSI
-      ##
+      #
       # Returns a string of the QR code as
       # characters writen with ANSI background set.
-      # 
-      # Options: 
+      #
+      # Options:
       # light: Foreground ("\033[47m")
       # dark: Background ANSI code. ("\033[47m")
       # fill_character: The written character. ('  ')
@@ -19,23 +21,20 @@ module RQRCode
           quiet_zone_size: 4
         }.merge(options)
 
-        normal = "\033[m"
+        normal = "\033[m\n"
         light = options.fetch(:light)
         dark = options.fetch(:dark)
         fill_character = options.fetch(:fill_character)
         quiet_zone_size = options.fetch(:quiet_zone_size)
+        output = []
 
-        output = ''
-
-        @modules.each_index do |c|
-
+        @qrcode.modules.each_index do |c|
           # start row with quiet zone
           row = light + fill_character * quiet_zone_size
           previous_dark = false
 
-          @modules.each_index do |r|
-            if is_dark(c, r)
-              # dark
+          @qrcode.modules.each_index do |r|
+            if @qrcode.checked?(c, r)
               if previous_dark != true
                 row << dark
                 previous_dark = true
@@ -58,18 +57,18 @@ module RQRCode
           row << fill_character * quiet_zone_size
 
           # always end with reset and newline
-          row << normal + "\n"
+          row << normal
 
           output << row
         end
 
         # count the row width so we can add quiet zone rows
-        width = output.each_line.first.scan(fill_character).length
+        width = output.first.scan(fill_character).length
 
-        quiet_row = light + fill_character * width + normal + "\n"
+        quiet_row = light + fill_character * width + normal
         quiet_rows = quiet_row * quiet_zone_size
 
-        return quiet_rows + output + quiet_rows
+        return quiet_rows + output.join + quiet_rows
       end
     end
   end

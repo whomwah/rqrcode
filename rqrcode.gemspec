@@ -1,32 +1,36 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+
+lib = File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "rqrcode/version"
 
-Gem::Specification.new do |s|
-  s.name        = "rqrcode"
-  s.version     = RQRCode::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Björn Blomqvist","Duncan Robertson"]
-  s.email       = ["darwin@bits2life.com"]
-  s.homepage    = "https://github.com/whomwah/rqrcode"
-  s.summary     = "A library to encode QR Codes"
-  s.description = <<EOF
-rQRCode is a library for encoding QR Codes. The simple
+Gem::Specification.new do |spec|
+  spec.name          = "rqrcode"
+  spec.version       = RQRCode::VERSION
+  spec.platform      = Gem::Platform::RUBY
+  spec.authors       = ["Duncan Robertson"]
+  spec.email         = ["duncan@whomwah.com"]
+
+  spec.summary       = %q{A library to encode QR Codes}
+  spec.description = <<EOF
+rqrcode is a library for encoding QR Codes. The simple
 interface allows you to create QR Code data structures
-ready to be displayed in the way you choose.
+and then render them in the way you choose.
 EOF
+  spec.homepage      = "https://github.com/whomwah/rqrcode"
+  spec.license       = "MIT"
 
-  s.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
-  
-  s.add_dependency 'chunky_png', "~> 1.0"
+  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  end
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
 
-  s.add_development_dependency "rake"
-  s.add_development_dependency("bundler", ">= 1.0.0")
-
-  s.has_rdoc      = true
-  s.extra_rdoc_files = ["README.md", "CHANGELOG", "LICENSE"]
-  s.files         = `git ls-files lib README.md CHANGELOG LICENSE`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  spec.required_ruby_version = '~> 2.3'
+  spec.add_dependency 'rqrcode_core', '~> 0.1.0'
+  spec.add_dependency 'chunky_png', "~> 1.0"
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "minitest", "~> 5.0"
 end
