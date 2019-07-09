@@ -31,6 +31,6 @@ EOF
   spec.add_dependency 'rqrcode_core', '~> 0.1.0'
   spec.add_dependency 'chunky_png', "~> 1.0"
   spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "minitest", "~> 5.0"
 end
