@@ -1,13 +1,14 @@
+__UPDATE:__ A new pre-release has been made [v1.0.0.pre](https://github.com/whomwah/rqrcode/releases/tag/v1.0.0.pre). A fresh start after a _long_ pause. There is actually no new functionality in the release but there are some dependency changes. Minimum Ruby version is now `~> 2.3`. This release also cleans up the internals a bit. The core `QR Code` generation has been extracted into a new [rqrcode_core](https://github.com/whomwah/rqrcode_core) gem. This enables `qrqcode` to concentrate on rendering. Once `v1.0.0.pre` has had time for people to try I'll release `v1.0.0` of `rqrcode` and then concentrate on working through issues and PRs although I appreciate many of these may be old and out of date now! You can install this pre-release with `gem install rqrcode --pre` or `gem 'rqrcode', '>= 1.0.0.pre'` in your `Gemfile`.
+
+
 # RQRCode
 
-RQRCode is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
+[![Codeship Status for whomwah/rqrcode](https://app.codeship.com/projects/66910bf0-809b-0137-b2d8-06fb89da20d2/status?branch=master)](https://app.codeship.com/projects/352496)
+
+[RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
 
 * QR code is trademarked by Denso Wave inc
 * For `rqrcode` releases `< 1.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/cd2732a68434e6197c219e6c8cbdadfce0c4c4f3/README.md)
-
-## Build Status
-
-[![Codeship Status for whomwah/rqrcode](https://app.codeship.com/projects/66910bf0-809b-0137-b2d8-06fb89da20d2/status?branch=master)](https://app.codeship.com/projects/352496)
 
 ## Installing
 
@@ -20,7 +21,7 @@ gem 'rqrcode'
 or install manually:
 
 ```ruby
-$ gem install rqrcode
+gem install rqrcode
 ```
 
 ## Basic usage example
@@ -28,7 +29,7 @@ $ gem install rqrcode
 ```ruby
 require 'rqrcode'
 
-qr = RQRCode::QRCode.new('http://github.com', size: 4, level: :h)
+qr = RQRCode::QRCode.new('http://github.com')
 result = ''
 
 qr.qrcode.modules.each do |row|
@@ -42,14 +43,32 @@ end
 puts result
 ```
 
-## Specifying QR code mode
+### Advanced Options
 
-Sometimes you may want to specify the QR code mode explicitly.
+These are the various QR Code generation options provided by [rqrqcode_core](https://github.com/whomwah/rqrcode_core).
 
-It is done via the `mode` option. Allowed values are: `number`, `alphanumeric` and `byte_8bit`.
+```
+string - the string you wish to encode
 
-```ruby
-qr = RQRCode::QRCode.new('1234567890', size: 2, level: :m, mode: :number)
+size   - the size of the qrcode (default 4)
+
+level  - the error correction level, can be:
+  * Level :l 7%  of code can be restored
+  * Level :m 15% of code can be restored
+  * Level :q 25% of code can be restored
+  * Level :h 30% of code can be restored (default :h)
+
+mode   - the mode of the qrcode (defaults to alphanumeric or byte_8bit, depending on the input data):
+  * :number
+  * :alphanumeric
+  * :byte_8bit
+  * :kanji
+```
+
+Example
+
+```
+qrcode = RQRCodeCore::QRCode.new('hello world', size: 1, level: :m, mode: :alphanumeric)
 ```
 
 ## Render types
