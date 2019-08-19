@@ -14,12 +14,15 @@ module RQRCode
       # color - Foreground color for the code (e.g. "000000" or :black)
       # module_size - The Pixel size of each module (e.g. 11)
       # shape_rendering - Defaults to crispEdges
+      # standalone - wether to make this a full SVG file, or only svg to embed
+      #              in other svg.
       #
       def as_svg(options={})
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
+        standalone = options[:standalone].nil? ? true : options[:standalone]
 
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count*module_size) + (2*offset)
@@ -45,7 +48,12 @@ module RQRCode
           result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
         end
 
-        [xml_tag, open_tag, result, close_tag].flatten.join("\n")
+        if standalone
+          result.unshift(xml_tag, open_tag)
+          result << close_tag
+        end
+
+        result.join("\n")
       end
     end
   end
