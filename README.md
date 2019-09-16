@@ -1,6 +1,3 @@
-__UPDATE:__ A new pre-release has been made [v1.0.0.pre](https://github.com/whomwah/rqrcode/releases/tag/v1.0.0.pre). A fresh start after a _long_ pause. There is actually no new functionality in the release but there are some dependency changes. Minimum Ruby version is now `~> 2.3`. This release also cleans up the internals a bit. The core `QR Code` generation has been extracted into a new [rqrcode_core](https://github.com/whomwah/rqrcode_core) gem. This enables `qrqcode` to concentrate on rendering. Once `v1.0.0.pre` has had time for people to try I'll release `v1.0.0` of `rqrcode` and then concentrate on working through issues and PRs although I appreciate many of these may be old and out of date now! You can install this pre-release with `gem install rqrcode --pre` or `gem 'rqrcode', '>= 1.0.0.pre'` in your `Gemfile`.
-
-
 # RQRCode
 
 ![](https://github.com/whomwah/rqrcode/workflows/rqrcode/badge.svg)
@@ -9,6 +6,7 @@ __UPDATE:__ A new pre-release has been made [v1.0.0.pre](https://github.com/whom
 [RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
 
 * QR code is trademarked by Denso Wave inc
+* Minimum Ruby version is `~> 2.3`
 * For `rqrcode` releases `< 1.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/cd2732a68434e6197c219e6c8cbdadfce0c4c4f3/README.md)
 
 ## Installing
@@ -90,7 +88,8 @@ svg = qrcode.as_svg(
   offset: 0,
   color: '000',
   shape_rendering: 'crispEdges',
-  module_size: 6
+  module_size: 6,
+  standalone: true
 )
 ```
 
