@@ -11,7 +11,7 @@ module RQRCode #:nodoc:
     attr_reader :qrcode
 
     def initialize(string, *args)
-      @qrcode = RQRCodeCore::QRCode.new(string, args)
+      @qrcode = RQRCodeCore::QRCode.new(string, *args)
     end
   end
 end
