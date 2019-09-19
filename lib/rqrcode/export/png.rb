@@ -6,8 +6,7 @@ require 'chunky_png'
 module RQRCode
   module Export
     module PNG
-      #
-      # Render the PNG from the Qrcode.
+      # Render the PNG from the QR Code.
       #
       # There are two sizing algoritams.
       #
@@ -19,6 +18,12 @@ module RQRCode
       # Options:
       # fill  - Background ChunkyPNG::Color, defaults to 'white'
       # color - Foreground ChunkyPNG::Color, defaults to 'black'
+      #
+      # When option :file is supplied you can use the following ChunkyPNG constraints
+      # color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants. defaults to 'ChunkyPNG::COLOR_GRAYSCALE'
+      # bit_depth   - The bit depth to use. This option is only used for indexed images. defaults to '1' bit
+      # interlace   - Whether to use interlacing (true or false). defaults to ChunkyPNG default
+      # compression - The compression level for Zlib. This can be a value between 0 and 9, or a Zlib constant like Zlib::BEST_COMPRESSION, defaults to ChunkyPNG defaults
       #
       # *Googleis*
       # size            - Total size of PNG in pixels. The module size is calculated so it fits. (defaults to 90)
@@ -35,24 +40,23 @@ module RQRCode
       #
       def as_png(options = {})
         default_img_options = {
-          :resize_gte_to => false,
-          :resize_exactly_to => false,
-          :fill => 'white',
-          :color => 'black',
-          :size => 120,
-          :border_modules => 4,
-          :file => false,
-          :module_px_size => 6
+          bit_depth: 1,
+          border_modules: 4,
+          color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+          color: 'black',
+          file: false,
+          fill: 'white',
+          module_px_size: 6,
+          resize_exactly_to: false,
+          resize_gte_to: false,
+          size: 120
         }
 
         googleis = options.length == 0 || (options[:size] != nil)
-
         options = default_img_options.merge(options) # reverse_merge
-
         fill   = ChunkyPNG::Color(options[:fill])
         color  = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
-
         module_px_size = nil
         border_px = nil
         png = nil
@@ -103,10 +107,16 @@ module RQRCode
           png = png.resize(resize_to, resize_to)
         end
 
-
         if output_file
-          png.save(output_file,{ :color_mode => ChunkyPNG::COLOR_GRAYSCALE, :bit_depth =>1})
+          constraints = {
+            color_mode: options[:color_mode],
+            bit_depth: options[:bit_depth]
+          }
+          constraints[:interlace]   = options[:interlace]   if options.has_key?(:interlace)
+          constraints[:compression] = options[:compression] if options.has_key?(:compression)
+          png.save(output_file, constraints)
         end
+
         png
       end
     end

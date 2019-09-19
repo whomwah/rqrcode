@@ -1,16 +1,16 @@
-require 'test_helper'
+require 'spec_helper'
 require 'rqrcode/data'
 
 describe 'RQRCode' do
   it 'must provide a custom to_s' do
     qr = RQRCode::QRCode.new('http://kyan.com', size: 3)
-    qr.to_s[0..50].must_equal("xxxxxxx   x x  xxx    xxxxxxx\nx     x  xxxxx  x x  ")
-    qr.to_s(true: 'q', false: 'n')[0..36].must_equal("qqqqqqqnnnqnqnnqqqnnnnqqqqqqq\nqnnnnnq")
-    qr.to_s(true: '@')[0..21].must_equal("@@@@@@@   @ @  @@@    ")
+    expect(qr.to_s[0..50]).to eq("xxxxxxx   x x  xxx    xxxxxxx\nx     x  xxxxx  x x  ")
+    expect(qr.to_s(true: 'q', false: 'n')[0..36]).to eq("qqqqqqqnnnqnqnnqqqnnnnqqqqqqq\nqnnnnnq")
+    expect(qr.to_s(true: '@')[0..21]).to eq("@@@@@@@   @ @  @@@    ")
   end
 
   it 'must expose the core qrcode' do
-    RQRCode::QRCode.new('svg').qrcode.must_be_instance_of(RQRCodeCore::QRCode)
+    expect(RQRCode::QRCode.new('svg').qrcode).to be_instance_of(RQRCodeCore::QRCode)
   end
 
 
@@ -26,7 +26,7 @@ describe 'RQRCode' do
       str << "\n"
     end
 
-    str.must_equal(AS_BASIC)
+    expect(str).to eq(AS_BASIC)
   end
 
   it 'should do a basic render using old "modules" interface' do
@@ -41,7 +41,7 @@ describe 'RQRCode' do
       str << "\n"
     end
 
-    str.must_equal(AS_BASIC)
+    expect(str).to eq(AS_BASIC)
   end
 
   it 'should pass options to rqrcode_core' do
@@ -52,7 +52,7 @@ describe 'RQRCode' do
 
     qr = RQRCode::QRCode.new('QRCODE', options)
 
-    qr.qrcode.mode.must_equal :mode_alpha_numk
-    qr.qrcode.version.must_equal options[:size]
+    expect(qr.qrcode.mode).to eq(:mode_alpha_numk)
+    expect(qr.qrcode.version).to eq(options[:size])
   end
 end
