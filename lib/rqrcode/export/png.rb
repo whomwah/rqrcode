@@ -6,8 +6,7 @@ require 'chunky_png'
 module RQRCode
   module Export
     module PNG
-      #
-      # Render the PNG from the Qrcode.
+      # Render the PNG from the QR Code.
       #
       # There are two sizing algoritams.
       #
@@ -41,26 +40,23 @@ module RQRCode
       #
       def as_png(options = {})
         default_img_options = {
-          :resize_gte_to => false,
-          :resize_exactly_to => false,
-          :fill => 'white',
-          :color => 'black',
-          :size => 120,
-          :border_modules => 4,
-          :file => false,
-          :module_px_size => 6,
-          :color_mode => ChunkyPNG::COLOR_GRAYSCALE,
-          :bit_depth => 1
+          bit_depth: 1,
+          border_modules: 4,
+          color_mode: ChunkyPNG::COLOR_GRAYSCALE,
+          color: 'black',
+          file: false,
+          fill: 'white',
+          module_px_size: 6,
+          resize_exactly_to: false,
+          resize_gte_to: false,
+          size: 120
         }
 
         googleis = options.length == 0 || (options[:size] != nil)
-
         options = default_img_options.merge(options) # reverse_merge
-
         fill   = ChunkyPNG::Color(options[:fill])
         color  = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
-
         module_px_size = nil
         border_px = nil
         png = nil
@@ -113,8 +109,8 @@ module RQRCode
 
         if output_file
           constraints = {
-            :color_mode => options[:color_mode],
-            :bit_depth  => options[:bit_depth]
+            color_mode: options[:color_mode],
+            bit_depth: options[:bit_depth]
           }
           constraints[:interlace]   = options[:interlace]   if options.has_key?(:interlace)
           constraints[:compression] = options[:compression] if options.has_key?(:compression)
