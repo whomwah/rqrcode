@@ -142,6 +142,22 @@ IO.write("/tmp/github-qrcode.png", png.to_s)
 
 ![QR code with github url](./images/github-qrcode.png)
 
+### as CSS
+
+You can export the QRCode as a HTML/CSS construct which you can style based on your needs. It will return raw css. In Rails Applications you might call `.html_safe` on it or `raw()`
+It supports overlaying a logo/icon. (Example stylesheet to be found in `lib/css/as_css_template.scss`)
+```ruby
+qr = RQRCode::QRCode.new('Buy Bitcoin')
+qr.as_css(
+    size: 444,                # the total height/size of the QR Code, default: 200
+    logo: "link/to/logo.png", # will be overlayed as a centered image tag. won't be rendered if nil
+    logo_size: 48,            # default: 32x32px
+    id: "myQRCode",           # default: '#qrcode'
+    class: "wrapping",        # inner wrapper container. default: '.qrcode-container'
+)
+```
+Output: TODO, show an image
+
 ### On the console ( just because you can )
 
 ```ruby

@@ -1,0 +1,45 @@
+// Copy this file and change $text-color and $white according to your needs.
+// The anchor squares are named inner|outer |tl|tr|br|bl so they can be styled individually
+
+#qrcode {
+  $size: 1px;
+  display: inline-block;
+  position: relative;
+  .qr-inner{
+    .r {
+      height: $size;
+      display: block;
+      line-height: $size;
+      font-size: 0;
+      margin: 0;
+      padding: 0;
+      letter-spacing: 0;
+      .c {
+        height: $size;
+        width: $size;
+        display: inline-block;
+        line-height: $size;
+        background: $white;
+        &.round, &.square {
+          background: $text-color;
+        }
+        &.round {
+          border-radius: 50%;
+        }
+      }
+      .rounded-tl {border-radius: 10px 0 0 0 }
+      .rounded-tr {border-radius: 0 10px 0 0 }
+      .rounded-br {border-radius: 0 0 10px 0 }
+      .rounded-bl {border-radius: 0 0 0 10px }
+      .square {
+        opacity: 0.65;
+      }
+    }
+    > img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 10000;
+    }
+  }
+}
