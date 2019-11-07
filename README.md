@@ -167,6 +167,21 @@ x xxx x xxx  x  x  x  x xxx x
 
 [http://www.rubydoc.info/gems/rqrcode](http://www.rubydoc.info/gems/rqrcode)
 
+## Tests
+
+You can run the test suite using:
+
+```
+$ ./bin/setup
+$ bundle exec rspec
+```
+
+or try the lib from the console with:
+
+```
+$ ./bin/console
+```
+
 ## Contributing
 * Fork the project
 * Send a pull request
