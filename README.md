@@ -137,7 +137,7 @@ png = qrcode.as_png(
   size: 120
 )
 
-IO.write("/tmp/github-qrcode.png", png.to_s)
+IO.binwrite("/tmp/github-qrcode.png", png.to_s)
 ```
 
 ![QR code with github url](./images/github-qrcode.png)
