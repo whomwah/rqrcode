@@ -104,8 +104,8 @@ require 'rqrcode'
 
 qrcode = RQRCode::QRCode.new("http://github.com/")
 
-# NOTE: showing with default options specified explicitly
-svg = qrcode.as_html
+\
+html = qrcode.as_html
 ```
 
 ### as ANSI
