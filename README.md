@@ -95,6 +95,19 @@ svg = qrcode.as_svg(
 
 ![QR code with github url](./images/github-qrcode.svg)
 
+### as HTML
+
+The HTML renderer will produce a stand-alone HTML `<table>` as a `String`
+
+```ruby
+require 'rqrcode'
+
+qrcode = RQRCode::QRCode.new("http://github.com/")
+
+# NOTE: showing with default options specified explicitly
+svg = qrcode.as_html
+```
+
 ### as ANSI
 
 The ANSI renderer will produce as a string with ANSI color codes.
