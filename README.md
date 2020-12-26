@@ -6,7 +6,7 @@
 [RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
 
 * QR code is trademarked by Denso Wave inc
-* Minimum Ruby version is `~> 2.3`
+* Minimum Ruby version is `>= 2.3`
 * For `rqrcode` releases `< 1.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/cd2732a68434e6197c219e6c8cbdadfce0c4c4f3/README.md)
 
 ## Installing
