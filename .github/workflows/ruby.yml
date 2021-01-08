@@ -11,19 +11,20 @@ on:
 
 jobs:
   build:
-    name: Test Ruby ${{ matrix.ruby_version }} on ${{ matrix.os }}
+    name: Test Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        ruby_version: [2.5.x, 2.6.x]
-        os: [ubuntu-latest]
-
+        os: [ubuntu-latest, macos-latest]
+        ruby: [2.5, 2.6, 2.7, 3.0]
     steps:
     - uses: actions/checkout@v1
-    - name: Use Ruby ${{ matrix.ruby_version }}
-      uses: actions/setup-ruby@v1
+    - name: Use Ruby ${{ matrix.ruby }}
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ matrix.ruby_version }}
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
     - name: Gem install and test
       run: |
         gem install bundler
