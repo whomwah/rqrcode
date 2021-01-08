@@ -30,5 +30,14 @@ describe 'Export::SVG' do
       expect(doc).not_to match(%r{<svg.*>})
       expect(doc).not_to match(%r{</svg>})
     end
+
+    it 'renders viewBox and not height/width when `viewbox` is `true`' do
+      doc = RQRCode::QRCode.new('qrcode').as_svg(viewbox: true)
+      # For now we do very naive pattern matching. The alternative is to
+      # include a librariry for parsing XML, like nokogiri. That is a big
+      # change for such a small test, though.
+      expect(doc).not_to match(%r{<\?xml.*height="\d+".*width=})
+      expect(doc).to match(%r{<svg.*viewBox="(\d+\s?){4}"})
+    end
   end
 end
