@@ -93,6 +93,12 @@ svg = qrcode.as_svg(
 )
 ```
 
+SVG only options: 
+
+```ruby
+  viewbox - replace height, width in <svg> with a viewBox, allows CSS scaling
+```
+
 ![QR code with github url](./images/github-qrcode.svg)
 
 ### as ANSI

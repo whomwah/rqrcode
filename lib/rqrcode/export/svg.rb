@@ -16,6 +16,7 @@ module RQRCode
       # shape_rendering - Defaults to crispEdges
       # standalone - wether to make this a full SVG file, or only svg to embed
       #              in other svg.
+      # viewbox - If True then render viewBox instead of height and width
       #
       def as_svg(options={})
         offset = options[:offset].to_i || 0
@@ -23,12 +24,22 @@ module RQRCode
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
         standalone = options[:standalone].nil? ? true : options[:standalone]
+        viewbox = options[:viewbox] == true ? true : false
 
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count*module_size) + (2*offset)
 
         xml_tag = %{<?xml version="1.0" standalone="yes"?>}
-        open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" shape-rendering="#{shape_rendering}" viewBox="0 0 #{dimension} #{dimension}">}
+        open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" shape-rendering="#{shape_rendering}"}
+
+        if viewbox
+          open_tag += %{ viewBox="0 0 #{dimension} #{dimension}"}
+        else
+          open_tag += %{ width="#{dimension}" height="#{dimension}"}
+        end
+
+        open_tag += '>'
+
         close_tag = "</svg>"
 
         result = []
@@ -55,6 +66,7 @@ module RQRCode
 
         result.join("\n")
       end
+
     end
   end
 end
