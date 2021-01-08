@@ -10,23 +10,20 @@ on:
     - master
 
 jobs:
-  build:
-    name: Test Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  test:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
         ruby: [2.5, 2.6, 2.7, 3.0]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
-    - name: Use Ruby ${{ matrix.ruby }}
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Gem install and test
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-        bundle exec rspec
+    - run: |
+       gem install bundler
+       bundle install --jobs 4 --retry 3
+       bundle exec rspec
