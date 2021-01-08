@@ -39,5 +39,22 @@ describe 'Export::SVG' do
       expect(doc).not_to match(%r{<\?xml.*height="\d+".*width=})
       expect(doc).to match(%r{<svg.*viewBox="(\d+\s?){4}"})
     end
+
+    it 'renders id when `svg_attributes[:id]` is provided ' do
+      doc = RQRCode::QRCode.new('qrcode').as_svg(svg_attributes: {id: '123'})
+      # For now we do very naive pattern matching. The alternative is to
+      # include a librariry for parsing XML, like nokogiri. That is a big
+      # change for such a small test, though.
+      expect(doc).to match(%r{<svg.*\sid="123".*>})
+    end
+
+    it 'renders class when `svg_attributes[:class]` is provided ' do
+      doc = RQRCode::QRCode.new('qrcode').as_svg(svg_attributes: {class: 'foo'})
+      # For now we do very naive pattern matching. The alternative is to
+      # include a librariry for parsing XML, like nokogiri. That is a big
+      # change for such a small test, though.
+      expect(doc).to match(%r{<svg.*\sclass="foo".*>})
+    end
+
   end
 end

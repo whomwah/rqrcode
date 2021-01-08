@@ -16,7 +16,8 @@ module RQRCode
       # shape_rendering - Defaults to crispEdges
       # standalone - wether to make this a full SVG file, or only svg to embed
       #              in other svg.
-      # viewbox - If True then render viewBox instead of height and width
+      # viewbox - If true then render viewBox instead of height and width
+      # svg_attributes - A hash, valid keys are :id, :class
       #
       def as_svg(options={})
         offset = options[:offset].to_i || 0
@@ -25,8 +26,7 @@ module RQRCode
         module_size = options[:module_size] || 11
         standalone = options[:standalone].nil? ? true : options[:standalone]
         viewbox = options[:viewbox] == true ? true : false
-
-        viewbox = options[:viewbox] == true ? true : false
+        svg_attributes = options[:svg_attributes] || {}
 
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count*module_size) + (2*offset)
@@ -40,6 +40,9 @@ module RQRCode
           open_tag += %{ width="#{dimension}" height="#{dimension}"}
         end
 
+        open_tag += %{ id="#{svg_attributes.dig(:id)}" } if svg_attributes.dig(:id)
+        open_tag += %{ class="#{svg_attributes.dig(:class)}" } if svg_attributes.dig(:class)
+
         open_tag += '>'
 
         close_tag = "</svg>"
@@ -50,8 +53,7 @@ module RQRCode
           @qrcode.modules.each_index do |r|
             y = c*module_size + offset
             x = r*module_size + offset
-
-            next unless @qrcode.checked?(c, r)
+next unless @qrcode.checked?(c, r)
             tmp << %{<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" style="fill:##{color}"/>}
           end
           result << tmp.join

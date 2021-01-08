@@ -96,7 +96,8 @@ svg = qrcode.as_svg(
 SVG only options: 
 
 ```ruby
-  viewbox - replace height, width in <svg> with a viewBox, allows CSS scaling
+  viewbox        - replace height, width in <svg> with a viewBox, allows CSS scaling
+  svg_attributes - a Hash, valid keys are `:id` and `:class`, e.g. `svg_attributes: {id: '123'}`, adds id and/or class attributes
 ```
 
 ![QR code with github url](./images/github-qrcode.svg)
