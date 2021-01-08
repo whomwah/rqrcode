@@ -26,6 +26,8 @@ module RQRCode
         standalone = options[:standalone].nil? ? true : options[:standalone]
         viewbox = options[:viewbox] == true ? true : false
 
+        viewbox = options[:viewbox] == true ? true : false
+
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count*module_size) + (2*offset)
 
