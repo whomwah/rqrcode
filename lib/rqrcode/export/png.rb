@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-require 'chunky_png'
+
+require "chunky_png"
 
 # This class creates PNG files.
 # Code from: https://github.com/DCarper/rqrcode
@@ -43,19 +44,19 @@ module RQRCode
           bit_depth: 1,
           border_modules: 4,
           color_mode: ChunkyPNG::COLOR_GRAYSCALE,
-          color: 'black',
+          color: "black",
           file: false,
-          fill: 'white',
+          fill: "white",
           module_px_size: 6,
           resize_exactly_to: false,
           resize_gte_to: false,
           size: 120
         }
 
-        googleis = options.length == 0 || (options[:size] != nil)
+        googleis = options.length == 0 || !options[:size].nil?
         options = default_img_options.merge(options) # reverse_merge
-        fill   = ChunkyPNG::Color(options[:fill])
-        color  = ChunkyPNG::Color(options[:color])
+        fill = ChunkyPNG::Color(options[:fill])
+        color = ChunkyPNG::Color(options[:color])
         output_file = options[:file]
         module_px_size = nil
         border_px = nil
@@ -81,7 +82,7 @@ module RQRCode
           else
             options[:module_px_size]
           end
-          border_px = border *  module_px_size
+          border_px = border * module_px_size
           total_border_px = border_px * 2
           resize_to = options[:resize_exactly_to]
 
@@ -96,7 +97,7 @@ module RQRCode
             if @qrcode.checked?(x, y)
               (0...module_px_size).each do |i|
                 (0...module_px_size).each do |j|
-                  png[(y * module_px_size) + border_px + j , (x * module_px_size) + border_px + i] = color
+                  png[(y * module_px_size) + border_px + j, (x * module_px_size) + border_px + i] = color
                 end
               end
             end
@@ -112,7 +113,7 @@ module RQRCode
             color_mode: options[:color_mode],
             bit_depth: options[:bit_depth]
           }
-          constraints[:interlace]   = options[:interlace]   if options.has_key?(:interlace)
+          constraints[:interlace] = options[:interlace] if options.has_key?(:interlace)
           constraints[:compression] = options[:compression] if options.has_key?(:compression)
           png.save(output_file, constraints)
         end
