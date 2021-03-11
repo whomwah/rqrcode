@@ -182,11 +182,21 @@ or try the lib from the console with:
 $ ./bin/console
 ```
 
+## Linting
+
+The project uses [standardrb](https://github.com/testdouble/standard) and can be run with:
+
+```
+$ ./bin/setup
+$ bundle exec standardrb --format progress # to check
+$ bundle exec standardrb --fix # to fix
+```
+
 ## Contributing
 
 The current `as_png`, `as_css`, `as_svg`, `as_ansi` etc etc renderings of a QR Code will eventually (when I can get round to it) be moved into their own gems so they can be managed independently by people in their own repos -- ideally -- who are interested in this kind of thing. This will leave me to look after `rqrcode_core` gem which I do have time for.
 
-So for example if you only required a `png` rendering of a QR Code, you could simply use the gem `rqrcode_png`. This eventually means that the `rqrcode` gem will just become a lightweight gem that pulls in all the various rendering and TBH will likely be depreciated.
+So for example if you only required a `png` rendering of a QR Code, you could simply use the gem `rqrcode_png`. This eventually means that the `rqrcode` gem will just become a bucket that pulls in all the existing renderings only.
 
 The motivation behind all this is because the rendering side of this gem takes up the most time. Everyone wants a slightly different version of a QR Code and it's impossible to support everyone. The easiest way is to empower people to create their own which they can manage.
 
