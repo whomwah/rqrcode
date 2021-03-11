@@ -173,7 +173,8 @@ You can run the test suite using:
 
 ```
 $ ./bin/setup
-$ bundle exec rspec
+$ rake      # runs specs and standard:fix
+$ rake spec # just runs the specs
 ```
 
 or try the lib from the console with:
@@ -184,12 +185,12 @@ $ ./bin/console
 
 ## Linting
 
-The project uses [standardrb](https://github.com/testdouble/standard) and can be run with:
+The project uses [standardrb](https://github.com/testdouble/standard) and can be used with:
 
 ```
 $ ./bin/setup
-$ bundle exec standardrb --format progress # to check
-$ bundle exec standardrb --fix # to fix
+$ rake standard # checks
+$ rake standard:fix # fixes
 ```
 
 ## Contributing
