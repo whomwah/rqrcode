@@ -6,7 +6,7 @@ module RQRCode
       #
       # Use this module to HTML-ify the QR code if you just want the default HTML
       def as_html
-        ['<table>', rows.as_html, '</table>'].join
+        ["<table>", rows.as_html, "</table>"].join
       end
 
       private
@@ -27,7 +27,7 @@ module RQRCode
 
       class Row < Struct.new(:qr, :qr_module, :row_index)
         def as_html
-          ['<tr>', cells.map(&:as_html).join, '</tr>'].join
+          ["<tr>", cells.map(&:as_html).join, "</tr>"].join
         end
 
         def cells
@@ -41,7 +41,7 @@ module RQRCode
         end
 
         def html_class
-          qr.checked?(row_index, col_index) ? 'black' : 'white'
+          qr.checked?(row_index, col_index) ? "black" : "white"
         end
       end
     end

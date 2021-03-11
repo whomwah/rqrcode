@@ -13,11 +13,11 @@ module RQRCode
       # fill_character: The written character. ('  ')
       # quiet_zone_size: (4)
       #
-      def as_ansi(options={})
+      def as_ansi(options = {})
         options = {
           light: "\033[47m",
           dark: "\033[40m",
-          fill_character: '  ',
+          fill_character: "  ",
           quiet_zone_size: 4
         }.merge(options)
 
@@ -39,15 +39,13 @@ module RQRCode
                 row << dark
                 previous_dark = true
               end
-              row << fill_character
-            else
+            elsif previous_dark != false
               # light
-              if previous_dark != false
-                row << light
-                previous_dark = false
-              end
-              row << fill_character
+              row << light
+              previous_dark = false
             end
+
+            row << fill_character
           end
 
           # add quiet zone
@@ -68,7 +66,7 @@ module RQRCode
         quiet_row = light + fill_character * width + normal
         quiet_rows = quiet_row * quiet_zone_size
 
-        return quiet_rows + output.join + quiet_rows
+        quiet_rows + output.join + quiet_rows
       end
     end
   end
