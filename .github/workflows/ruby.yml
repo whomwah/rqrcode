@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - release/*
   pull_request:
     branches:
     - master
@@ -23,7 +22,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Run Tests
-      run: bundle exec rspec
-    - name: StandardRB Check
+    - name: Run Tests for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
+      run: bundle exec rake spec
+    - name: StandardRB check for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
       run: bundle exec standardrb --format progress
