@@ -28,18 +28,17 @@ gem install rqrcode
 ```ruby
 require 'rqrcode'
 
-qr = RQRCode::QRCode.new('http://github.com')
-result = ''
+qr = RQRCode::QRCode.new('https://kyan.com')
 
-qr.qrcode.modules.each do |row|
-  row.each do |col|
-    result << (col ? 'X' : 'O')
-  end
+puts qr.to_s
 
-  result << "\n"
-end
-
-puts result
+xxxxxxx xxxxxxx  xxx  xxxxxxx
+x     x  x  xxx   xx  x     x
+x xxx x xx x x     xx x xxx x
+x xxx x      xx xx xx x xxx x
+x xxx x x x       xxx x xxx x
+x     x  xxx x xx x x x     x
+...
 ```
 
 ### Advanced Options
@@ -72,12 +71,29 @@ qrcode = RQRCodeCore::QRCode.new('hello world', size: 1, level: :m, mode: :alpha
 
 ## Render types
 
-You can output your QR code in various forms. These are detailed below:
+You probably want to output your QR code in a specific format. We make this easy by providing a bunch of formats to choose from below, each with their own set of options:
 
 ### as SVG
 
 The SVG renderer will produce a stand-alone SVG as a `String`
 
+```
+Options:
+
+offset          - Padding around the QR Code in pixels
+                  (default 0)
+fill            - Background color e.g "ffffff" or :white
+                  (default none)
+color           - Foreground color e.g "000" or :black
+                  (default "000")
+module_size     - The Pixel size of each module
+                  (defaults 11)
+shape_rendering - SVG Attribute: auto | optimizeSpeed | crispEdges | geometricPrecision
+                  (defaults crispEdges)
+standalone      - whether to make this a full SVG file, or only an svg to embed in other svg
+                  (default true)
+```
+Example
 ```ruby
 require 'rqrcode'
 
@@ -88,35 +104,61 @@ svg = qrcode.as_svg(
   offset: 0,
   color: '000',
   shape_rendering: 'crispEdges',
-  module_size: 6,
+  module_size: 11,
   standalone: true
 )
 ```
 
 ![QR code with github url](./images/github-qrcode.svg)
 
-### as ANSI
-
-The ANSI renderer will produce as a string with ANSI color codes.
-
-```ruby
-require 'rqrcode'
-
-qrcode = RQRCode::QRCode.new("http://github.com/")
-
-# NOTE: showing with default options specified explicitly
-svg = qrcode.as_ansi(
-  light: "\033[47m", dark: "\033[40m",
-  fill_character: '  ',
-  quiet_zone_size: 4
-)
-```
-
-![QR code with github url](./images/ansi-screen-shot.png)
-
 ### as PNG
 
-The library can produce a PNG. Result will be a `ChunkyPNG::Image` instance.
+The will produce a PNG using the [ChunkyPNG gem](https://github.com/wvanbergen/chunky_png). The result will be a `ChunkyPNG::Image` instance.
+
+```
+Options:
+
+fill  - Background ChunkyPNG::Color, defaults to 'white'
+color - Foreground ChunkyPNG::Color, defaults to 'black'
+
+When option :file is supplied you can use the following ChunkyPNG constraints:
+
+color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants.
+              (defaults to 'ChunkyPNG::COLOR_GRAYSCALE')
+bit_depth   - The bit depth to use. This option is only used for indexed images.
+              (defaults to 1 bit)
+interlace   - Whether to use interlacing (true or false).
+              (defaults to ChunkyPNG default)
+compression - The compression level for Zlib. This can be a value between 0 and 9, or a
+              Zlib constant like Zlib::BEST_COMPRESSION
+              (defaults to ChunkyPNG default)
+
+There are two sizing algorithms.
+
+* Original that can result in blurry and hard to scan images
+* Google's Chart API inspired sizing that resizes the module size to fit within the given image size.
+
+The Google one will be used when no options are given or when the new size option is used.
+
+*Google Sizing*
+
+size            - Total size of PNG in pixels. The module size is calculated so it fits.
+                  (defaults to 120)
+border_modules  - Width of white border around the modules.
+                  (defaults to 4).
+
+-- DONT USE border_modules OPTION UNLESS YOU KNOW ABOUT THE QUIET ZONE NEEDS OF QR CODES --
+
+*Original Sizing*
+
+module_px_size  - Image size, in pixels.
+border          - Border thickness, in pixels
+
+It first creates an image where 1px = 1 module, then resizes.
+Defaults to 120x120 pixels, customizable by option.
+```
+
+Example
 
 ```ruby
 require 'rqrcode'
@@ -142,26 +184,38 @@ IO.binwrite("/tmp/github-qrcode.png", png.to_s)
 
 ![QR code with github url](./images/github-qrcode.png)
 
-### On the console ( just because you can )
 
+### as ANSI
+
+The ANSI renderer will produce as a string with ANSI color codes.
+
+```
+Options:
+
+light           - Foreground ANSI code
+                  (default "\033[47m")
+dark            - Background ANSI code
+                  (default "\033[40m")
+fill_character  - The written character
+                  (default '  ')
+quiet_zone_size - Padding around the edge
+                  (default 4)
+```
+Example
 ```ruby
 require 'rqrcode'
 
-qr = RQRCode::QRCode.new('http://kyan.com', size: 4, level: :h)
+qrcode = RQRCode::QRCode.new("http://github.com/")
 
-puts qr.to_s
+# NOTE: showing with default options specified explicitly
+svg = qrcode.as_ansi(
+  light: "\033[47m", dark: "\033[40m",
+  fill_character: '  ',
+  quiet_zone_size: 4
+)
 ```
 
-Output:
-
-```
-xxxxxxx   x x  xxx    xxxxxxx
-x     x  xxxxx  x x   x     x
-x xxx x    x x     x  x xxx x
-x xxx x  xxx  x xxx   x xxx x
-x xxx x xxx  x  x  x  x xxx x
-... etc
-```
+![QR code with github url](./images/ansi-screen-shot.png)
 
 ## API Documentation
 
@@ -195,13 +249,13 @@ $ rake standard:fix # fixes
 
 ## Contributing
 
-The current `as_png`, `as_css`, `as_svg`, `as_ansi` etc etc renderings of a QR Code will eventually (when I can get round to it) be moved into their own gems so they can be managed independently by people in their own repos -- ideally -- who are interested in this kind of thing. This will leave me to look after `rqrcode_core` gem which I do have time for.
+The current plan moving forward is to move `as_png`, `as_css`, `as_svg`, `as_ansi` etc into their own gems so they can be managed independently -- ideally -- by people who are interested in maintaining a specific render type. This will leave me to look after `rqrcode_core` gem which I do have time for.
 
-So for example if you only required a `png` rendering of a QR Code, you could simply use the gem `rqrcode_png`. This eventually means that the `rqrcode` gem will just become a bucket that pulls in all the existing renderings only.
+So for example if you only required a `png` rendering of a QR Code, you could simply use the gem `rqrcode_png`. This would eventually mean that the `rqrcode` gem will just become a bucket that pulls in all the existing renderings only and would have deprecated usage over time.
 
-The motivation behind all this is because the rendering side of this gem takes up the most time. Everyone wants a slightly different version of a QR Code and it's impossible to support everyone. The easiest way is to empower people to create their own which they can manage.
+So, the motivation behind all this change is because the rendering side of this gem takes up the most time. It seems that many people want a slightly different version of a QR Code so supporting all the variations would be hard. The easiest way is to empower people to create their own versions which they can manage and share.
 
-The work shouldn't impact any current users of the gem. What this does mean though is that any contribution PR's should only be bug fixes rather than new functionality. Thanks.
+The work won't impact any current users of this gem. What this does mean though is that any contribution PR's should *only* be bug fixes rather than new functionality. Thanks D.
 
 * Fork the project
 * Send a pull request
