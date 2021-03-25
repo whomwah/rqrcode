@@ -6,8 +6,19 @@ describe "Export::SVG" do
     expect(RQRCode::QRCode.new("qrcode")).to respond_to(:as_svg)
   end
 
-  it "must export to svg" do
-    expect(RQRCode::QRCode.new("qrcode").as_svg).to eq(AS_SVG)
+  context "with use_rect (default) option" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("qrcode").as_svg).to eq(AS_SVG)
+    end
+  end
+
+  context "with use_path option" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        offset: 20
+      )).to eq(AS_SVG1)
+    end
   end
 
   describe "options" do
