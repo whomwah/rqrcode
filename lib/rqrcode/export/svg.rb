@@ -23,11 +23,13 @@ module RQRCode
         end
       end
 
-      DIRECTIONS = {
+      SVG_PATH_COMMANDS = {
+        move: "M",
         up: "v-",
         down: "v",
         left: "h-",
-        right: "h"
+        right: "h",
+        close: "z"
       }
 
       #
@@ -139,30 +141,33 @@ module RQRCode
         end
 
         edge_count = edge_matrix.flatten.compact.count
-
         path = []
+
         while edge_count > 0
           edge_loop = []
           matrix_cell = edge_matrix.find { |row| row.any? }.find { |cell| !cell.nil? && !cell.empty? }
           edge = matrix_cell.first
+
           while edge
             edge_loop << edge
             matrix_cell = edge_matrix[edge.start_y][edge.start_x]
             matrix_cell.delete edge
             edge_matrix[edge.start_y][edge.start_x] = nil if matrix_cell.empty?
             edge_count -= 1
+
             # try to find an edge continuing the current edge
             matrix_cell = edge_matrix[edge.end_y][edge.end_x]
             edge = matrix_cell.nil? ? nil : matrix_cell.first
           end
 
           first_edge = edge_loop.first
-          edge_loop_string = "M#{first_edge.start_x} #{first_edge.start_y}"
+          edge_loop_string = SVG_PATH_COMMANDS[:move]
+          edge_loop_string += "#{first_edge.start_x} #{first_edge.start_y}"
 
           edge_loop.chunk(&:direction).to_a[0...-1].each do |direction, edges|
-            edge_loop_string += "#{DIRECTIONS[direction]}#{edges.length}"
+            edge_loop_string << "#{SVG_PATH_COMMANDS[direction]}#{edges.length}"
           end
-          edge_loop_string += "z"
+          edge_loop_string << SVG_PATH_COMMANDS[:close]
 
           path << edge_loop_string
         end
