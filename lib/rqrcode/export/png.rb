@@ -9,35 +9,42 @@ module RQRCode
     module PNG
       # Render the PNG from the QR Code.
       #
-      # There are two sizing algoritams.
+      # Options:
+      # fill  - Background ChunkyPNG::Color, defaults to 'white'
+      # color - Foreground ChunkyPNG::Color, defaults to 'black'
+      #
+      # When option :file is supplied you can use the following ChunkyPNG constraints
+      # color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants.
+      #               (defaults to 'ChunkyPNG::COLOR_GRAYSCALE')
+      # bit_depth   - The bit depth to use. This option is only used for indexed images.
+      #               (defaults to 1 bit)
+      # interlace   - Whether to use interlacing (true or false).
+      #               (defaults to ChunkyPNG default)
+      # compression - The compression level for Zlib. This can be a value between 0 and 9, or a
+      #               Zlib constant like Zlib::BEST_COMPRESSION
+      #               (defaults to ChunkyPNG default)
+      #
+      # There are two sizing algorithms.
       #
       # - Original that can result in blurry and hard to scan images
       # - Google's Chart API inspired sizing that resizes the module size to fit within the given image size.
       #
       # The Googleis one will be used when no options are given or when the new size option is used.
       #
-      # Options:
-      # fill  - Background ChunkyPNG::Color, defaults to 'white'
-      # color - Foreground ChunkyPNG::Color, defaults to 'black'
-      #
-      # When option :file is supplied you can use the following ChunkyPNG constraints
-      # color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants. defaults to 'ChunkyPNG::COLOR_GRAYSCALE'
-      # bit_depth   - The bit depth to use. This option is only used for indexed images. defaults to '1' bit
-      # interlace   - Whether to use interlacing (true or false). defaults to ChunkyPNG default
-      # compression - The compression level for Zlib. This can be a value between 0 and 9, or a Zlib constant like Zlib::BEST_COMPRESSION, defaults to ChunkyPNG defaults
-      #
-      # *Googleis*
-      # size            - Total size of PNG in pixels. The module size is calculated so it fits. (defaults to 90)
-      # border_modules  - Width of white border around in modules. (defaults to 4).
+      # *Google*
+      # size            - Total size of PNG in pixels. The module size is calculated so it fits.
+      #                   (defaults to 120)
+      # border_modules  - Width of white border around in modules.
+      #                   (defaults to 4).
       #
       #  -- DONT USE border_modules OPTION UNLESS YOU KNOW ABOUT THE QUIET ZONE NEEDS OF QR CODES --
       #
       # *Original*
       # module_px_size  - Image size, in pixels.
-      # border - Border thickness, in pixels
+      # border          - Border thickness, in pixels
       #
       # It first creates an image where 1px = 1 module, then resizes.
-      # Defaults to 90x90 pixels, customizable by option.
+      # Defaults to 120x120 pixels, customizable by option.
       #
       def as_png(options = {})
         default_img_options = {

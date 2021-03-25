@@ -9,7 +9,7 @@ module RQRCode
       #
       # Options:
       # light: Foreground ("\033[47m")
-      # dark: Background ANSI code. ("\033[47m")
+      # dark: Background ANSI code. ("\033[40m")
       # fill_character: The written character. ('  ')
       # quiet_zone_size: (4)
       #
