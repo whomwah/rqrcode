@@ -35,7 +35,7 @@ module RQRCode
       # standalone - wether to make this a full SVG file, or only svg to embed
       #              in other svg.
       #
-      def as_svg(options={})
+      def as_svg(options = {})
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
@@ -43,15 +43,14 @@ module RQRCode
         standalone = options[:standalone].nil? ? true : options[:standalone]
 
         # height and width dependent on offset and QR complexity
-        dimension = (@qrcode.module_count*module_size) + (2*offset)
+        dimension = (@qrcode.module_count * module_size) + (2 * offset)
 
-        xml_tag = %{<?xml version="1.0" standalone="yes"?>}
-        open_tag = %{<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{dimension}" height="#{dimension}" shape-rendering="#{shape_rendering}">}
+        xml_tag = %(<?xml version="1.0" standalone="yes"?>)
+        open_tag = %(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{dimension}" height="#{dimension}" shape-rendering="#{shape_rendering}">)
         close_tag = "</svg>"
 
         result = []
-
-        modules_array = qrcode.modules
+        modules_array = @qrcode.modules
 
         matrix_height = modules_array.length + 1
         matrix_width = modules_array.first.length + 1
@@ -124,7 +123,7 @@ module RQRCode
         result << %{<path d="#{path.join("")}" style="fill:##{color}" transform="translate(#{offset},#{offset}) scale(#{module_size})"/>}
 
         if options[:fill]
-          result.unshift %{<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>}
+          result.unshift %(<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>)
         end
 
         if standalone
