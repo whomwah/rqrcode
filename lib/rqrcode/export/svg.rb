@@ -106,12 +106,11 @@ module RQRCode
 
       def use_path(str, module_size, offset, color)
         modules_array = @qrcode.modules
-        matrix_height = modules_array.length + 1
-        matrix_width = modules_array.first.length + 1
-        edge_matrix = Array.new(matrix_height) { Array.new(matrix_width) { [] } }
-        false_row = [[false] * modules_array.first.length]
+        matrix_width = matrix_height = modules_array.length + 1
+        empty_row = [Array.new(matrix_width - 1, false)]
+        edge_matrix = Array.new(matrix_height) { Array.new(matrix_width) }
 
-        (false_row + modules_array + false_row).each_cons(2).with_index do |row_pair, row_index|
+        (empty_row + modules_array + empty_row).each_cons(2).with_index do |row_pair, row_index|
           first_row, second_row = row_pair
 
           # horizontal edges
@@ -120,7 +119,8 @@ module RQRCode
             when [true, false] then Edge.new column_index + 1, row_index, :left
             when [false, true] then Edge.new column_index, row_index, :right
             end
-            edge_matrix[edge.start_y][edge.start_x] << edge if edge
+
+            (edge_matrix[edge.start_y][edge.start_x] ||= []) << edge if edge
           end
 
           #  vertical edges
@@ -129,14 +129,8 @@ module RQRCode
             when [true, false] then Edge.new column_index, row_index, :down
             when [false, true] then Edge.new column_index, row_index + 1, :up
             end
-            edge_matrix[edge.start_y][edge.start_x] << edge if edge
-          end
-        end
 
-        # clean up empty cells
-        edge_matrix.each_with_index do |matrix_row, row_index|
-          matrix_row.each_with_index do |cell, column_index|
-            matrix_row[column_index] = nil if cell.empty?
+            (edge_matrix[edge.start_y][edge.start_x] ||= []) << edge if edge
           end
         end
 
@@ -145,8 +139,8 @@ module RQRCode
 
         while edge_count > 0
           edge_loop = []
-          matrix_cell = edge_matrix.find { |row| row.any? }.find { |cell| !cell.nil? && !cell.empty? }
-          edge = matrix_cell.first
+          next_matrix_cell = edge_matrix.find(&:any?).find { |cell| cell&.any? }
+          edge = next_matrix_cell.first
 
           while edge
             edge_loop << edge
@@ -156,8 +150,7 @@ module RQRCode
             edge_count -= 1
 
             # try to find an edge continuing the current edge
-            matrix_cell = edge_matrix[edge.end_y][edge.end_x]
-            edge = matrix_cell.nil? ? nil : matrix_cell.first
+            edge = edge_matrix[edge.end_y][edge.end_x]&.first
           end
 
           first_edge = edge_loop.first
