@@ -172,7 +172,7 @@ module RQRCode
           output_tag.result << close_tag
         end
 
-        output_tag.result.join("\n")
+        output_tag.result.join
       end
     end
   end
