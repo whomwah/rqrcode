@@ -33,11 +33,20 @@ describe "Export::SVG" do
   end
 
   context "standalone false" do
-    it "must export to svg" do
+    it "will not include the <xml>" do
       expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
         standalone: false,
         use_path: true
       )).to eq(AS_SVG3)
+    end
+  end
+
+  context "viewbox true" do
+    it "will use the viewBox attr" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        viewbox: true,
+        use_path: true
+      )).to eq(AS_SVG4)
     end
   end
 end

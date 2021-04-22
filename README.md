@@ -95,6 +95,9 @@ standalone      - whether to make this a full SVG file, or only an svg to embed 
 use_path        - Use <path> to render SVG rather than <rect> to significantly reduce size
                   and quality. This will become the default in future versions.
                   (default false)
+viewbox         - replace the `svg.width` and `svg.height` attribute with `svg.viewBox` to
+                  allow CSS scaling
+                  (default false)
 ```
 Example
 ```ruby
@@ -104,11 +107,11 @@ qrcode = RQRCode::QRCode.new("http://github.com/")
 
 # NOTE: showing with default options specified explicitly
 svg = qrcode.as_svg(
-  offset: 0,
   color: '000',
   shape_rendering: 'crispEdges',
   module_size: 11,
-  standalone: true
+  standalone: true,
+  use_path: true
 )
 ```
 
