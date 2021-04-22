@@ -49,4 +49,16 @@ describe "Export::SVG" do
       )).to eq(AS_SVG4)
     end
   end
+
+  context "svg_attributes" do
+    it "renders `svg_attributes` when provided " do
+      expect(RQRCode::QRCode.new("qrcode").as_svg(
+        use_path: true,
+        svg_attributes: {
+          id: "myUniqueId",
+          class: "myClass"
+        }
+      )).to eq(AS_SVG5)
+    end
+  end
 end
