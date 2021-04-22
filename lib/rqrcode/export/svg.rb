@@ -146,11 +146,10 @@ module RQRCode
       #
       def as_svg(options = {})
         use_path = options[:use_path]
-        default_module_size = use_path ? 10 : 11 # for backward compatability
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
-        module_size = options[:module_size] || default_module_size
+        module_size = options[:module_size] || 11
         standalone = options[:standalone].nil? ? true : options[:standalone]
 
         # height and width dependent on offset and QR complexity
