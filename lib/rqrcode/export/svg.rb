@@ -115,6 +115,13 @@ module RQRCode
         end
       end
 
+      DEFAULT_SVG_ATTRIBUTES = [
+        %(version="1.1"),
+        %(xmlns="http://www.w3.org/2000/svg"),
+        %(xmlns:xlink="http://www.w3.org/1999/xlink"),
+        %(xmlns:ev="http://www.w3.org/2001/xml-events")
+      ]
+
       SVG_PATH_COMMANDS = {
         move: "M",
         up: "v-",
@@ -145,6 +152,8 @@ module RQRCode
       #                   (default false)
       # viewbox         - replace `width` and `height` in <svg> with a viewBox, allows CSS scaling
       #                   (default false)
+      # svg_attributes  - A optional hash of custom <svg> attributes. Existing attributes will remain.
+      #                   (default {})
       #
       def as_svg(options = {})
         fill = options[:fill]
@@ -155,14 +164,20 @@ module RQRCode
         module_size = options[:module_size] || 11
         standalone = options[:standalone].nil? ? true : options[:standalone]
         viewbox = options[:viewbox].nil? ? false : options[:viewbox]
+        svg_attributes = options[:svg_attributes] || {}
 
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count * module_size) + (2 * offset)
         # use dimensions differently if we are using a viewBox
         dimensions_attr = viewbox ? %(viewBox="0 0 #{dimension} #{dimension}") : %(width="#{dimension}" height="#{dimension}")
 
+        svg_tag_attributes = (DEFAULT_SVG_ATTRIBUTES + [
+          dimensions_attr,
+          %(shape-rendering="#{shape_rendering}")
+        ] + svg_attributes.map { |k, v| %(#{k}="#{v}") }).join(" ")
+
         xml_tag = %(<?xml version="1.0" standalone="yes"?>)
-        open_tag = %(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{dimensions_attr} shape-rendering="#{shape_rendering}">)
+        open_tag = %(<svg #{svg_tag_attributes}>)
         close_tag = "</svg>"
 
         output_tag = (use_path ? Path : Rect).new(@qrcode)

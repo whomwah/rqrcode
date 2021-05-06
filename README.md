@@ -90,14 +90,16 @@ module_size     - The Pixel size of each module
                   (defaults 11)
 shape_rendering - SVG Attribute: auto | optimizeSpeed | crispEdges | geometricPrecision
                   (defaults crispEdges)
-standalone      - whether to make this a full SVG file, or only an svg to embed in other svg
+standalone      - Whether to make this a full SVG file, or only an svg to embed in other svg
                   (default true)
 use_path        - Use <path> to render SVG rather than <rect> to significantly reduce size
                   and quality. This will become the default in future versions.
                   (default false)
-viewbox         - replace the `svg.width` and `svg.height` attribute with `svg.viewBox` to
+viewbox         - Replace the `svg.width` and `svg.height` attribute with `svg.viewBox` to
                   allow CSS scaling
                   (default false)
+svg_attributes  - A optional hash of custom <svg> attributes. Existing attributes will remain.
+                  (default {})
 ```
 Example
 ```ruby
@@ -111,7 +113,10 @@ svg = qrcode.as_svg(
   shape_rendering: 'crispEdges',
   module_size: 11,
   standalone: true,
-  use_path: true
+  use_path: true,
+  svg_attributes: {
+    id: "myUniqueId"
+  }
 )
 ```
 
