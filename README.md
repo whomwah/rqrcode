@@ -114,10 +114,7 @@ svg = qrcode.as_svg(
   shape_rendering: "crispEdges",
   module_size: 11,
   standalone: true,
-  use_path: true,
-  svg_attributes: {
-    id: "myUniqueId"
-  }
+  use_path: true
 )
 ```
 
