@@ -6,29 +6,38 @@ describe "Export::SVG" do
     expect(RQRCode::QRCode.new("qrcode")).to respond_to(:as_svg)
   end
 
-  it "must export to svg" do
-    expect(RQRCode::QRCode.new("qrcode").as_svg).to eq(AS_SVG)
+  context "with use_rect (default) option" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg).to eq(AS_SVG)
+    end
   end
 
-  describe "options" do
-    it "has standalone option true by default" do
-      doc = RQRCode::QRCode.new("qrcode").as_svg
-      # For now we do very naive pattern matching. The alternative is to
-      # include a librariry for parsing XML, like nokogiri. That is a big
-      # change for such a small test, though.
-      expect(doc).to match(%r{<\?xml.*standalone="yes"})
-      expect(doc).to match(%r{<svg.*>})
-      expect(doc).to match(%r{</svg>})
+  context "with use_path option" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true
+      )).to eq(AS_SVG1)
     end
+  end
 
-    it "omits surrounding XML when `standalone` is `false`" do
-      doc = RQRCode::QRCode.new("qrcode").as_svg(standalone: false)
-      # For now we do very naive pattern matching. The alternative is to
-      # include a librariry for parsing XML, like nokogiri. That is a big
-      # change for such a small test, though.
-      expect(doc).not_to match(%r{<\?xml.*standalone="yes"})
-      expect(doc).not_to match(%r{<svg.*>})
-      expect(doc).not_to match(%r{</svg>})
+  context "with various options" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        module_size: 10,
+        use_path: true,
+        offset: 40,
+        color: "ff0000",
+        fill: "ffcc00"
+      )).to eq(AS_SVG2)
+    end
+  end
+
+  context "standalone false" do
+    it "must export to svg" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        standalone: false,
+        use_path: true
+      )).to eq(AS_SVG3)
     end
   end
 end
