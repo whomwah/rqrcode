@@ -143,27 +143,33 @@ module RQRCode
       # use_path        - Use <path> to render SVG rather than <rect> to significantly reduce size
       #                   and quality. This will become the default in future versions.
       #                   (default false)
+      # viewbox         - replace `width` and `height` in <svg> with a viewBox, allows CSS scaling
+      #                   (default false)
       #
       def as_svg(options = {})
+        fill = options[:fill]
         use_path = options[:use_path]
         offset = options[:offset].to_i || 0
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
         standalone = options[:standalone].nil? ? true : options[:standalone]
+        viewbox = options[:viewbox].nil? ? false : options[:viewbox]
 
         # height and width dependent on offset and QR complexity
         dimension = (@qrcode.module_count * module_size) + (2 * offset)
+        # use dimensions differently if we are using a viewBox
+        dimensions_attr = viewbox ? %(viewBox="0 0 #{dimension} #{dimension}") : %(width="#{dimension}" height="#{dimension}")
 
         xml_tag = %(<?xml version="1.0" standalone="yes"?>)
-        open_tag = %(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" width="#{dimension}" height="#{dimension}" shape-rendering="#{shape_rendering}">)
+        open_tag = %(<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" #{dimensions_attr} shape-rendering="#{shape_rendering}">)
         close_tag = "</svg>"
 
         output_tag = (use_path ? Path : Rect).new(@qrcode)
         output_tag.build(module_size, offset, color)
 
-        if options[:fill]
-          output_tag.result.unshift %(<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{options[:fill]}"/>)
+        if fill
+          output_tag.result.unshift %(<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:##{fill}"/>)
         end
 
         if standalone
