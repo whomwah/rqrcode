@@ -7,13 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Corrected method name referred to in CHANGELOG.
+
 ## [2.0.0] - 2021-05-06
 
 ### Added
 
-- A new `use_path:` option on `.to_svg`. This uses a `<path>` node to greatly reduce the final SVG size. [#108]
-- A new `viewbox:` option on `.to_svg`. Replaces the `svg.width` and `svg.height` attribute with `svg.viewBox` to allow CSS scaling. [#112]
-- A new `svg_attributes:` option on `.to_svg`. Allows you to pass in custom SVG attributes to be used in the `<svg>` tag. [#113]
+- A new `use_path:` option on `.as_svg`. This uses a `<path>` node to greatly reduce the final SVG size. [#108]
+- A new `viewbox:` option on `.as_svg`. Replaces the `svg.width` and `svg.height` attribute with `svg.viewBox` to allow CSS scaling. [#112]
+- A new `svg_attributes:` option on `.as_svg`. Allows you to pass in custom SVG attributes to be used in the `<svg>` tag. [#113]
 
 ### Changed
 
