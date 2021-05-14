@@ -32,6 +32,7 @@ require "rqrcode"
 qr = RQRCode::QRCode.new("https://kyan.com")
 
 puts qr.to_s
+# to_s( dark: "x", light: " " ) # defaults
 
 xxxxxxx xxxxxxx  xxx  xxxxxxx
 x     x  x  xxx   xx  x     x
@@ -42,9 +43,11 @@ x     x  xxx x xx x x x     x
 ...
 ```
 
+Easy, but unlikely to be readable. For this you will need to use one of the many [rendering options](#render-types) below.
+
 ### Advanced Options
 
-These are the various QR Code generation options provided by [rqrqcode_core](https://github.com/whomwah/rqrcode_core).
+These are the various QR code generation options provided by the underlying [rqrqcode_core](https://github.com/whomwah/rqrcode_core). You may actually only need this library if you don't need the various rendering options `rqrcode` provides, but just need the data structure.
 
 ```
 string - the string you wish to encode
