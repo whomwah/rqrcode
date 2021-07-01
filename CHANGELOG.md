@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Sync Gemfile.lock with `rqrcode_core.1.1.0`
+- Add badge for Standard linting
+
 ### Changed
 
 - Corrected method name referred to in CHANGELOG.
