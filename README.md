@@ -1,6 +1,7 @@
 # RQRCode
 
 ![](https://github.com/whomwah/rqrcode/actions/workflows/ruby.yml/badge.svg)
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
 
 
 [RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
