@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Sync Gemfile.lock with `rqrcode_core.1.1.0`
+## [2.1.0] - 2021-08-26
+
+- Sync Gemfile.lock with `rqrcode_core.1.2.0` [Adds Multimode Support](https://github.com/whomwah/rqrcode_core#multiple-encoding-support)
 - Add badge for Standard linting
 
 ### Changed
@@ -41,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump dependencies
 - fix `required_ruby_version` for Ruby 3 support
 
-[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/whomwah/rqrcode/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/whomwah/rqrcode/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/whomwah/rqrcode/compare/v1.1.1...v1.2.0

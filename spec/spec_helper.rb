@@ -3,6 +3,7 @@
 # The generated `.rspec` file contains `--require spec_helper` which will cause
 # this file to always be loaded, without a need to explicitly require it in any
 # files.
+require "bundler/setup"
 require "rqrcode"
 #
 # Given that it is always loaded, you are encouraged to keep this file as
