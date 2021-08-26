@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rqrcode (2.0.0)
+    rqrcode (2.1.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
 
@@ -18,7 +18,7 @@ GEM
     rake (13.0.3)
     regexp_parser (2.1.1)
     rexml (3.2.5)
-    rqrcode_core (1.1.0)
+    rqrcode_core (1.2.0)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -65,4 +65,4 @@ DEPENDENCIES
   standardrb (~> 1.0)
 
 BUNDLED WITH
-   2.2.15
+   2.2.22

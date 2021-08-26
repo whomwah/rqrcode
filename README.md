@@ -51,27 +51,39 @@ Easy, but unlikely to be readable. For this you will need to use one of the many
 These are the various QR code generation options provided by the underlying [rqrcode_core](https://github.com/whomwah/rqrcode_core). You may actually only need this library if you don't need the various rendering options `rqrcode` provides, but just need the data structure.
 
 ```
-string - the string you wish to encode
+Expects a string or array (for multi-segment encoding) to be parsed in, other args are optional
 
-size   - the size (Integer) of the qrcode (defaults to smallest size needed to encode the string)
+  data - the string, QRSegment or array of Hashes (with data:, mode: keys) you wish to encode
 
-level  - the error correction level, can be:
-  * Level :l 7%  of code can be restored
-  * Level :m 15% of code can be restored
-  * Level :q 25% of code can be restored
-  * Level :h 30% of code can be restored (default :h)
+  size - the size (Integer) of the QR Code (defaults to smallest size needed to encode the data)
 
-mode   - the mode of the qrcode (defaults to alphanumeric or byte_8bit, depending on the input data):
-  * :number
-  * :alphanumeric
-  * :byte_8bit
-  * :kanji
+  max_size - the max_size (Integer) of the QR Code (default RQRCodeCore::QRUtil.max_size)
+
+  level - the error correction level, can be:
+    * Level :l 7%  of code can be restored
+    * Level :m 15% of code can be restored
+    * Level :q 25% of code can be restored
+    * Level :h 30% of code can be restored (default :h)
+
+  mode - the mode of the QR Code (defaults to :alphanumeric or :byte_8bit, depending on the input data,
+         only used when data is a string):
+    * :number
+    * :alphanumeric
+    * :byte_8bit
+    * :kanji
 ```
 
 Example
 
-```
-qrcode = RQRCodeCore::QRCode.new('hello world', size: 1, level: :m, mode: :alphanumeric)
+```ruby
+simple_qrcode = RQRCodeCore::QRCode.new("https://kyan.com", size: 1, level: :m, mode: :alphanumeric)
+
+segment_qrcode = QRCodeCore::QRCode.new({ data: "foo", mode: :byte_8bit })
+
+multi_qrcode = RQRCodeCore::QRCode.new([
+  { data: 'foo', mode: :byte_8bit },
+  { data: 'bar1', mode: :alphanumeric }
+])
 ```
 
 ## Render types
