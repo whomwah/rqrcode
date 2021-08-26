@@ -48,7 +48,7 @@ Easy, but unlikely to be readable. For this you will need to use one of the many
 
 ### Advanced Options
 
-These are the various QR code generation options provided by the underlying [rqrqcode_core](https://github.com/whomwah/rqrcode_core). You may actually only need this library if you don't need the various rendering options `rqrcode` provides, but just need the data structure.
+These are the various QR code generation options provided by the underlying [rqrcode_core](https://github.com/whomwah/rqrcode_core). You may actually only need this library if you don't need the various rendering options `rqrcode` provides, but just need the data structure.
 
 ```
 string - the string you wish to encode
