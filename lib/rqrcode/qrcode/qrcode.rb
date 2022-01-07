@@ -2,7 +2,7 @@
 
 require "forwardable"
 
-module RQRCode #:nodoc:
+module RQRCode # :nodoc:
   class QRCode
     extend Forwardable
     def_delegators :@qrcode, :to_s
