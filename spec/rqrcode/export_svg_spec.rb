@@ -61,4 +61,14 @@ describe "Export::SVG" do
       )).to eq(AS_SVG5)
     end
   end
+
+  context "with color name (symbol)" do
+    it "does not include # prefix for color" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        color: :red,
+        fill: :yellow
+      )).to eq(AS_SVG6)
+    end
+  end
 end

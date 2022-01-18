@@ -99,9 +99,9 @@ Options:
 
 offset          - Padding around the QR Code in pixels
                   (default 0)
-fill            - Background color e.g "ffffff" or :white
+fill            - Background color e.g "ffffff" or :white or :currentColor
                   (default none)
-color           - Foreground color e.g "000" or :black
+color           - Foreground color e.g "000" or :black or :currentColor
                   (default "000")
 module_size     - The Pixel size of each module
                   (defaults 11)
