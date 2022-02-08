@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added in a handler for when color arguments are passed in as symbols e.g `color: :yellow`. This also allows for the use of the `:currentColor` keyword.
+
 ## [2.1.0] - 2021-08-26
 
 - Sync Gemfile.lock with `rqrcode_core.1.2.0` [Adds Multimode Support](https://github.com/whomwah/rqrcode_core#multiple-encoding-support)
