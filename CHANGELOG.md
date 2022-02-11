@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Added in a handler for when color arguments are passed in as symbols e.g `color: :yellow`. This also allows for the use of the `:currentColor` keyword.
+## [2.1.1] - 2022-02-11
+
+- Added in a handler for when color arguments are passed in as symbols e.g `color: :yellow`. This also allows for the use of the `:currentColor` keyword. [#122]
 
 ## [2.1.0] - 2021-08-26
 
@@ -45,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump dependencies
 - fix `required_ruby_version` for Ruby 3 support
 
-[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.1.0...HEAD
+[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.1.1...HEAD
+[2.1.1]: https://github.com/whomwah/rqrcode/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/whomwah/rqrcode/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/whomwah/rqrcode/compare/v1.2.0...v2.0.0
 [1.2.0]: https://github.com/whomwah/rqrcode/compare/v1.1.1...v1.2.0
