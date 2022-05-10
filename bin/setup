@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-IFS=$'\n\t'
+IFS=, read -ra ADDR <<< "${1}"
 set -vx
 
 bundle install
