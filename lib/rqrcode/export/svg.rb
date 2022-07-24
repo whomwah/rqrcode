@@ -79,7 +79,7 @@ module RQRCode
           # Prefix hexadecimal colors unless using a named color (symbol)
           color = "##{color}" unless color.is_a?(Symbol)
 
-          @result << %{<path d="#{path.join}" style="fill:#{color}" transform="translate(#{offset},#{offset}) scale(#{module_size})"/>}
+          @result << %{<path d="#{path.join}" fill="#{color}" transform="translate(#{offset},#{offset}) scale(#{module_size})"/>}
         end
       end
 
@@ -95,7 +95,7 @@ module RQRCode
               x = r * module_size + offset
 
               next unless @qrcode.checked?(c, r)
-              tmp << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" style="fill:#{color}"/>)
+              tmp << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" fill="#{color}"/>)
             end
 
             @result << tmp.join
@@ -192,7 +192,7 @@ module RQRCode
         if fill
           # Prefix hexadecimal colors unless using a named color (symbol)
           fill = "##{fill}" unless fill.is_a?(Symbol)
-          output_tag.result.unshift %(<rect width="#{dimension}" height="#{dimension}" x="0" y="0" style="fill:#{fill}"/>)
+          output_tag.result.unshift %(<rect width="#{dimension}" height="#{dimension}" x="0" y="0" fill="#{fill}"/>)
         end
 
         if standalone
