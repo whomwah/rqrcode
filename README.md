@@ -251,7 +251,7 @@ svg = qrcode.as_ansi(
 You can run the test suite using:
 
 ```
-$ ./bin/setup
+$ bundle install
 $ rake      # runs specs and standard:fix
 $ rake spec # just runs the specs
 ```
@@ -267,7 +267,7 @@ $ ./bin/console
 The project uses [standardrb](https://github.com/testdouble/standard) and can be used with:
 
 ```
-$ ./bin/setup
+$ bundle install
 $ rake standard # checks
 $ rake standard:fix # fixes
 ```
