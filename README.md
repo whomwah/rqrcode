@@ -109,8 +109,8 @@ shape_rendering - SVG Attribute: auto | optimizeSpeed | crispEdges | geometricPr
                   (defaults crispEdges)
 standalone      - Whether to make this a full SVG file, or only an svg to embed in other svg
                   (default true)
-use_path        - Use <path> to render SVG rather than <rect> to significantly reduce size
-                  and quality. This will become the default in future versions.
+use_path        - Use <path> to render SVG rather than <rect> to significantly reduce size.
+                  This will become the default in future versions.
                   (default false)
 viewbox         - Replace the `svg.width` and `svg.height` attribute with `svg.viewBox` to
                   allow CSS scaling
