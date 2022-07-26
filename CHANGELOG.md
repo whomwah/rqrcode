@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2022-07-26
+
+* Remove setup script as it just calls bundle install [#128]
+* Change inline styles to the fill property to allow for strict CSP style-src directive [#127]
+
 ## [2.1.1] - 2022-02-11
 
 - Added in a handler for when color arguments are passed in as symbols e.g `color: :yellow`. This also allows for the use of the `:currentColor` keyword. [#122]
@@ -47,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump dependencies
 - fix `required_ruby_version` for Ruby 3 support
 
-[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.1.1...HEAD
+[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.1.2...HEAD
+[2.1.2]: https://github.com/whomwah/rqrcode/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/whomwah/rqrcode/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/whomwah/rqrcode/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/whomwah/rqrcode/compare/v1.2.0...v2.0.0
