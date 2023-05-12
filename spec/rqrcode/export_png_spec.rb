@@ -25,6 +25,122 @@ describe "Export::PNG" do
     RQRCode::QRCode.new("png").as_png
   end
 
+  context "with various color inputs" do
+    before :each do
+      allow(ChunkyPNG).to receive(:Color).and_call_original
+      expect(mockImage).to receive(:save)
+        .once
+        .with("some/path", {bit_depth: 1, color_mode: 0})
+    end
+
+    it "should handle the defaults" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 4294967295)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path"
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with("black").once
+      expect(ChunkyPNG).to have_received(:Color).with("white").once
+    end
+
+    it "should handle a blue 'color'" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 4294967295)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        color: "blue"
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with("blue").once
+      expect(ChunkyPNG).to have_received(:Color).with("white").once
+    end
+
+    it "should handle a #FC0000 'color'" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 4294967295)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        color: "#FC0000"
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with("#FC0000").once
+      expect(ChunkyPNG).to have_received(:Color).with("white").once
+    end
+
+    it "should handle an rgb 'color'" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 4294967295)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        color: [0, 0, 0]
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with(0, 0, 0).once
+      expect(ChunkyPNG).to have_received(:Color).with("white").once
+    end
+
+    it "should handle a green 'fill'" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 8388863)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        fill: "green"
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with("black").once
+      expect(ChunkyPNG).to have_received(:Color).with("green").once
+    end
+
+    it "should handle an rgb 'fill'" do
+      expect(ChunkyPNG::Image).to receive(:new)
+        .once
+        .with(174, 174, 4294967295)
+        .and_return(mockImage)
+
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        fill: [255, 255, 255]
+      )
+
+      expect(ChunkyPNG).to have_received(:Color).with("black").once
+      expect(ChunkyPNG).to have_received(:Color).with(255, 255, 255).once
+    end
+  end
+
+  it "should not handle nonsense color " do
+    expect {
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        color: "madeupcolor"
+      )
+    }.to raise_error(ArgumentError, "Unknown color name madeupcolor!")
+  end
+
+  it "should not handle nonsense fill " do
+    expect {
+      RQRCode::QRCode.new("png").as_png(
+        file: "some/path",
+        fill: "madeupcolor"
+      )
+    }.to raise_error(ArgumentError, "Unknown color name madeupcolor!")
+  end
+
   context "with file save and constaints" do
     it "should export using the correct defaults" do
       expect(ChunkyPNG::Image).to receive(:new)

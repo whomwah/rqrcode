@@ -143,8 +143,8 @@ The will produce a PNG using the [ChunkyPNG gem](https://github.com/wvanbergen/c
 ```
 Options:
 
-fill  - Background ChunkyPNG::Color, defaults to 'white'
-color - Foreground ChunkyPNG::Color, defaults to 'black'
+fill  - Background <ChunkyPNG::Color>, defaults to 'white'. Use [] for multi args
+color - Foreground <ChunkyPNG::Color>, defaults to 'black'. Use [] for multi args
 
 When option :file is supplied you can use the following ChunkyPNG constraints:
 

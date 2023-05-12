@@ -3,15 +3,14 @@
 require "chunky_png"
 
 # This class creates PNG files.
-# Code from: https://github.com/DCarper/rqrcode
 module RQRCode
   module Export
     module PNG
       # Render the PNG from the QR Code.
       #
       # Options:
-      # fill  - Background ChunkyPNG::Color, defaults to 'white'
-      # color - Foreground ChunkyPNG::Color, defaults to 'black'
+      # fill  - Background ChunkyPNG::Color, defaults to 'white'.
+      # color - Foreground ChunkyPNG::Color, defaults to 'black'.
       #
       # When option :file is supplied you can use the following ChunkyPNG constraints
       # color_mode  - The color mode to use. Use one of the ChunkyPNG::COLOR_* constants.
@@ -62,8 +61,8 @@ module RQRCode
 
         googleis = options.length == 0 || !options[:size].nil?
         options = default_img_options.merge(options) # reverse_merge
-        fill = ChunkyPNG::Color(options[:fill])
-        color = ChunkyPNG::Color(options[:color])
+        fill = ChunkyPNG::Color(*(options[:fill].is_a?(Array) ? options[:fill] : [options[:fill]]))
+        color = ChunkyPNG::Color(*(options[:color].is_a?(Array) ? options[:color] : [options[:color]]))
         output_file = options[:file]
         module_px_size = nil
         border_px = nil
