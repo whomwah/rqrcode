@@ -1,10 +1,23 @@
 # frozen_string_literal: true
 
-require "chunky_png"
-
 # This class creates PNG files.
 module RQRCode
   module Export
+    module LazyPNG
+      @mutex = Mutex.new
+      class << self
+        attr_reader :mutex
+      end
+
+      def as_png(options = {})
+        LazyPNG.mutex.synchronize {
+          require "chunky_png"
+          self.class.include PNG unless self.class.include?(PNG)
+        }
+        as_png(options)
+      end
+    end
+
     module PNG
       # Render the PNG from the QR Code.
       #
@@ -130,4 +143,4 @@ module RQRCode
   end
 end
 
-RQRCode::QRCode.send :include, RQRCode::Export::PNG
+RQRCode::QRCode.send :include, RQRCode::Export::LazyPNG

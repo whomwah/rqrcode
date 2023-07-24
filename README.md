@@ -17,6 +17,7 @@ Add this line to your application's `Gemfile`:
 
 ```ruby
 gem "rqrcode", "~> 2.0"
+gem "chunky_png", "~> 1.0" # only necessary if you use png export
 ```
 
 or install manually:

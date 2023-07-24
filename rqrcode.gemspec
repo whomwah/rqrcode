@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.6"
   spec.add_dependency "rqrcode_core", "~> 1.0"
-  spec.add_dependency "chunky_png", "~> 1.0"
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
