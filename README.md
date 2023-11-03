@@ -76,13 +76,13 @@ Expects a string or array (for multi-segment encoding) to be parsed in, other ar
 Example
 
 ```ruby
-simple_qrcode = RQRCodeCore::QRCode.new("https://kyan.com", size: 1, level: :m, mode: :alphanumeric)
+simple_qrcode = RQRCodeCore::QRCode.new("https://kyan.com", size: 2, level: :m, mode: :byte_8bit)
 
-segment_qrcode = QRCodeCore::QRCode.new({ data: "foo", mode: :byte_8bit })
+segment_qrcode = RQRCodeCore::QRCode.new([{ data: "foo", mode: :byte_8bit }])
 
 multi_qrcode = RQRCodeCore::QRCode.new([
   { data: 'foo', mode: :byte_8bit },
-  { data: 'bar1', mode: :alphanumeric }
+  { data: 'BAR1', mode: :alphanumeric }
 ])
 ```
 
