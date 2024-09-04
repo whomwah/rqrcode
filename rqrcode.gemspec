@@ -35,5 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
-  spec.add_development_dependency "standardrb", "~> 1.0"
+  # We need an explicit lower version as high versons
+  # require us to support Ruby >= 3.0.0
+  spec.add_development_dependency "standard", "1.37"
 end
