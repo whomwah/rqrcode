@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.metadata = {
     "bug_tracker_uri" => "https://github.com/whomwah/rqrcode/issues",
-    "changelog_uri" => "https://github.com/whomwah/rqrcode/blob/master/CHANGELOG.md"
+    "changelog_uri" => "https://github.com/whomwah/rqrcode/blob/main/CHANGELOG.md"
   }
 
   spec.files = Dir.chdir(File.expand_path("..", __FILE__)) do
@@ -29,13 +29,11 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.7"
-  spec.add_dependency "rqrcode_core", "~> 1.0"
+  spec.required_ruby_version = "~> 3.0"
+  spec.add_dependency "rqrcode_core", "~> 2.0"
   spec.add_dependency "chunky_png", "~> 1.0"
   spec.add_development_dependency "bundler", "~> 2.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
-  # We need an explicit lower version as high versons
-  # require us to support Ruby >= 3.0.0
-  spec.add_development_dependency "standard", "1.37"
+  spec.add_development_dependency "standard", "~> 1.41"
 end

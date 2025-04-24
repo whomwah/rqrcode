@@ -11,17 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-* Allow all ChunkyPNG::Color options to be passed into `fill` and `color` on `as_png` [#135]
-* Add 3.2 to CI [@petergoldstein](https://github.com/petergoldstein) [#133]
-* Development dependency upgrades. Minimum Ruby change [#130]
-* README updates
+- Allow all ChunkyPNG::Color options to be passed into `fill` and `color` on `as_png` [#135]
+- Add 3.2 to CI [@petergoldstein](https://github.com/petergoldstein) [#133]
+- Development dependency upgrades. Minimum Ruby change [#130]
+- README updates
 
 ## [2.1.2] - 2022-07-26
 
 ### Changed
 
-* Remove setup script as it just calls bundle install [#128]
-* Change inline styles to the fill property to allow for strict CSP style-src directive [#127]
+- Remove setup script as it just calls bundle install [#128]
+- Change inline styles to the fill property to allow for strict CSP style-src directive [#127]
 
 ## [2.1.1] - 2022-02-11
 
@@ -60,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Change
 
-- The dependency `rqrcode_core-1.0.0` has a tiny breaking change to the `to_s` public method. https://github.com/whomwah/rqrcode_core/blob/master/CHANGELOG.md#breaking-changes
+- The dependency `rqrcode_core-1.0.0` has a tiny breaking change to the `to_s` public method. https://github.com/whomwah/rqrcode_core/blob/main/CHANGELOG.md#breaking-changes
 
 ## [1.2.0] - 2020-12-26
 
