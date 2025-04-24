@@ -3,10 +3,9 @@ name: rqrcode
 on:
   push:
     branches:
-    - master
-  pull_request:
-    branches:
-    - master
+      - main
+      - release
+  pull_request: # Runs on any PR regardless of target branch
 
 jobs:
   Build:
@@ -14,15 +13,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        ruby: ['3.0', '3.1', '3.2', '3.3']
+        ruby: ["3.0", "3.1", "3.2", "3.3", "3.4"]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-    - name: Run Tests for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
-      run: bundle exec rake spec
-    - name: StandardRB check for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
-      run: bundle exec standardrb --format progress
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Run Tests for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
+        run: bundle exec rake spec
+      - name: StandardRB check for Ruby ${{ matrix.ruby }} on ${{ matrix.os }}
+        run: bundle exec standardrb --format progress
