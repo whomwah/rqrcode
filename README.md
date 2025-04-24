@@ -7,7 +7,7 @@
 [RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
 
 * QR code is trademarked by Denso Wave inc
-* Minimum Ruby version is `>= 2.6`
+* Minimum Ruby version is `>= 3.0.0`
 * For `rqrcode` releases `< 2.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/v1.2.0/README.md)
 * For `rqrcode` releases `< 1.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/v0.9.0/README.md)
 
@@ -76,13 +76,13 @@ Expects a string or array (for multi-segment encoding) to be parsed in, other ar
 Example
 
 ```ruby
-simple_qrcode = RQRCodeCore::QRCode.new("https://kyan.com", size: 1, level: :m, mode: :alphanumeric)
+simple_qrcode = RQRCodeCore::QRCode.new("https://kyan.com", size: 2, level: :m, mode: :byte_8bit)
 
-segment_qrcode = QRCodeCore::QRCode.new({ data: "foo", mode: :byte_8bit })
+segment_qrcode = RQRCodeCore::QRCode.new([{ data: "foo", mode: :byte_8bit }])
 
 multi_qrcode = RQRCodeCore::QRCode.new([
   { data: 'foo', mode: :byte_8bit },
-  { data: 'bar1', mode: :alphanumeric }
+  { data: 'BAR1', mode: :alphanumeric }
 ])
 ```
 
