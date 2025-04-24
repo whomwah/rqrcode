@@ -71,4 +71,40 @@ describe "Export::SVG" do
       )).to eq(AS_SVG6)
     end
   end
+
+  context "with offset_x and offset_y options" do
+    it "applies different x and y offsets with use_path for smaller output" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        offset_x: 20,
+        offset_y: 30
+      )).to eq(AS_SVG7)
+    end
+
+    it "uses offset as fallback when specific offsets aren't provided" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        offset: 25
+      )).to eq(AS_SVG8)
+    end
+  end
+
+  context "with fill and offset options combined" do
+    it "combines fill with global offset" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        fill: "ccffcc",
+        offset: 10
+      )).to eq(AS_SVG9)
+    end
+
+    it "combines fill with specific offsets" do
+      expect(RQRCode::QRCode.new("https://kyan.com").as_svg(
+        use_path: true,
+        fill: "ccffcc",
+        offset_x: 15,
+        offset_y: 20
+      )).to eq(AS_SVG10)
+    end
+  end
 end
