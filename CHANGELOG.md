@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2025-04-24
+
+- Drop support for Ruby <3.0 in order to keep up with dev dependencies.
+- **Breaking Change**: The `rqrcode_core` gem has been updated to version 3.0.0, which includes breaking changes. Please refer to the [rqrcode_core changelog](https://github.com/whomwah/rqrcode/blob/main/CHANGELOG.md)
+
 ## [2.2.0] - 2023-06-17
 
 ### Changed
