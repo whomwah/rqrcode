@@ -3,20 +3,17 @@
 ![](https://github.com/whomwah/rqrcode/actions/workflows/ruby.yml/badge.svg)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
 
-
 [RQRCode](https://github.com/whomwah/rqrcode) is a library for creating and rendering QR codes into various formats. It has a simple interface with all the standard QR code options. It was adapted from the Javascript library by Kazuhiko Arase.
 
-* QR code is trademarked by Denso Wave inc
-* Minimum Ruby version is `>= 3.0.0`
-* For `rqrcode` releases `< 2.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/v1.2.0/README.md)
-* For `rqrcode` releases `< 1.0.0` please use [this README](https://github.com/whomwah/rqrcode/blob/v0.9.0/README.md)
+- QR code is trademarked by Denso Wave inc
+- Minimum Ruby version is `>= 3.0.0`
 
 ## Installing
 
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem "rqrcode", "~> 2.0"
+gem "rqrcode", "~> 3.0"
 ```
 
 or install manually:
@@ -70,7 +67,6 @@ Expects a string or array (for multi-segment encoding) to be parsed in, other ar
     * :number
     * :alphanumeric
     * :byte_8bit
-    * :kanji
 ```
 
 Example
@@ -99,6 +95,10 @@ Options:
 
 offset          - Padding around the QR Code in pixels
                   (default 0)
+offset_x        - X Padding around the QR Code in pixels
+                  (default offset)
+offset_y        - Y Padding around the QR Code in pixels
+                  (default offset)
 fill            - Background color e.g "ffffff" or :white or :currentColor
                   (default none)
 color           - Foreground color e.g "000" or :black or :currentColor
@@ -118,7 +118,9 @@ viewbox         - Replace the `svg.width` and `svg.height` attribute with `svg.v
 svg_attributes  - A optional hash of custom <svg> attributes. Existing attributes will remain.
                   (default {})
 ```
+
 Example
+
 ```ruby
 require "rqrcode"
 
@@ -209,7 +211,6 @@ IO.binwrite("/tmp/github-qrcode.png", png.to_s)
 
 ![QR code with github url](./images/github-qrcode.png)
 
-
 ### `as_ansi`
 
 The ANSI renderer will produce as a string with ANSI color codes.
@@ -226,7 +227,9 @@ fill_character  - The written character
 quiet_zone_size - Padding around the edge
                   (default 4)
 ```
+
 Example
+
 ```ruby
 require "rqrcode"
 
@@ -280,9 +283,9 @@ The motivation for the above is because the rendering side of this gem takes up 
 
 Any contribution PR's will be greatly accepted. It's important that they are well tested and backwards compatible.
 
-* Fork the project
-* Send a pull request
-* Don't touch the .gemspec, I'll do that when I release a new version
+- Fork the project
+- Send a pull request
+- Don't touch the .gemspec, I'll do that when I release a new version
 
 Thanks D.
 
@@ -296,9 +299,9 @@ Oh, and thanks to my bosses at https://kyan.com for giving me time to maintain t
 
 ## Resources
 
-* wikipedia:: http://en.wikipedia.org/wiki/QR_Code
-* Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
-* kaywa:: http://qrcode.kaywa.com
+- wikipedia:: http://en.wikipedia.org/wiki/QR_Code
+- Denso-Wave website:: http://www.denso-wave.com/qrcode/index-e.html
+- kaywa:: http://qrcode.kaywa.com
 
 ## Copyright
 
