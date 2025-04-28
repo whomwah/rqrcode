@@ -15,7 +15,15 @@ module RQRCode
       end
 
       class Path < BaseOutputSVG
-        def build(module_size, offset, color)
+        def build(module_size, options = {})
+          # Extract values from options
+          color = options[:color]
+          offset_x = options[:offset_x].to_i
+          offset_y = options[:offset_y].to_i
+
+          # Prefix hexadecimal colors unless using a named color (symbol)
+          color = "##{color}" unless color.is_a?(Symbol)
+
           modules_array = @qrcode.modules
           matrix_width = matrix_height = modules_array.length + 1
           empty_row = [Array.new(matrix_width - 1, false)]
@@ -76,23 +84,25 @@ module RQRCode
             path << edge_loop_string
           end
 
-          # Prefix hexadecimal colors unless using a named color (symbol)
-          color = "##{color}" unless color.is_a?(Symbol)
-
-          @result << %{<path d="#{path.join}" fill="#{color}" transform="translate(#{offset},#{offset}) scale(#{module_size})"/>}
+          @result << %{<path d="#{path.join}" fill="#{color}" transform="translate(#{offset_x},#{offset_y}) scale(#{module_size})"/>}
         end
       end
 
       class Rect < BaseOutputSVG
-        def build(module_size, offset, color)
+        def build(module_size, options = {})
+          # Extract values from options
+          color = options[:color]
+          offset_x = options[:offset_x].to_i
+          offset_y = options[:offset_y].to_i
+
           # Prefix hexadecimal colors unless using a named color (symbol)
           color = "##{color}" unless color.is_a?(Symbol)
 
           @qrcode.modules.each_index do |c|
             tmp = []
             @qrcode.modules.each_index do |r|
-              y = c * module_size + offset
-              x = r * module_size + offset
+              x = r * module_size + offset_x
+              y = c * module_size + offset_y
 
               next unless @qrcode.checked?(c, r)
               tmp << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" fill="#{color}"/>)
@@ -143,6 +153,10 @@ module RQRCode
       # Options:
       # offset          - Padding around the QR Code in pixels
       #                   (default 0)
+      # offset_x        - X Padding around the QR Code in pixels
+      #                   (default offset)
+      # offset_y        - Y Padding around the QR Code in pixels
+      #                   (default offset)
       # fill            - Background color e.g "ffffff"
       #                   (default none)
       # color           - Foreground color e.g "000"
@@ -164,7 +178,9 @@ module RQRCode
       def as_svg(options = {})
         fill = options[:fill]
         use_path = options[:use_path]
-        offset = options[:offset].to_i || 0
+        offset = options[:offset].to_i
+        offset_x = options.key?(:offset_x) ? options[:offset_x].to_i : offset
+        offset_y = options.key?(:offset_y) ? options[:offset_y].to_i : offset
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
@@ -173,9 +189,11 @@ module RQRCode
         svg_attributes = options[:svg_attributes] || {}
 
         # height and width dependent on offset and QR complexity
-        dimension = (@qrcode.module_count * module_size) + (2 * offset)
+        width = (@qrcode.module_count * module_size) + (2 * offset_x)
+        height = (@qrcode.module_count * module_size) + (2 * offset_y)
+        dimension = [width, height].max
         # use dimensions differently if we are using a viewBox
-        dimensions_attr = viewbox ? %(viewBox="0 0 #{dimension} #{dimension}") : %(width="#{dimension}" height="#{dimension}")
+        dimensions_attr = viewbox ? %(viewBox="0 0 #{width} #{height}") : %(width="#{width}" height="#{height}")
 
         svg_tag_attributes = (DEFAULT_SVG_ATTRIBUTES + [
           dimensions_attr,
@@ -187,7 +205,7 @@ module RQRCode
         close_tag = "</svg>"
 
         output_tag = (use_path ? Path : Rect).new(@qrcode)
-        output_tag.build(module_size, offset, color)
+        output_tag.build(module_size, offset_x: offset_x, offset_y: offset_y, color: color)
 
         if fill
           # Prefix hexadecimal colors unless using a named color (symbol)

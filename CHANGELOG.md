@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2025-04-28
+
+- Added support for `offset_x` and `offset_y` options in the `as_svg` method for independent x and y padding around QR codes [#153]
+
 ## [3.0.0] - 2025-04-24
 
 - Drop support for Ruby <3.0 in order to keep up with dev dependencies.
-- **Breaking Change**: The `rqrcode_core` gem has been updated to version 3.0.0, which includes breaking changes. Please refer to the [rqrcode_core changelog](https://github.com/whomwah/rqrcode/blob/main/CHANGELOG.md)
+- **Breaking Change**: The `rqrcode_core` gem has been updated to version 2.0.0, which includes breaking changes. Please refer to the [rqrcode_core changelog](https://github.com/whomwah/rqrcode_core/blob/main/CHANGELOG.md)
 
 ## [2.2.0] - 2023-06-17
 
@@ -75,7 +79,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump dependencies
 - fix `required_ruby_version` for Ruby 3 support
 
-[unreleased]: https://github.com/whomwah/rqrcode/compare/v2.2.0...HEAD
+[unreleased]: https://github.com/whomwah/rqrcode/compare/v3.1.0...HEAD
+[3.1.0]: https://github.com/whomwah/rqrcode/compare/v3.0.0...v3.1.0
+[3.0.0]: https://github.com/whomwah/rqrcode/compare/v2.2.0...v3.0.0
 [2.2.0]: https://github.com/whomwah/rqrcode/compare/v2.1.2...v2.2.0
 [2.1.2]: https://github.com/whomwah/rqrcode/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/whomwah/rqrcode/compare/v2.1.0...v2.1.1
