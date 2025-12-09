@@ -275,6 +275,10 @@ $ rake standard # checks
 $ rake standard:fix # fixes
 ```
 
+## Benchmarks
+
+RQRCode includes comprehensive performance benchmarks for tracking export format performance over time. See the [benchmark README](benchmark/README.md) for details on running benchmarks, interpreting results, and current performance baselines.
+
 ## Contributing
 
 I am not currently accepting any new renderers as the current `as_png`, `as_svg` and `as_ansi` work for most cases. If you need something different from what's available, the [`rqrcode_core`](https://github.com/whomwah/rqrcode_core) gem gives you access to all the QR Code information you will need so makes it simple to generate your own.

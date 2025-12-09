@@ -9,11 +9,13 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    benchmark-ips (2.14.0)
     chunky_png (1.4.0)
     diff-lcs (1.5.1)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
+    memory_profiler (1.1.0)
     parallel (1.26.3)
     parser (3.3.5.0)
       ast (~> 2.4.1)
@@ -52,6 +54,7 @@ GEM
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
+    stackprof (0.2.27)
     standard (1.41.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
@@ -72,10 +75,13 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  benchmark-ips (~> 2.0)
   bundler (~> 2.0)
+  memory_profiler (~> 1.0)
   rake (~> 13.0)
   rqrcode!
   rspec (~> 3.5)
+  stackprof (~> 0.2)
   standard (~> 1.41)
 
 BUNDLED WITH
