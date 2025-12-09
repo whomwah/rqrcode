@@ -73,15 +73,21 @@ module RQRCode
             end
 
             first_edge = edge_loop.first
-            edge_loop_string = SVG_PATH_COMMANDS[:move]
-            edge_loop_string += "#{first_edge.start_x} #{first_edge.start_y}"
+            edge_loop_parts = [
+              SVG_PATH_COMMANDS[:move],
+              first_edge.start_x.to_s,
+              " ",
+              first_edge.start_y.to_s
+            ]
 
-            edge_loop.chunk(&:direction).to_a[0...-1].each do |direction, edges|
-              edge_loop_string << "#{SVG_PATH_COMMANDS[direction]}#{edges.length}"
+            chunked = edge_loop.chunk(&:direction).to_a
+            chunked[0...-1].each do |direction, edges|
+              edge_loop_parts << SVG_PATH_COMMANDS[direction]
+              edge_loop_parts << edges.length.to_s
             end
-            edge_loop_string << SVG_PATH_COMMANDS[:close]
+            edge_loop_parts << SVG_PATH_COMMANDS[:close]
 
-            path << edge_loop_string
+            path << edge_loop_parts.join
           end
 
           @result << %{<path d="#{path.join}" fill="#{color}" transform="translate(#{offset_x},#{offset_y}) scale(#{module_size})"/>}
@@ -99,16 +105,13 @@ module RQRCode
           color = "##{color}" unless color.is_a?(Symbol)
 
           @qrcode.modules.each_index do |c|
-            tmp = []
             @qrcode.modules.each_index do |r|
+              next unless @qrcode.checked?(c, r)
+
               x = r * module_size + offset_x
               y = c * module_size + offset_y
-
-              next unless @qrcode.checked?(c, r)
-              tmp << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" fill="#{color}"/>)
+              @result << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" fill="#{color}"/>)
             end
-
-            @result << tmp.join
           end
         end
       end
@@ -224,4 +227,4 @@ module RQRCode
   end
 end
 
-RQRCode::QRCode.send :include, RQRCode::Export::SVG
+RQRCode::QRCode.include RQRCode::Export::SVG

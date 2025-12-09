@@ -111,47 +111,47 @@ For medium-sized QR codes:
 
 ## Latest Benchmark Results
 
-**Last Updated: 2025-12-09 20:00:37 UTC**
+**Last Updated: 2025-12-09 21:35:23 UTC**
 **Ruby Version: 3.3.4**
 
 ### Format Comparison (Medium QR Code)
 
 | Format | Iterations/sec | Std Dev | Samples | Slowdown vs Fastest |
 |--------|----------------|---------|---------|---------------------|
-| ANSI   | 1,367.46      | 0.51%   | 136     | 1.00x (baseline)   |
-| PNG    | 865.86        | 0.92%   | 87      | 1.58x              |
-| HTML   | 653.38        | 0.31%   | 65      | 2.09x              |
-| SVG    | 183.67        | 1.09%   | 18      | 7.45x              |
+| ANSI   | 1,357.88      | 0.29%   | 134     | 1.00x (baseline)   |
+| PNG    | 860.84        | 0.70%   | 84      | 1.58x              |
+| HTML   | 657.21        | 0.46%   | 65      | 2.07x              |
+| SVG    | 183.97        | 0.54%   | 17      | 7.38x              |
 
 ### Performance by QR Code Size
 
 #### SVG Export
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
 |--------|----------------|---------|-------------------|
-| Small  | 547.83        | 0.37%   | 1.00x (baseline) |
-| Medium | 188.04        | 0.53%   | 2.91x            |
-| Large  | 47.47         | 4.21%   | 11.54x           |
+| Small  | 541.56        | 0.55%   | 1.00x (baseline) |
+| Medium | 186.28        | 0.54%   | 2.91x            |
+| Large  | 45.57         | 4.39%   | 11.88x           |
 
 #### PNG Export
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
 |--------|----------------|---------|-------------------|
-| Small  | 1,183.86      | 0.59%   | 1.00x (baseline) |
-| Medium | 857.01        | 1.75%   | 1.38x            |
-| Large  | 303.14        | 0.66%   | 3.91x            |
+| Small  | 1,169.96      | 1.71%   | 1.00x (baseline) |
+| Medium | 855.79        | 1.29%   | 1.37x            |
+| Large  | 297.02        | 1.35%   | 3.94x            |
 
 #### HTML Export
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
 |--------|----------------|---------|-------------------|
-| Small  | 1,914.90      | 1.04%   | 1.00x (baseline) |
-| Medium | 659.26        | 0.30%   | 2.90x            |
-| Large  | 228.95        | 1.75%   | 8.36x            |
+| Small  | 1,858.17      | 1.18%   | 1.00x (baseline) |
+| Medium | 641.96        | 1.09%   | 2.89x            |
+| Large  | 222.92        | 1.79%   | 8.34x            |
 
 #### ANSI Export
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
 |--------|----------------|---------|-------------------|
-| Small  | 3,954.51      | 1.06%   | 1.00x (baseline) |
-| Medium | 1,359.47      | 1.47%   | 2.91x            |
-| Large  | 478.66        | 1.88%   | 8.26x            |
+| Small  | 3,884.06      | 1.08%   | 1.00x (baseline) |
+| Medium | 1,349.69      | 0.74%   | 2.88x            |
+| Large  | 474.02        | 0.84%   | 8.19x            |
 
 ### Memory Allocations
 
@@ -163,8 +163,8 @@ For medium-sized QR codes:
 | SVG    | 7,432,001              | 375.7             |
 
 **Key Insights:**
-- ANSI is the fastest format (1,367 i/s) and most memory-efficient (40.7k objects)
-- SVG is the slowest format (183 i/s) and most memory-intensive (7.4M objects)
+- ANSI is the fastest format (1,358 i/s) and most memory-efficient (40.7k objects)
+- SVG is the slowest format (184 i/s) and most memory-intensive (7.4M objects)
 - All formats show 3-12x performance degradation as QR size increases
 - Memory usage varies dramatically: ANSI uses 23x less memory than SVG
 
