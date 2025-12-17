@@ -19,9 +19,14 @@ module BenchmarkHelper
     xlarge: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " * 20
   }.freeze
 
-  # Create QR codes for benchmarking
+  # Create QR codes for benchmarking (rendering-only benchmarks)
   def self.qrcodes
     @qrcodes ||= QR_DATA.transform_values { |data| RQRCode::QRCode.new(data) }
+  end
+
+  # Get raw QR data for end-to-end benchmarks (generation + rendering)
+  def self.qr_data
+    QR_DATA
   end
 
   # Get results directory
@@ -47,10 +52,10 @@ module BenchmarkHelper
     puts "\n💾 Results saved to: #{filename}"
   end
 
-  # Run IPS benchmark
+  # Run IPS benchmark (rendering-only, uses pre-generated QR codes)
   def self.run_ips(label, warmup: 2, time: 5, &block)
     puts "\n" + "=" * 80
-    puts "IPS Benchmark: #{label}"
+    puts "IPS Benchmark: #{label} (rendering-only)"
     puts "=" * 80
 
     results = {}
@@ -82,6 +87,50 @@ module BenchmarkHelper
       "ips_#{label.downcase.gsub(/\s+/, "_")}",
       {
         label: label,
+        timestamp: Time.now.iso8601,
+        ruby_version: RUBY_VERSION,
+        results: results
+      }
+    )
+
+    report
+  end
+
+  # Run IPS benchmark for end-to-end workflow (generation + rendering)
+  def self.run_ips_e2e(label, warmup: 2, time: 5, &block)
+    puts "\n" + "=" * 80
+    puts "IPS Benchmark: #{label} (end-to-end: generation + rendering)"
+    puts "=" * 80
+
+    results = {}
+    report = Benchmark.ips do |x|
+      x.config(warmup: warmup, time: time)
+      block.call(x, qr_data)
+      x.compare!
+    end
+
+    # Extract actual metrics from the report
+    report.entries.each do |entry|
+      results[entry.label] = {
+        iterations_per_second: entry.stats.central_tendency.round(2),
+        standard_deviation: entry.stats.error_percentage.round(2),
+        samples: entry.measurement_cycle
+      }
+    end
+
+    # Calculate comparison ratios (fastest = 1.0x)
+    if results.any?
+      fastest_ips = results.values.map { |r| r[:iterations_per_second] }.max
+      results.each do |_label, data|
+        data[:comparison] = (fastest_ips / data[:iterations_per_second]).round(2)
+      end
+    end
+
+    # Save results with actual metrics
+    save_results(
+      "ips_e2e_#{label.downcase.gsub(/\s+/, "_")}",
+      {
+        label: "#{label} (end-to-end)",
         timestamp: Time.now.iso8601,
         ruby_version: RUBY_VERSION,
         results: results
