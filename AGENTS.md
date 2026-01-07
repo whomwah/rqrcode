@@ -36,3 +36,11 @@
 - Core QR generation: `rqrcode_core` gem (do not modify, separate project)
 - PNG rendering: `chunky_png` gem
 - This gem focuses on rendering QR codes from `rqrcode_core` data structures
+
+## Commit Messages
+
+Use the Semantic Commit Message style:
+
+- **type**: The type of change (see below)
+- **scope**: Optional, the area of the codebase affected (e.g., `auth`, `api`, `ui`)
+- **subject**: A brief description in imperative mood, lowercase, no full stop
