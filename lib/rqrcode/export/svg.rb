@@ -21,9 +21,6 @@ module RQRCode
           offset_x = options[:offset_x].to_i
           offset_y = options[:offset_y].to_i
 
-          # Prefix hexadecimal colors unless using a named color (symbol)
-          color = "##{color}" unless color.is_a?(Symbol)
-
           modules_array = @qrcode.modules
           matrix_width = matrix_height = modules_array.length + 1
           empty_row = [Array.new(matrix_width - 1, false)]
@@ -100,9 +97,6 @@ module RQRCode
           color = options[:color]
           offset_x = options[:offset_x].to_i
           offset_y = options[:offset_y].to_i
-
-          # Prefix hexadecimal colors unless using a named color (symbol)
-          color = "##{color}" unless color.is_a?(Symbol)
 
           @qrcode.modules.each_index do |c|
             @qrcode.modules.each_index do |r|
@@ -187,7 +181,7 @@ module RQRCode
         color = options[:color] || "000"
         shape_rendering = options[:shape_rendering] || "crispEdges"
         module_size = options[:module_size] || 11
-        standalone = options[:standalone].nil? ? true : options[:standalone]
+        standalone = options[:standalone].nil? || options[:standalone]
         viewbox = options[:viewbox].nil? ? false : options[:viewbox]
         svg_attributes = options[:svg_attributes] || {}
 
@@ -206,6 +200,9 @@ module RQRCode
         xml_tag = %(<?xml version="1.0" standalone="yes"?>)
         open_tag = %(<svg #{svg_tag_attributes}>)
         close_tag = "</svg>"
+
+        # Prefix hexadecimal colors unless using a named color (symbol)
+        color = "##{color}" unless color.is_a?(Symbol)
 
         output_tag = (use_path ? Path : Rect).new(@qrcode)
         output_tag.build(module_size, offset_x: offset_x, offset_y: offset_y, color: color)
