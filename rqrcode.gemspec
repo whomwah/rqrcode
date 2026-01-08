@@ -1,4 +1,4 @@
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "rqrcode/version"
 
@@ -22,18 +22,23 @@ Gem::Specification.new do |spec|
     "changelog_uri" => "https://github.com/whomwah/rqrcode/blob/main/CHANGELOG.md"
   }
 
-  spec.files = Dir.chdir(File.expand_path("..", __FILE__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").select do |f|
+      f.match(%r{^lib/}) || %w[LICENSE.txt README.md CHANGELOG.md].include?(f)
+    end
   end
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 3.0"
-  spec.add_dependency "rqrcode_core", "~> 2.0"
+  spec.required_ruby_version = ">= 3.2"
   spec.add_dependency "chunky_png", "~> 1.0"
-  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_dependency "rqrcode_core", "~> 2.0"
+  spec.add_development_dependency "benchmark-ips", "~> 2.0"
+  spec.add_development_dependency "bundler", "~> 4.0"
+  spec.add_development_dependency "memory_profiler", "~> 1.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
+  spec.add_development_dependency "stackprof", "~> 0.2"
   spec.add_development_dependency "standard", "~> 1.41"
 end

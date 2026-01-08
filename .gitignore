@@ -11,3 +11,4 @@
 *.sublime-project
 *.sublime-workspace
 *.gem
+/benchmark/results/
