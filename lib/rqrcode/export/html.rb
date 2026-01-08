@@ -3,49 +3,34 @@
 module RQRCode
   module Export
     module HTML
-      #
-      # Use this module to HTML-ify the QR code if you just want the default HTML
+      TABLE_OPEN = "<table>"
+      TABLE_CLOSE = "</table>"
+      TR_OPEN = "<tr>"
+      TR_CLOSE = "</tr>"
+      TD_BLACK = '<td class="black"></td>'
+      TD_WHITE = '<td class="white"></td>'
+
       def as_html
-        ["<table>", rows.as_html, "</table>"].join
-      end
+        qr = @qrcode
+        module_count = qr.module_count
 
-      private
+        estimated_size = (module_count * module_count * 26) + (module_count * 9) + 15
+        result = String.new(capacity: estimated_size)
 
-      def rows
-        Rows.new(@qrcode)
-      end
-
-      class Rows < Struct.new(:qr)
-        def as_html
-          rows.map(&:as_html).join
+        result << TABLE_OPEN
+        module_count.times do |row_index|
+          result << TR_OPEN
+          module_count.times do |col_index|
+            result << (qr.checked?(row_index, col_index) ? TD_BLACK : TD_WHITE)
+          end
+          result << TR_CLOSE
         end
+        result << TABLE_CLOSE
 
-        def rows
-          qr.modules.each_with_index.map { |qr_module, row_index| Row.new(qr, qr_module, row_index) }
-        end
-      end
-
-      class Row < Struct.new(:qr, :qr_module, :row_index)
-        def as_html
-          ["<tr>", cells.map(&:as_html).join, "</tr>"].join
-        end
-
-        def cells
-          qr.modules.each_with_index.map { |qr_module, col_index| Cell.new(qr, col_index, row_index) }
-        end
-      end
-
-      class Cell < Struct.new(:qr, :col_index, :row_index)
-        def as_html
-          "<td class=\"#{html_class}\"></td>"
-        end
-
-        def html_class
-          qr.checked?(row_index, col_index) ? "black" : "white"
-        end
+        result
       end
     end
   end
 end
 
-RQRCode::QRCode.send :include, RQRCode::Export::HTML
+RQRCode::QRCode.include RQRCode::Export::HTML
