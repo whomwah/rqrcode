@@ -23,23 +23,19 @@ Gem::Specification.new do |spec|
   }
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      f.match(%r{^(test|spec|features|benchmark|images|bin)/}) || # exclude test/dev directories
-        f.match(/\.(rspec|standard\.yml|gitignore|DS_Store)$/) || # exclude config files
-        f.match(/^_config\.yml$/) || # exclude Jekyll config
-        f.match(%r{^\.github/}) || # exclude GitHub configs
-        f.match(/(AGENTS|OPTIMIZATIONS)\.md$/) # exclude dev documentation
+    `git ls-files -z`.split("\x0").select do |f|
+      f.match(%r{^lib/}) || %w[LICENSE.txt README.md CHANGELOG.md].include?(f)
     end
   end
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 3.0"
+  spec.required_ruby_version = ">= 3.2"
   spec.add_dependency "chunky_png", "~> 1.0"
   spec.add_dependency "rqrcode_core", "~> 2.0"
   spec.add_development_dependency "benchmark-ips", "~> 2.0"
-  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "bundler", "~> 4.0"
   spec.add_development_dependency "memory_profiler", "~> 1.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.5"
