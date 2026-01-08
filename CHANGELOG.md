@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2025-06-12
+
+### Added
+
+- Comprehensive benchmarking suite in `benchmark/` directory for measuring performance and memory usage across all export formats (SVG, PNG, HTML, ANSI)
+- `benchmark_helper.rb` providing shared utilities for IPS, memory, and stack profiling
+- Rake tasks for running benchmarks individually or all at once
+- `benchmark/README.md` explaining usage, metrics, and interpretation of results
+- `AGENTS.md` as a development guide for AI agents
+
+### Changed
+
+- **SVG rendering**: Improved by **+130%** (from 184 i/s to 424 i/s) with **71% memory reduction**
+- **HTML rendering**: Now the fastest export format at **1,876 i/s** (rendering-only benchmark)
+- **Memory efficiency**: HTML now uses **6x less memory** than SVG (previously 22x)
+- Updated minimum Ruby version requirement to >= 3.2.0
+- Updated GitHub workflow Ruby matrix to test only supported versions (3.2, 3.3, 3.4, 4.0)
+- Updated `README.md` with benchmark documentation and contribution guidelines
+
 ## [3.1.1] - 2025-11-25
 
 - Update required_ruby_version to support >= rather than ~> ready for Ruby 4
@@ -83,7 +102,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bump dependencies
 - fix `required_ruby_version` for Ruby 3 support
 
-[unreleased]: https://github.com/whomwah/rqrcode/compare/v3.1.1...HEAD
+[unreleased]: https://github.com/whomwah/rqrcode/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/whomwah/rqrcode/compare/v3.1.1...v3.2.0
 [3.1.1]: https://github.com/whomwah/rqrcode/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/whomwah/rqrcode/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/whomwah/rqrcode/compare/v2.2.0...v3.0.0
