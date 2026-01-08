@@ -15,79 +15,153 @@ module RQRCode
       end
 
       class Path < BaseOutputSVG
+        # Direction constants for edge representation
+        # Edges stored as [start_x, start_y, direction] arrays instead of Struct
+        DIR_UP = 0
+        DIR_DOWN = 1
+        DIR_LEFT = 2
+        DIR_RIGHT = 3
+
+        # Pre-computed end coordinate deltas: [dx, dy] for each direction
+        DIR_DELTAS = [
+          [0, -1], # UP
+          [0, 1],  # DOWN
+          [-1, 0], # LEFT
+          [1, 0]   # RIGHT
+        ].freeze
+
+        # SVG path commands indexed by direction constant
+        DIR_PATH_COMMANDS = ["v-", "v", "h-", "h"].freeze
+
         def build(module_size, options = {})
-          # Extract values from options
           color = options[:color]
           offset_x = options[:offset_x].to_i
           offset_y = options[:offset_y].to_i
 
           modules_array = @qrcode.modules
-          matrix_width = matrix_height = modules_array.length + 1
-          empty_row = [Array.new(matrix_width - 1, false)]
-          edge_matrix = Array.new(matrix_height) { Array.new(matrix_width) }
+          module_count = modules_array.length
+          matrix_size = module_count + 1
 
-          (empty_row + modules_array + empty_row).each_cons(2).with_index do |row_pair, row_index|
-            first_row, second_row = row_pair
+          # Edge matrix stores arrays of [x, y, direction] tuples
+          edge_matrix = Array.new(matrix_size) { Array.new(matrix_size) }
+          edge_count = 0
 
-            # horizontal edges
-            first_row.zip(second_row).each_with_index do |cell_pair, column_index|
-              edge = case cell_pair
-              when [true, false] then Edge.new column_index + 1, row_index, :left
-              when [false, true] then Edge.new column_index, row_index, :right
+          # Process horizontal edges (between vertically adjacent cells)
+          (module_count + 1).times do |row_index|
+            module_count.times do |col_index|
+              above = row_index > 0 && modules_array[row_index - 1][col_index]
+              below = row_index < module_count && modules_array[row_index][col_index]
+
+              if above && !below
+                # Edge going left at (col+1, row)
+                x = col_index + 1
+                y = row_index
+                (edge_matrix[y][x] ||= []) << [x, y, DIR_LEFT]
+                edge_count += 1
+              elsif !above && below
+                # Edge going right at (col, row)
+                x = col_index
+                y = row_index
+                (edge_matrix[y][x] ||= []) << [x, y, DIR_RIGHT]
+                edge_count += 1
               end
-
-              (edge_matrix[edge.start_y][edge.start_x] ||= []) << edge if edge
-            end
-
-            # vertical edges
-            ([false] + second_row + [false]).each_cons(2).each_with_index do |cell_pair, column_index|
-              edge = case cell_pair
-              when [true, false] then Edge.new column_index, row_index, :down
-              when [false, true] then Edge.new column_index, row_index + 1, :up
-              end
-
-              (edge_matrix[edge.start_y][edge.start_x] ||= []) << edge if edge
             end
           end
 
-          edge_count = edge_matrix.flatten.compact.count
-          path = []
+          # Process vertical edges (between horizontally adjacent cells)
+          module_count.times do |row_index|
+            (module_count + 1).times do |col_index|
+              left = col_index > 0 && modules_array[row_index][col_index - 1]
+              right = col_index < module_count && modules_array[row_index][col_index]
+
+              if left && !right
+                # Edge going down at (col, row)
+                x = col_index
+                y = row_index
+                (edge_matrix[y][x] ||= []) << [x, y, DIR_DOWN]
+                edge_count += 1
+              elsif !left && right
+                # Edge going up at (col, row+1)
+                x = col_index
+                y = row_index + 1
+                (edge_matrix[y][x] ||= []) << [x, y, DIR_UP]
+                edge_count += 1
+              end
+            end
+          end
+
+          path_parts = []
+
+          # Track search position to avoid re-scanning from beginning
+          search_y = 0
+          search_x = 0
 
           while edge_count > 0
-            edge_loop = []
-            next_matrix_cell = edge_matrix.find(&:any?).find { |cell| cell&.any? }
-            edge = next_matrix_cell.first
+            # Find next non-empty cell, starting from last position
+            start_edge = nil
+            found_y = search_y
+            found_x = search_x
 
-            while edge
-              edge_loop << edge
-              matrix_cell = edge_matrix[edge.start_y][edge.start_x]
-              matrix_cell.delete edge
-              edge_matrix[edge.start_y][edge.start_x] = nil if matrix_cell.empty?
+            # Continue from where we left off
+            (search_y...matrix_size).each do |y|
+              start_col = (y == search_y) ? search_x : 0
+              (start_col...matrix_size).each do |x|
+                cell = edge_matrix[y][x]
+                next unless cell && !cell.empty?
+
+                start_edge = cell.first
+                found_y = y
+                found_x = x
+                break
+              end
+              break if start_edge
+            end
+
+            # Update search position for next iteration
+            search_y = found_y
+            search_x = found_x
+
+            # Build path string directly without intermediate edge_loop array
+            path_str = String.new(capacity: 64)
+            path_str << "M" << start_edge[0].to_s << " " << start_edge[1].to_s
+
+            current_edge = start_edge
+            current_dir = nil
+            current_count = 0
+
+            while current_edge
+              ex, ey, edir = current_edge
+
+              # Remove edge from matrix
+              cell = edge_matrix[ey][ex]
+              cell.delete(current_edge)
+              edge_matrix[ey][ex] = nil if cell.empty?
               edge_count -= 1
 
-              # try to find an edge continuing the current edge
-              edge = edge_matrix[edge.end_y][edge.end_x]&.first
+              # Accumulate consecutive edges in same direction
+              if edir == current_dir
+                current_count += 1
+              else
+                # Flush previous direction
+                path_str << DIR_PATH_COMMANDS[current_dir] << current_count.to_s if current_dir
+                current_dir = edir
+                current_count = 1
+              end
+
+              # Find next edge at end coordinates
+              delta = DIR_DELTAS[edir]
+              next_x = ex + delta[0]
+              next_y = ey + delta[1]
+              next_cell = edge_matrix[next_y]&.[](next_x)
+              current_edge = next_cell&.first
             end
 
-            first_edge = edge_loop.first
-            edge_loop_parts = [
-              SVG_PATH_COMMANDS[:move],
-              first_edge.start_x.to_s,
-              " ",
-              first_edge.start_y.to_s
-            ]
-
-            chunked = edge_loop.chunk(&:direction).to_a
-            chunked[0...-1].each do |direction, edges|
-              edge_loop_parts << SVG_PATH_COMMANDS[direction]
-              edge_loop_parts << edges.length.to_s
-            end
-            edge_loop_parts << SVG_PATH_COMMANDS[:close]
-
-            path << edge_loop_parts.join
+            # Don't output the last direction segment - close path instead
+            path_str << "z"
+            path_parts << path_str
           end
 
-          @result << %{<path d="#{path.join}" fill="#{color}" transform="translate(#{offset_x},#{offset_y}) scale(#{module_size})"/>}
+          @result << %{<path d="#{path_parts.join}" fill="#{color}" transform="translate(#{offset_x},#{offset_y}) scale(#{module_size})"/>}
         end
       end
 
@@ -106,24 +180,6 @@ module RQRCode
               y = c * module_size + offset_y
               @result << %(<rect width="#{module_size}" height="#{module_size}" x="#{x}" y="#{y}" fill="#{color}"/>)
             end
-          end
-        end
-      end
-
-      class Edge < Struct.new(:start_x, :start_y, :direction)
-        def end_x
-          case direction
-          when :right then start_x + 1
-          when :left then start_x - 1
-          else start_x
-          end
-        end
-
-        def end_y
-          case direction
-          when :down then start_y + 1
-          when :up then start_y - 1
-          else start_y
           end
         end
       end

@@ -53,7 +53,7 @@ Measures only export performance using pre-generated QR codes
 - **When to use**: When optimising export code, isolating rendering bottlenecks
 - **File naming**: `ips_*_YYYYMMDD_HHMMSS.json`
 
-**Key Insight**: End-to-end benchmarks often show QR generation is the bottleneck (all formats perform similarly), while rendering-only benchmarks reveal significant differences between export formats (SVG can be 7-8x slower than ANSI).
+**Key Insight**: End-to-end benchmarks often show QR generation is the bottleneck (all formats perform similarly), while rendering-only benchmarks reveal differences between export formats (SVG is ~4x slower than HTML due to algorithmic complexity).
 
 ## Available Benchmarks
 
@@ -170,7 +170,7 @@ Benchmarks use 3 representative QR code sizes:
 
 ## Latest Benchmark Results
 
-**Last Updated: 2026-01-08 13:51:30 UTC**
+**Last Updated: 2026-01-08 14:09:06 UTC**
 **Ruby Version: 3.3.4**
 **Platform: Apple M-series**
 **rqrcode_core version: 2.0.1**
@@ -182,24 +182,24 @@ Benchmarks use 3 representative QR code sizes:
 
 | Format | Iterations/sec | Std Dev | Samples | Slowdown vs Fastest |
 |--------|----------------|---------|---------|---------------------|
-| HTML   | 34.2          | 0.00%   | 174     | 1.00x (baseline)   |
-| ANSI   | 34.0          | 0.00%   | 171     | 1.01x (same-ish)   |
-| PNG    | 33.1          | 3.00%   | 168     | 1.04x (same-ish)   |
-| SVG    | 29.0          | 0.00%   | 146     | 1.18x              |
+| HTML   | 34.1          | 2.90%   | 171     | 1.00x (baseline)   |
+| ANSI   | 34.1          | 0.00%   | 171     | 1.00x (same-ish)   |
+| PNG    | 33.6          | 0.00%   | 171     | 1.01x (same-ish)   |
+| SVG    | 32.2          | 0.00%   | 162     | 1.06x (same-ish)   |
 
-**Key Insight**: All formats perform similarly (~29-34 i/s) because QR generation dominates the time. Format choice has minimal impact on end-to-end performance.
+**Key Insight**: All formats now perform very similarly (~32-34 i/s) because QR generation dominates the time. SVG optimisations brought it in line with other formats for end-to-end usage.
 
 #### Rendering-only (Export Performance) - Medium QR Code
 *Diagnostic metric - shows export efficiency in isolation*
 
 | Format | Iterations/sec | Std Dev | Samples | Slowdown vs Fastest |
 |--------|----------------|---------|---------|---------------------|
-| HTML   | 1,868         | 0.60%   | 9,412   | 1.00x (baseline)   |
-| ANSI   | 1,351         | 0.30%   | 6,885   | 1.38x              |
-| PNG    | 864           | 0.70%   | 4,386   | 2.16x              |
-| SVG    | 184           | 0.50%   | 936     | 10.15x             |
+| HTML   | 1,876         | 0.70%   | 9,464   | 1.00x (baseline)   |
+| ANSI   | 1,310         | 6.20%   | 6,615   | 1.43x              |
+| PNG    | 840           | 4.90%   | 4,214   | 2.23x              |
+| SVG    | 424           | 1.70%   | 2,150   | 4.42x              |
 
-**Key Insight**: Export format differences are dramatic when isolated. SVG rendering is 10x slower than HTML, indicating optimisation opportunities.
+**Key Insight**: SVG rendering improved from 184 i/s to 424 i/s (+130%) after optimisations. The gap vs HTML reduced from 10x to 4.4x. Remaining gap is due to algorithmic complexity (edge detection + path tracing vs simple iteration).
 
 ### Performance by QR Code Size
 *Note: Higher iterations/sec is better; lower std dev is better; lower slowdown is better*
@@ -207,9 +207,9 @@ Benchmarks use 3 representative QR code sizes:
 #### SVG Export (End-to-end)
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
 |--------|----------------|---------|-------------------|
-| Small  | 92.8          | 0.00%   | 1.00x (baseline) |
-| Medium | 29.4          | 0.00%   | 3.16x            |
-| Large  | 9.6           | 0.00%   | 9.66x            |
+| Small  | 102.7         | 1.00%   | 1.00x (baseline) |
+| Medium | 32.2          | 0.00%   | 3.19x            |
+| Large  | 10.9          | 0.00%   | 9.41x            |
 
 #### PNG Export (End-to-end)
 | Size   | Iterations/sec | Std Dev | Slowdown vs Small |
@@ -239,15 +239,16 @@ Benchmarks use 3 representative QR code sizes:
 |--------|-------------------------|-------------------|
 | HTML   | 451                    | 18.0              |
 | PNG    | 357,676                | 23.1              |
-| SVG    | 7,443,651              | 392.5             |
+| SVG    | 2,157,951              | 113.8             |
 
 **Key Insights:**
-- **End-to-end**: QR generation is the bottleneck - format choice barely matters (~29-34 i/s for all)
-- **Rendering-only**: HTML is fastest (1,868 i/s), SVG is slowest (184 i/s) and most memory-intensive
+- **End-to-end**: All formats now perform similarly (~32-34 i/s) - SVG optimisations closed the gap
+- **Rendering-only**: HTML is fastest (1,876 i/s), SVG improved significantly (424 i/s, was 184 i/s)
+- **SVG improvements**: +130% rendering speed, 71% memory reduction after 2026-01-08 optimisations
 - **Optimisation priority**: Improvements to rqrcode_core have biggest impact on user experience
-- **Format choice**: For high-volume rendering, HTML/ANSI are significantly faster than SVG
+- **Format choice**: For high-volume rendering, HTML/ANSI are still faster but SVG is now competitive
 - All formats show 3-10x performance degradation as QR size increases
-- Memory usage varies dramatically: HTML uses 22x less memory than SVG
+- Memory usage: HTML uses 6x less memory than SVG (was 22x before optimisation)
 
 ## Notes
 
