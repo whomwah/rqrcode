@@ -146,8 +146,13 @@ describe "Export::SVG" do
     it "includes required SVG namespace attributes" do
       svg = RQRCode::QRCode.new("test").as_svg
       expect(svg).to include('xmlns="http://www.w3.org/2000/svg"')
-      expect(svg).to include('xmlns:xlink="http://www.w3.org/1999/xlink"')
       expect(svg).to include('version="1.1"')
+    end
+
+    it "does not include unused xmlns:xlink or xmlns:ev attributes" do
+      svg = RQRCode::QRCode.new("test").as_svg
+      expect(svg).not_to include("xmlns:xlink")
+      expect(svg).not_to include("xmlns:ev")
     end
 
     it "closes SVG tag properly" do
