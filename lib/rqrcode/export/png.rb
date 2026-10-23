@@ -98,15 +98,13 @@ module RQRCode
           png = ChunkyPNG::Image.new(total_img_size, total_img_size, fill)
         end
 
-        @qrcode.modules.each_index do |x|
-          @qrcode.modules.each_index do |y|
-            if @qrcode.checked?(x, y)
-              (0...module_px_size).each do |i|
-                (0...module_px_size).each do |j|
-                  png[(y * module_px_size) + border_px + j, (x * module_px_size) + border_px + i] = color
-                end
-              end
-            end
+        @qrcode.modules.each_with_index do |module_row, x|
+          scanline = png.row((x * module_px_size) + border_px)
+          module_row.each_with_index do |dark, y|
+            scanline.fill(color, (y * module_px_size) + border_px, module_px_size) if dark
+          end
+          module_px_size.times do |i|
+            png.replace_row!((x * module_px_size) + border_px + i, scanline)
           end
         end
 

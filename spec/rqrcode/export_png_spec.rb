@@ -4,7 +4,8 @@ describe "Export::PNG" do
   let(:mockImage) { double(:mock_image) }
 
   before :each do
-    allow(mockImage).to receive(:[]=)
+    allow(mockImage).to receive(:row) { [] }
+    allow(mockImage).to receive(:replace_row!)
   end
 
   it "must respond_to png" do
