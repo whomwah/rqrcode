@@ -199,6 +199,11 @@ describe "Export::PNG" do
       png = qrcode.as_png(options.merge(resize_exactly_to: 90))
       expect(png).to eq(qrcode.as_png(options).resize(90, 90))
     end
+
+    it "returns an empty image when size leaves no pixel per module" do
+      png = qrcode.as_png(size: 0)
+      expect([png.width, png.height]).to eq([0, 0])
+    end
   end
 
   context "with file save and constaints" do
