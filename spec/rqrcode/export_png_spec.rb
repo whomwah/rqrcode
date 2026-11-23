@@ -142,6 +142,65 @@ describe "Export::PNG" do
     }.to raise_error(ArgumentError, "Unknown color name madeupcolor!")
   end
 
+  context "pixel content" do
+    # A 29x29 QR code (version 3)
+    let(:qrcode) { RQRCode::QRCode.new("http://github.com/") }
+    let(:black) { ChunkyPNG::Color("black") }
+    let(:white) { ChunkyPNG::Color("white") }
+
+    # Every pixel must be `color` when the module it falls in is dark, and
+    # `fill` everywhere else, border included.
+    def expect_pixels(png, size:, module_px:, offset:, color:, fill:)
+      matrix = qrcode.qrcode
+      count = matrix.module_count
+      expect(png.width).to eq(size)
+      expect(png.height).to eq(size)
+
+      wrong = []
+      size.times do |py|
+        size.times do |px|
+          row = (py - offset).div(module_px)
+          col = (px - offset).div(module_px)
+          dark = row.between?(0, count - 1) && col.between?(0, count - 1) && matrix.checked?(row, col)
+          wrong << [px, py] unless png[px, py] == (dark ? color : fill)
+        end
+      end
+      expect(wrong.first(10)).to eq([])
+    end
+
+    it "renders the defaults" do
+      # 120 / (29 + 2 * 4) = 3px modules, (120 - 87) / 2 = 16px left/top border
+      png = qrcode.as_png
+      expect_pixels(png, size: 120, module_px: 3, offset: 16, color: black, fill: white)
+    end
+
+    it "centers the modules within size, the odd pixel going right and bottom" do
+      # 201 / (29 + 2 * 1) = 6px modules, (201 - 174) / 2 = 13px left/top border, 14px right/bottom
+      png = qrcode.as_png(size: 201, border_modules: 1, color: [200, 0, 0], fill: "#f0f0f0")
+      expect_pixels(png, size: 201, module_px: 6, offset: 13,
+        color: ChunkyPNG::Color.rgb(200, 0, 0), fill: ChunkyPNG::Color.from_hex("#f0f0f0"))
+    end
+
+    it "renders module_px_size and border_modules" do
+      # (29 + 2 * 2) * 3 = 99px, with a 2 * 3 = 6px border
+      png = qrcode.as_png(module_px_size: 3, border_modules: 2, color: "navy", fill: "yellow")
+      expect_pixels(png, size: 99, module_px: 3, offset: 6,
+        color: ChunkyPNG::Color("navy"), fill: ChunkyPNG::Color("yellow"))
+    end
+
+    it "renders resize_gte_to" do
+      # ceil(100 / (29 + 2 * 1)) = 4px modules, (29 + 2) * 4 = 124px, with a 4px border
+      png = qrcode.as_png(resize_gte_to: 100, border_modules: 1, color: "green", fill: "white")
+      expect_pixels(png, size: 124, module_px: 4, offset: 4, color: ChunkyPNG::Color("green"), fill: white)
+    end
+
+    it "renders resize_exactly_to as the unscaled image resized" do
+      options = {module_px_size: 3, border_modules: 2, color: "navy", fill: "yellow"}
+      png = qrcode.as_png(options.merge(resize_exactly_to: 90))
+      expect(png).to eq(qrcode.as_png(options).resize(90, 90))
+    end
+  end
+
   context "with file save and constaints" do
     it "should export using the correct defaults" do
       expect(ChunkyPNG::Image).to receive(:new)
