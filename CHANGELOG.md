@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `as_png` paints each module row once and copies it as whole scanlines: about 20x faster, with byte-identical images
+
 ## [3.2.0] - 2026-01-08
 
 ### Added
